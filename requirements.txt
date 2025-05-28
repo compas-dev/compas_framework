@@ -1,7 +1,9 @@
 compas >= 2.11
 compas_cgal
-compas_libigl
 compas_gmsh
+compas_libigl
+compas_model
+compas_notebook
+compas_session
 compas_shapeop
 compas_viewer
-compas_notebook
