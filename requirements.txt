@@ -1,0 +1,7 @@
+compas >= 2.11
+compas_cgal
+compas_libigl
+compas_gmsh
+compas_shapeop
+compas_viewer
+compas_notebook
