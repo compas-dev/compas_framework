@@ -10,9 +10,7 @@ build-backend = "setuptools.build_meta"
 name = "compas_framework"
 description = "The COMPAS framework packages"
 keywords = []
-authors = [
-    { name = "tom van mele", email = "tom.v.mele@gmail.com" },
-]
+authors = [{ name = "tom van mele", email = "tom.v.mele@gmail.com" }]
 license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.9"
@@ -50,7 +48,7 @@ zip-safe = false
 [tool.setuptools.dynamic]
 version = { attr = "compas_framework.__version__" }
 dependencies = { file = "requirements.txt" }
-optional-dependencies = { dev = { file = "requirements-dev.txt" } }
+optional-dependencies = { dev = { file = "requirements-dev.txt" }, notebook = { file = "requirements-notebook.txt" } }
 
 [tool.setuptools.packages.find]
 where = ["src"]

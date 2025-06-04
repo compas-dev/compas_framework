@@ -1,9 +1,8 @@
-compas >= 2.11
+compas >= 2.13
 compas_cgal
 compas_gmsh
 compas_libigl
 compas_model
-compas_notebook
 compas_session
 compas_shapeop
 compas_viewer
