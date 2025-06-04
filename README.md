@@ -18,6 +18,14 @@ cd compas_framework
 pip install -e ".[dev]"
 ```
 
+To install with support for Jupyter notebooks, do:
+
+```bash
+git clone https://github.com/compas-dev/compas_framework.git
+cd compas_framework
+pip install -e ".[notebook]"
+```
+
 ## Documentation
 
 For further "getting started" instructions, a tutorial, examples, and an API reference,
