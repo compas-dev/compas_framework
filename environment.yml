@@ -1,0 +1,11 @@
+name: compas-dev
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - pip
+  - compas_occ >=1.3
+  - pip:
+      - .
+      - -r requirements-dev.txt
+      - -r requirements-notebook.txt

@@ -5,32 +5,34 @@ Installation
 Stable
 ======
 
-Stable releases are available on PyPI and can be installed with pip.
+For installation WITHOUT `compas_occ`
 
 .. code-block:: bash
 
     pip install compas_framework
 
-
-Latest
-======
-
-The latest version can be installed from local source.
+For installation WITH `compas_occ`
 
 .. code-block:: bash
 
-    git clone https://github.com/compas-dev/compas_framework.git
-    cd compas_tna
-    pip install -e .
+    conda create -n compas-dev -c conda-forge compas_occ
+    conda activate compas-dev
+    pip install compas_framework
+
+In both cases, for installation with support for Jupyter notebooks
+
+.. code-block:: bash
+
+    pip install "compas_framework[notebook]"
 
 
 Development
 ===========
 
-To install `compas_framework` for development, install from local source with the "dev" requirements.
+To install `compas_framework` for development, install from local source.
 
 .. code-block:: bash
 
     git clone https://github.com/compas-dev/compas_framework.git
-    cd compas_tna
-    pip install -e ".[dev]"
+    cd compas_framework
+    conda env create -f environment.yml

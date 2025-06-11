@@ -4,11 +4,7 @@ compas_framework
 
 .. rst-class:: lead
 
-The COMPAS framework packages
-
-.. .. figure:: /_images/
-     :figclass: figure
-     :class: figure-img img-fluid
+`compas_framework` is a "meta package" that can be used to simplify the installation of the base framework of COMPAS.
 
 
 Table of Contents

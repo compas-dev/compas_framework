@@ -1,35 +1,26 @@
 # COMPAS Framework
 
-The COMPAS framework packages
+A "meta package" to install the COMPAS framework packages.
 
 ## Installation
 
-Stable releases can be installed from PyPI.
+For installation without `compas_occ`.
 
 ```bash
 pip install compas_framework
 ```
 
-To install the latest version for development, do:
+For installation with `compas_occ`.
 
 ```bash
-git clone https://github.com/compas-dev/compas_framework.git
-cd compas_framework
-pip install -e ".[dev]"
-```
-
-To install with support for Jupyter notebooks, do:
-
-```bash
-git clone https://github.com/compas-dev/compas_framework.git
-cd compas_framework
-pip install -e ".[notebook]"
+conda create -n compas-dev -c conda-forge compas_occ
+conda activate compas-dev
+pip install compas_framework
 ```
 
 ## Documentation
 
-For further "getting started" instructions, a tutorial, examples, and an API reference,
-please check out the online documentation here: [COMPAS Framework docs](https://compas-dev.github.io/compas_framework)
+For more information, check out the online documentation here: [COMPAS Framework docs](https://compas.dev/compas_framework)
 
 ## Issue Tracker
 
