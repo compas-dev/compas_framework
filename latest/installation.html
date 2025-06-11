@@ -536,26 +536,27 @@ document.write(`
 <h1>Installation</h1>
 <section id="stable">
 <h2>Stable</h2>
-<p>Stable releases are available on PyPI and can be installed with pip.</p>
+<p>For installation WITHOUT <cite>compas_occ</cite></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>compas_framework
 </pre></div>
 </div>
-</section>
-<section id="latest">
-<h2>Latest</h2>
-<p>The latest version can be installed from local source.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/compas-dev/compas_framework.git
-<span class="nb">cd</span><span class="w"> </span>compas_tna
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<p>For installation WITH <cite>compas_occ</cite></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>compas-dev<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>compas_occ
+conda<span class="w"> </span>activate<span class="w"> </span>compas-dev
+pip<span class="w"> </span>install<span class="w"> </span>compas_framework
+</pre></div>
+</div>
+<p>In both cases, for installation with support for Jupyter notebooks</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;compas_framework[notebook]&quot;</span>
 </pre></div>
 </div>
 </section>
 <section id="development">
 <h2>Development</h2>
-<p>To install <cite>compas_framework</cite> for development, install from local source with the “dev” requirements.</p>
+<p>To install <cite>compas_framework</cite> for development, install from local source.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/compas-dev/compas_framework.git
-<span class="nb">cd</span><span class="w"> </span>compas_tna
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<span class="nb">cd</span><span class="w"> </span>compas_framework
+conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
 </pre></div>
 </div>
 </section>
@@ -583,7 +584,6 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stable">Stable</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latest">Latest</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development">Development</a></li>
 </ul>
   </nav></div>
