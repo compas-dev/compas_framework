@@ -1,4 +1,4 @@
-# Contributing
+# Contributing to COMPAS Framework
 
 Contributions are welcome and very much appreciated!
 
@@ -12,7 +12,7 @@ In short, this is how that works.
 3. Install development dependencies:
 
    ```bash
-   pip install -r requirements-dev.txt
+   python -m pip install -e ".[dev,docs]"
    ```
 
 4. Make sure all tests pass:
@@ -21,24 +21,24 @@ In short, this is how that works.
    invoke test
    ```
 
-5. Start making your changes to the **master** branch (or branch off of it).
+5. Start making your changes on a feature branch based on **main**.
 6. Make sure all tests still pass:
 
    ```bash
    invoke test
    ```
 
-7. Add yourself to the *Contributors* section of `AUTHORS.md`.
-8. Commit your changes and push your branch to GitHub.
-9. Create a [pull request](https://help.github.com/articles/about-pull-requests/) through the GitHub website.
+7. Commit your changes and push your branch to GitHub.
+8. Create a [pull request](https://help.github.com/articles/about-pull-requests/) through the GitHub website.
 
 During development, use [pyinvoke](http://docs.pyinvoke.org/) tasks on the
 command line to ease recurring operations:
 
 * `invoke clean`: Clean all generated artifacts.
 * `invoke check`: Run various code and documentation style checks.
-* `invoke docs`: Generate documentation.
 * `invoke test`: Run all tests and checks in one swift command.
+* `invoke typecheck`: Run Pyright over integration code and tests.
+* `invoke docs`: Build the MkDocs documentation.
 * `invoke`: Show available tasks.
 
 ## Bug reports

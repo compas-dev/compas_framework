@@ -13,20 +13,35 @@ keywords = []
 authors = [{ name = "tom van mele", email = "tom.v.mele@gmail.com" }]
 license = { file = "LICENSE" }
 readme = "README.md"
-requires-python = ">=3.9"
-dynamic = ['dependencies', 'optional-dependencies', 'version']
+requires-python = ">=3.12"
+dynamic = ["version"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Topic :: Scientific/Engineering",
-    "Operating System :: Unix",
-    "Operating System :: POSIX",
-    "Operating System :: Microsoft :: Windows",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
+dependencies = [
+    "compas",
+    "compas_cgal",
+    "compas_gmsh",
+    "compas_libigl",
+    "compas_model",
+    "compas_occ",
+    "compas_session",
+    "compas_shapeop",
+    "compas_viewer",
+]
+
+[project.optional-dependencies]
+dev = ["build", "bump-my-version", "compas_invocations2", "invoke >=0.14", "pyright", "pytest", "pytest-cov", "ruff", "twine", "wheel"]
+docs = ["mkdocs >=1.6", "mkdocs-material >=9.5", "mkdocstrings[python]"]
+rhino = ["compas_ghpython", "compas_rhino"]
+blender = ["compas_blender"]
+hosts = ["compas_blender", "compas_ghpython", "compas_rhino"]
 
 [project.urls]
 Homepage = "https://compas-dev.github.io/compas_framework"
@@ -47,8 +62,6 @@ zip-safe = false
 
 [tool.setuptools.dynamic]
 version = { attr = "compas_framework.__version__" }
-dependencies = { file = "requirements.txt" }
-optional-dependencies = { dev = { file = "requirements-dev.txt" }, notebook = { file = "requirements-notebook.txt" } }
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -64,7 +77,7 @@ python_files = ["test_*.py", "*_test.py", "test.py"]
 addopts = [
     "-ra",
     "--strict-markers",
-    "--doctest-glob=*.rst",
+    "--doctest-glob=*.md",
     "--tb=short",
     "--import-mode=importlib",
 ]
@@ -74,6 +87,13 @@ doctest_optionflags = [
     "ALLOW_UNICODE",
     "ALLOW_BYTES",
     "NUMBER",
+]
+markers = [
+    "integration: cross-package integration tests",
+    "roundtrip: data serialization and conversion roundtrip tests",
+    "performance: performance and regression benchmark tests",
+    "gui: tests requiring GUI capabilities",
+    "native_backend: tests requiring a native geometry backend",
 ]
 
 # ============================================================================
@@ -106,7 +126,7 @@ line-length = 179
 [tool.ruff]
 line-length = 179
 indent-width = 4
-target-version = "py39"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
@@ -129,3 +149,7 @@ max-doc-length = 179
 [tool.ruff.format]
 docstring-code-format = true
 docstring-code-line-length = "dynamic"
+
+[tool.pyright]
+include = ["src/compas_framework", "tests"]
+pythonVersion = "3.12"

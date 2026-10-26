@@ -1,22 +1,29 @@
 # COMPAS Framework
 
-A "meta package" to install the COMPAS framework packages.
+The integration and release package for the main COMPAS framework packages:
+`compas`, `compas_occ`, `compas_cgal`, `compas_libigl`, `compas_gmsh`,
+`compas_viewer`, `compas_model`, `compas_shapeop`, and `compas_session`.
+
+In addition to providing one installation target, this repository hosts
+full-framework tests, data roundtrips, performance checks, examples, and
+documentation.
 
 ## Installation
 
-For installation without `compas_occ`.
-
 ```bash
 pip install compas_framework
 ```
 
-For installation with `compas_occ`.
+Host integrations are available as extras:
 
 ```bash
-conda create -n compas-dev -c conda-forge compas_occ
-conda activate compas-dev
-pip install compas_framework
+pip install "compas_framework[rhino]"
+pip install "compas_framework[blender]"
+pip install "compas_framework[hosts]"
 ```
+
+Python 3.12 or newer is required. Some geometry backends have native
+dependencies and may be easier to install through conda-forge.
 
 ## Documentation
 
