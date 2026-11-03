@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Added the geometry-tessellation initiative inventory, architecture proposal, accepted decision records, and coordinated implementation plan.
+* Added cross-package integration tests for continuous-geometry tessellation, triangle-processing plugin boundaries, serialization, and native geometry backends.
+
 ### Changed
+
+* Documented the COMPAS 3 geometry package compatibility matrix, native backend prerequisites, and geometry integration test workflow.
 
 ### Removed
 
