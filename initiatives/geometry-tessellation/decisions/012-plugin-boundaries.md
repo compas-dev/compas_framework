@@ -39,6 +39,19 @@ core pluggable is the public API; backend functions implement that exact
 signature and result contract but are not maintained as a second, divergent
 high-level API.
 
+### Approved refinement — 2026-11-05
+
+Native backend entry points must target lightweight, category-oriented plugin
+registration modules. These modules define the decorated plugin functions but
+import their implementation modules inside the function bodies. This preserves
+direct backend APIs while preventing ordinary plugin discovery from loading
+compiled extensions or their implementation modules.
+
+This refinement is required because `PluginManager` calls
+`entry_point.load()` for every declared plugin module during discovery. Tests
+must therefore verify both installed entry-point registration and, in a fresh
+process, that discovery alone does not load native extensions.
+
 ## Consequences
 
 - Plugin dispatch becomes testable through core APIs.
