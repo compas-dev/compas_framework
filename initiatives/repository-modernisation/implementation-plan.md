@@ -131,7 +131,10 @@ In parallel where file ownership is independent:
 
 - migrate `compas_session` to the pure uv profile and from Sphinx to MkDocs;
 - migrate `compas_framework` ordinary checks to the pure profile and add a
-  separate coordinated native integration/release-order job;
+  separate coordinated native integration/release-order job; the ordinary
+  patch remains blocked on Proposed
+  [ADR 020](decisions/020-framework-host-extras.md), which resolves its
+  incompatible COMPAS 2 host extras and root lock;
 - after explicit approval of Proposed ADRs 014–016 in
   [`compas-gmsh.md`](compas-gmsh.md), establish meaningful `compas_gmsh`
   tests and its evidence-based external-runtime matrix; source implementation

@@ -222,7 +222,10 @@ tasks that only sequence the documented direct commands.
 - `compas_model` must keep optional Coal/OCC runtime provisioning explicit;
   those integrations do not belong in its ordinary pure-Python job.
 - `compas_framework` keeps ordinary pure-Python checks separate from a
-  coordinated native-package integration/release-order job.
+  coordinated native-package integration/release-order job. Its incompatible
+  COMPAS 2 host extras and root-lock conflict are resolved by Proposed
+  [ADR 020](decisions/020-framework-host-extras.md) before the ordinary
+  modernization patch is committed.
 - `compas_viewer` keeps its current modular actions and uv profile, while
   removing Black residue, temporary COMPAS branch installation, mutating lint,
   and non-strict docs; Qt/OpenGL provisioning stays explicit.
