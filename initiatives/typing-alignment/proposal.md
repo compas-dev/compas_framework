@@ -69,6 +69,10 @@ Generic linear-algebra and quaternion inputs use the neutral
 `FloatSequenceLike` name over the same capability instead of a geometric alias.
 `SupportsFloat` is reserved for an individual scalar parameter only when its
 existing implementation already performs that conversion.
+Every current `RealInput` alternative satisfies `SupportsFloat`, so a scalar
+from a one-dimensional `PointLike` or `VectorLike` can be assigned directly to
+a normalizing `Point` or `Vector` component setter without call-site
+conversion.
 
 Do not use `numpy.typing.ArrayLike` as the default geometry input type. It is
 appropriate for APIs that really call `np.asarray` on broad numerical input,

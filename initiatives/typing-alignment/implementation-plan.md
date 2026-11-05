@@ -246,6 +246,10 @@ affected core constructors, static/runtime fixtures, and public documentation.
 - migrate quaternion and generic linear-algebra consumers to neutral
   `FloatSequenceLike` over `RealInput`, preserving existing direct arithmetic
   without new conversions, validation, casts, or ignores for typing;
+- lock the static `RealInput`-to-`SupportsFloat` relationship with explicit
+  union and concrete Python/NumPy scalar fixtures, including direct
+  one-dimensional `PointLike`/`VectorLike` element assignment to representative
+  `Point`/`Vector` component setters without conversion, cast, or ignore;
 - make core `Point` and `Vector` explicitly conform to
   `CoordinateProtocol[float]`, preserve the runtime-checkable coordinate and
   point-collection membership used by equality, and use only unparameterized

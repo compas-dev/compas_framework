@@ -244,6 +244,13 @@ broaden the element contract of `FloatSequenceLike`, `PointLike`, or
 `VectorLike`. Any broader runtime acceptance or new normalization requires a
 separate explicit behavior decision.
 
+Every alternative of `RealInput` must remain statically assignable to
+`SupportsFloat`. Therefore a scalar obtained from a one-dimensional
+`PointLike` or `VectorLike` can be passed directly to an existing normalizing
+scalar API—for example, `point.x = point_like[0]`—without a call-site
+conversion, cast, or ignore. Any future expansion of `RealInput` must preserve
+this invariant or require a separate explicit decision.
+
 ### Static capability and runtime membership
 
 `CoordinateProtocol` and `PointsProtocol` are `@runtime_checkable` only because
@@ -420,6 +427,13 @@ families.
   nominal `Point`/`Vector` conformance. It does not claim exact scalar
   inference for an unshaped NumPy branch and retains error fixtures for the
   rejected single-signature and iteration-only alternatives.
+- A focused Pyright scalar-handoff matrix proving that the complete
+  `RealInput` union and representative Python `int`/`float` and NumPy
+  integer/floating values satisfy `SupportsFloat`, and that
+  `point.x = point_like[0]` plus the corresponding representative `Vector`
+  setter assignment require no conversion, cast, or ignore. Point/vector
+  element access in this fixture is subject to the one-dimensional operation
+  contract; it does not infer shape from the unshaped `NumericArray` alias.
 - Static fixtures for `Plane(PointLike, VectorLike)`, `Line(PointLike,
   PointLike)`, and `Frame(PointLike, VectorLike, VectorLike)` using Python,
   COMPAS, and NumPy values.
