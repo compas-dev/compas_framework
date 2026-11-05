@@ -8,6 +8,7 @@ COMPAS framework, initially focusing on:
 - `compas`
 - `compas_occ`
 - `compas_cgal`
+- `compas_libigl`
 
 The initiative should make public Python APIs, plugin boundaries, native
 extension adapters, tests, and documentation agree on the values they accept
@@ -29,10 +30,12 @@ requirements.
 5. How should `compas_occ` isolate untyped PythonOCC/SWIG APIs?
 6. How should `compas_cgal` type NumPy/native buffers and distribute stubs for
    compiled extension modules?
-7. Which uses of `Any`, casts, ignores, forward references, and broad concrete
+7. How should `compas_libigl` replace native import suppressions with accurate
+   stubs and coordinate its public results with core and CGAL?
+8. Which uses of `Any`, casts, ignores, forward references, and broad concrete
    unions can be removed or localized?
-8. Which Pyright, Ruff, test, and CI configuration should be shared across the
-   three packages?
+9. Which Pyright, Ruff, test, and CI configuration should be shared across the
+   four packages?
 
 ## Design principles
 
@@ -60,7 +63,7 @@ requirements.
 ## Initial deliverables
 
 1. `inventory.md` describing current conventions, inconsistencies, NumPy
-   boundaries, tooling, tests, and risks in all three packages.
+   boundaries, tooling, tests, and risks in all four packages.
 2. `proposal.md` defining recommended public and native-boundary contracts,
    alternatives, migration effects, verification, and implementation phases.
 3. One ADR per significant independent typing decision.
@@ -90,14 +93,12 @@ Use the `compas3` environment. Before completion, affected packages must pass:
 
 ## Current status
 
-Implementation in progress. ADRs 001–014 are Accepted. Implementation is authorized
-within the approved scope, with duck typing preserved through Python code and
-normalization localized to explicit native, serialization, and representation
-boundaries. CGAL WP4 has started on branch `initiative/typing-alignment`, created
-from modernization commit `d31ec0f`; WP4 is not yet complete. `compas_libigl`
-joined the initiative on 2026-11-05 from `c3-upgrade` commit `70acf99` to align
-its native mesh plugins with ADR 012 and add truthful typed distribution
-coverage. CGAL
-skeletonisation output is a known correctness limitation: current results are
-not correct, and typing or packaging checks must not be treated as functional
-validation of that module.
+Implementation is in progress. ADRs 001–014 are Accepted. Typing ADRs 015–017
+and Geometry ADRs 022–023 are Proposed, and their source slices remain blocked
+until explicit approval. Approved work preserves duck typing through Python
+code and localizes normalization to explicit native, serialization, ownership,
+and retained-representation boundaries. `compas_libigl` joined the initiative
+on 2026-11-05 to align its native mesh plugins and replace incomplete native
+typing with the shared contract. CGAL skeletonisation output remains a known
+correctness limitation: typing, stub, or packaging checks must not be treated
+as functional validation of that module.

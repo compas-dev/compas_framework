@@ -6,17 +6,16 @@ Proposed.
 
 ## Context
 
-Accepted ADR 013 chose named triangulation operations and producer-specific
-keyword controls over public strategy hierarchies. It did not define the final
-named polygon-operation table, aggregate customization contract, planar
-Delaunay signatures, or exact producer defaults. WP7.4–WP7.7 cannot remove the
-old strategy types without those public contracts.
+Accepted ADR 013 chose named algorithms and producer-specific keyword controls
+over public strategy hierarchies. Geometry-tessellation ADR 022 is Proposed in
+response to the user-authored operation definitions and distinguishes
+structured polygonization, discrete triangulation, and precision-controlled
+BRep tessellation.
 
-This ADR refines ADR 013 rather than changing its direction. The new approval
-choice is whether aggregate geometry methods accept a duck-typed triangulator
-callable. All signatures and defaults below are proposed together so the
-remaining migration can remove the old paths directly without compatibility
-shims.
+This ADR supplies the exact signatures and invariants needed by WP7.4–WP7.7.
+It assumes Geometry ADRs 022–023 and Typing ADR 016 are accepted as proposed.
+If any changes, this table must be reconciled before the affected decisions
+are accepted or implemented.
 
 ## Polygon triangulation functions
 
@@ -31,7 +30,7 @@ The function:
 - raises `ValueError` for fewer than three vertices;
 - returns the input triangle topology unchanged for three vertices;
 - splits a quadrilateral along its shortest diagonal;
-- uses planar ear clipping for five or more vertices;
+- uses planar ear clipping for five or more vertices; and
 - raises `ValueError` when a polygon with five or more vertices is non-planar.
 
 ### Named alternatives
@@ -59,9 +58,12 @@ def triangulate_polygon_minimum_area(
 ```
 
 `triangulate_polygon_projected` projects to a best-fit plane only within the
-explicit `max_deviation` bound. `triangulate_polygon_minimum_area` accepts an
-ordered non-planar 3D polygon and uses the O(n³) minimum-area triangulation.
-The ear-clipping function is the explicit planar polygon operation.
+explicit positive finite `max_deviation` bound.
+`triangulate_polygon_minimum_area` accepts an ordered non-planar 3D polygon and
+uses the O(n³) minimum-area triangulation. The ear-clipping function is the
+explicit planar polygon operation. Delaunay processing of a concave boundary
+uses the named constrained planar-domain operation below rather than an
+implicit face-triangulation fallback.
 
 ### Polygon result invariants
 
@@ -121,8 +123,10 @@ def triangulate(
 ```
 
 The callable keeps aggregate code independent of nominal strategy types and
-allows options to be bound transparently with `functools.partial`, for example
-a selected quadrilateral diagonal or projection bound.
+allows algorithm-specific options to be bound transparently with
+`functools.partial`. An aggregate stages all face results before mutating a
+`Mesh`. Generated faces inherit source face attributes; vertex keys are
+preserved, while generated face keys are not promised.
 
 Alternatives 1–4 are not recommended: no customization is unnecessarily
 closed; a literal cannot express algorithm-specific options; multiple
@@ -140,26 +144,26 @@ def to_polygonal_surface(self) -> PolygonalSurface: ...
 def to_mesh(self) -> Mesh: ...
 ```
 
+The latter two are representation conversions, not polygonization operations.
 The tessellation vertex buffer is flattened deterministically: exterior
 vertices first, followed by every hole in stored order. Every returned triangle
 indexes that flattened buffer. The operation introduces no Steiner vertices.
-Triangle winding agrees with `region.plane.normal` regardless of the winding of
-individual hole rings. Both conversion methods delegate to `triangulated` so
-they preserve the same vertex mapping and topology.
+Triangle winding agrees with `region.plane.normal` regardless of the winding
+of individual hole rings. Both conversions delegate to `triangulated` so they
+preserve the same vertex mapping and topology.
 
 Users who need constrained or conforming refinement call the named planar
-domain functions directly with the region exterior and holes. Region
-triangulation rejects invalid, touching, or intersecting rings rather than
-silently repairing them.
+domain functions directly. Region triangulation rejects invalid, touching, or
+intersecting rings rather than silently repairing them.
 
-## Planar Delaunay functions
+## Named planar Delaunay functions
 
 ```python
 def delaunay_triangulation(
     points: CoordinatesInput,
     *,
     frame: Frame | None = None,
-) -> TriangleMeshInput: ...
+) -> VerticesFaces: ...
 
 def constrained_delaunay_triangulation(
     boundary: CoordinatesInput,
@@ -168,7 +172,7 @@ def constrained_delaunay_triangulation(
     constraints: CoordinatesCollectionInput = (),
     points: CoordinatesInput = (),
     frame: Frame | None = None,
-) -> TriangleMeshInput: ...
+) -> VerticesFaces: ...
 
 def conforming_delaunay_triangulation(
     boundary: CoordinatesInput,
@@ -178,13 +182,13 @@ def conforming_delaunay_triangulation(
     points: CoordinatesInput = (),
     max_edge_length: float | None = None,
     frame: Frame | None = None,
-) -> TriangleMeshInput: ...
+) -> VerticesFaces: ...
 ```
 
 The matching private hooks are `_delaunay_triangulation`,
 `_constrained_delaunay_triangulation`, and
-`_conforming_delaunay_triangulation` with the same parameters and result
-contract.
+`_conforming_delaunay_triangulation` with identical parameters and result
+contracts.
 
 Inputs are planar within `TOL`. With `frame=None`, the domain is interpreted in
 world XY. An explicit frame defines the planar domain. The operations do not
@@ -193,106 +197,147 @@ preserve accepted source coordinates. `max_edge_length`, when provided, is
 positive and finite. No `min_angle` or `max_area` control is introduced.
 
 The result is a concrete `(coordinates, triangles)` structural tuple, not a
-`Tessellation`. Every triangle contains three distinct in-range integer indices,
-has nonzero signed area in frame coordinates, and is counterclockwise in frame
-XY. Its winding therefore agrees with the frame normal, or world +Z when no
-frame is provided.
+`Tessellation`. Every triangle contains three distinct in-range integer
+indices, has nonzero signed area in frame coordinates, and is counterclockwise
+in frame XY. Its winding therefore agrees with the frame normal, or world +Z
+when no frame is provided.
 
-Every distinct accepted source location appears in the result with its original
-3D coordinate. Repeated shared endpoints coalesce. Conflicting 3D coordinates
-at the same planar location are rejected. Result vertex order is unspecified.
-Unconstrained Delaunay and valid nonintersecting constrained Delaunay introduce
-no Steiner vertices. Conforming Delaunay may introduce planar Steiner vertices.
+Every distinct accepted source location appears in the result with its
+original 3D coordinate. Repeated shared endpoints coalesce. Conflicting 3D
+coordinates at the same planar location are rejected. Result vertex order is
+unspecified. Unconstrained Delaunay and valid nonintersecting constrained
+Delaunay introduce no Steiner vertices. Conforming Delaunay may introduce
+planar Steiner vertices.
 
 Boundary and hole rings are simple and mutually disjoint. Constraints remain
 inside the domain and may meet only at shared endpoints. Crossings and
 unsupported touching configurations are rejected. No operation mutates Python
 or NumPy source buffers.
 
-## Shape and surface discretization
+## Structured shape and surface conversions
 
-Both `polygonize` and `tessellate` use the following keyword-only controls:
+`Shape` and untrimmed `Surface` types expose `to_polygonal_surface` as the
+conversion backed by structured polygonization:
 
-| Producer | Signature | Validation and result behavior |
+| Producer | Exact signature | Validation and polygonal result |
 |---|---|---|
-| `Box` | `polygonize()` / `tessellate()` | No controls. |
-| `Cone`, `Cylinder` | `(*, nu: int = 64)` | `nu >= 3`. |
-| `Sphere`, `Torus` | `(*, nu: int = 64, nv: int = 64)` | `nu >= 3`, `nv >= 3`. |
-| `Capsule` | `(*, nu: int = 64, nv: int = 64)` | `nu >= 3`; `nv >= 4` and even. |
-| `Surface` | `(*, nu: int = 64, nv: int = 64)` | Both counts >= 1. `polygonize` returns quads; `tessellate` returns two triangles per grid cell with normals and UV coordinates. |
+| `Box` | `to_polygonal_surface()` | No controls; six quadrilateral faces. |
+| `Cone`, `Cylinder` | `to_polygonal_surface(*, nu: int = 64)` | `nu >= 3`; structured side cells and required cap/pole triangles. |
+| `Sphere` | `to_polygonal_surface(*, nu: int = 64, nv: int = 64)` | `nu >= 3`, `nv >= 3`; quads where regular and required pole triangles. |
+| `Torus` | `to_polygonal_surface(*, nu: int = 64, nv: int = 64)` | `nu >= 3`, `nv >= 3`; a periodic quadrilateral grid. |
+| `Capsule` | `to_polygonal_surface(*, nu: int = 64, nv: int = 64)` | `nu >= 3`; `nv >= 4` and even; quads where regular and required pole triangles. |
+| untrimmed `Surface` | `to_polygonal_surface(*, nu: int = 64, nv: int = 64)` | Both counts `>= 1`; `(nu + 1) * (nv + 1)` vertices and `nu * nv` quads. |
 
-No generic `Adaptive` replacement is introduced. A no-argument call remains
-available for generic visualization conversion through the documented
-producer defaults.
+Counts are cell resolution, not approximation-error targets. Booleans and
+non-integral values raise `TypeError`; values below the stated minima raise
+`ValueError`. No generic adaptive control is introduced.
 
-For a `Surface` grid, vertices, normals, and UV coordinates each contain
-`(nu + 1) * (nv + 1)` items. Buffers use lexicographic `(u, v)` order with `v`
-varying fastest. UV coordinates are `[i / nu, j / nv]`; periodic seams retain
-separate 0 and 1 endpoint samples. Each cell with corners `a, b, c, d` yields
-triangles `[a, b, c]` and `[a, c, d]` in increasing parameter directions.
-At regular samples, analytic normals and triangle winding agree with
-`du × dv`.
+For a `Surface` grid, vertices use lexicographic `(u, v)` order with `v`
+varying fastest. Periodic seams retain separate endpoint samples. Cell corners
+`a, b, c, d` follow increasing parameter directions. Analytic normals follow
+`du × dv`; arbitrary coarse chord faces do not have a universal orientation
+guarantee relative to those normals on curved or folded cells.
 
-Singular parameter cells may remain in the output. The implementation does not
-silently delete or reindex them, so universal triangle nondegeneracy is not a
-surface-grid guarantee. This limitation is documented rather than hidden by a
+Singular cells may remain. The conversion does not silently delete or reindex
+them, so universal face nondegeneracy is not guaranteed at parameter
+singularities. This limitation is documented rather than hidden by a
 topology-changing cleanup.
 
-## BRep discretization
+## Shape and surface triangle conversion
 
-Public `Brep` methods accept optional controls:
+The same producers expose `to_tessellation` for visualization and transfer,
+with signatures identical to their `to_polygonal_surface` calls:
 
 ```python
-def tessellate(
+shape.to_tessellation(*, same_resolution_keywords) -> Tessellation
+surface.to_tessellation(*, nu: int = 64, nv: int = 64) -> Tessellation
+```
+
+This is an exact composition, not an independent approximation algorithm:
+
+```python
+geometry.to_tessellation(**options)
+# has the same vertices and triangles as
+geometry.to_polygonal_surface(**options).triangulated()
+```
+
+Every polygonal face uses the default `triangulate_polygon` policy. The
+conversion inserts no vertices beyond the structured polygonization and may
+not choose a backend-specific alternative. A caller needing another policy
+uses `to_polygonal_surface(...).triangulated(custom_callable)`.
+
+For `Surface`, the result may additionally carry analytic vertex normals and UV
+coordinates sampled in the same vertex order. UV coordinates are
+`[i / nu, j / nv]`. Analytic normals follow `du × dv`; no universal agreement
+between those normals and coarse chord-triangle winding is promised for an
+arbitrary curved or folded surface. Attributes are attached only when one
+valid same-index value exists per polygonized vertex. The conversion never
+duplicates vertices to manufacture seam or crease attributes.
+
+## BRep tessellation conversion
+
+`Brep` and `BrepFace` do not expose a polygonal-surface conversion. They expose
+only the representation-oriented method backed by BRep tessellation:
+
+```python
+def to_tessellation(
+    self,
     *,
     linear_deflection: float | None = None,
     angular_deflection: float | None = None,
 ) -> Tessellation: ...
-
-def polygonize(
-    *,
-    linear_deflection: float | None = None,
-    angular_deflection: float | None = None,
-) -> PolygonalSurface: ...
 ```
 
-`BrepFace` exposes the same public signatures and delegates through `as_brep`.
-Public methods resolve `None` before plugin dispatch: linear deflection uses
+`BrepFace.to_tessellation` delegates through `as_brep`. Public methods resolve
+`None` before plugin dispatch: linear deflection uses
 `TOL.lineardeflection`, and angular deflection uses the degree equivalent of
 `TOL.angulardeflection`.
 
-The plugin hooks receive the BRep positionally and concrete required keyword
+The plugin hook receives the BRep positionally and concrete required keyword
 arguments:
 
 ```python
-def brep_tessellate(
+def brep_to_tessellation(
     brep: Brep,
     *,
     linear_deflection: float,
     angular_deflection: float,
 ) -> Tessellation: ...
-
-def brep_polygonize(
-    brep: Brep,
-    *,
-    linear_deflection: float,
-    angular_deflection: float,
-) -> PolygonalSurface: ...
 ```
 
-Plugin hooks do not accept or resolve `None`. Linear deflection is in model
+The hook does not accept or resolve `None`. Linear deflection is in model
 units; angular deflection is in degrees. Public resolution and explicit values
 use the same validation: booleans and non-real values raise `TypeError`;
 non-finite or non-positive values raise `ValueError`; angular values greater
 than 180 raise `ValueError`. OCC converts degrees to radians exactly once at
-the native boundary. Core and OCC wrappers keep these exact shapes.
-`polygonize` uses the same tessellation controls and retains the established
-boundary-polyline behavior.
+the native boundary. Tessellation preserves face winding and relevant boundary
+polylines.
+
+There is no `Brep.to_polygonal_surface` or
+`BrepFace.to_polygonal_surface`. The old `brep_tessellate` and
+`brep_polygonize` hooks are removed; `brep_to_tessellation` is the sole BRep
+conversion hook. Converting its result to a `PolygonalSurface` afterward is a
+separate representation conversion and does not claim structured BRep
+polygonization.
+
+## Numerical triangle-mesh boundaries
+
+Numerical mesh operations use the structural contract accepted in ADR 012:
+
+```python
+VerticesFaces = tuple[CoordinatesInput, IndicesCollectionInput]
+```
+
+They accept suitable Python sequences and NumPy buffers directly and return
+shape-checked structural buffers. They do not require or implicitly convert
+`Tessellation`, `PolygonalSurface`, or `Mesh`. Backend normalization occurs
+once at the native ABI boundary with only the minimal safety checks required
+for native access and operation-specific result validation.
 
 ## Direct removal and migration
 
-The following are removed directly, without aliases, adapters, deprecation
-shims, or duplicate public paths:
+Remove the following without aliases, adapters, deprecation shims, or duplicate
+public paths:
 
 - `TriangulationStrategy`, `FaceTriangulation`, `DiagonalSplit`,
   `EarClipping`, `ProjectedEarClipping`, and `MinimumAreaTriangulation`;
@@ -302,75 +347,87 @@ shims, or duplicate public paths:
 - `TessellationStrategy`, `Native`, `UGrid`, `UVGrid`, `Adaptive`, and
   `Deflection`;
 - strategy serialization, exports, documentation, and examples;
-- generic `Shape` strategy handling and `_tessellation_strategy`.
+- generic `Shape` strategy handling and `_tessellation_strategy`; and
+- public `polygonize`/`tessellate` methods, BRep/BRepFace polygonal-surface
+  conversion, and the old `brep_polygonize`/`brep_tessellate` hooks.
 
 | Removed path | Replacement |
 |---|---|
 | Polygon strategy object | Named polygon function or aggregate callable. |
-| Delaunay strategy flag | Matching named Delaunay function. |
+| Delaunay strategy flag | Matching named planar Delaunay function. |
 | `TriangulationQuality` | `max_edge_length` on conforming Delaunay only. |
-| Shape/surface tessellation strategy | Producer-owned `nu`/`nv` keywords. |
-| BRep `Deflection` | Linear and angular deflection keywords. |
-| Strategy serialization and exports | No replacement; the public strategy types are removed. |
+| Shape/surface policy strategy | Producer-owned `to_polygonal_surface` and `to_tessellation` `nu`/`nv` keywords. |
+| BRep `Deflection` | Linear and angular `to_tessellation` keywords. |
+| Shape/surface `polygonize`/`tessellate` | Representation-oriented `to_polygonal_surface`/`to_tessellation`. |
+| BRep polygonization | No direct conversion; explicitly convert the resulting `Tessellation` if needed. |
+| `brep_polygonize`/`brep_tessellate` | Sole `brep_to_tessellation` hook. |
+| Strategy serialization and exports | No replacement. |
 
 ## Verification
 
-- Assert exact public and plugin signatures, defaults, and keyword-only
-  controls.
+- Assert exact public and plugin signatures, defaults, keyword-only controls,
+  and producer-family operation availability.
 - Cover Python and NumPy coordinate inputs and source non-mutation.
 - Verify polygon triangle counts, index bounds and distinctness, source-only
   references, nonzero areas, winding, reversed boundaries, warped quads,
   degeneracy rejection, and minimum-area cyclic orientation.
-- Verify aggregate face-to-triangle mapping and preservation of attributes.
-- Verify callable customization, including `functools.partial` for
-  algorithm-specific options.
+- Verify aggregate face mapping, atomic mutation, attribute transfer, and
+  callable customization including `functools.partial`.
 - Verify no-argument `PlanarRegion` triangulation, either hole winding,
   exterior-then-holes flattening, region-normal winding, no Steiner vertices,
-  invalid/touching/intersecting ring rejection, and conversion delegation.
-- Verify Delaunay result shape and bounds, signed nonzero frame area,
-  counterclockwise winding, reversed boundaries, rotated frames, shared-point
-  coalescing, conflicting-coordinate rejection, source-coordinate retention,
-  no Steiner vertices for unconstrained/constrained operations, permitted
-  Steiner vertices for conforming operations, crossing rejection, and Python
-  and NumPy source non-mutation.
-- Verify producer triangle/quad counts, minimum resolutions, generic
-  no-argument conversion, surface buffer lengths and ordering, UV endpoints,
-  two-triangle cell indices, analytic-normal/winding agreement, and the
-  documented singular-cell behavior.
-- Inspect exact public BRep, `BrepFace`, and plugin-hook signatures. Verify
-  hooks reject `None`; explicit and tolerance-derived validation rejects
-  `NaN`, infinity, booleans, zero, negative values, and angles above 180;
-  verify `TOL.temporary` defaults, degrees-to-radians conversion exactly once,
-  `BrepFace` delegation, plugin parity, and retained boundary polylines.
-- Assert removed symbols are absent from source exports, serialization,
-  examples, documentation, typed fixtures, and built packages.
+  invalid ring rejection, and conversion delegation.
+- Verify Delaunay result shapes, signed frame area, winding, rotated frames,
+  source-coordinate retention, coalescing/rejection rules, allowed Steiner
+  insertion, crossing rejection, and input non-mutation.
+- Verify polygonal cell counts and order for every producer. Compare direct
+  shape/surface `to_tessellation` against
+  `to_polygonal_surface(...).triangulated()` for identical vertices and
+  triangles, including singular-cell behavior.
+- Verify Surface normals and UVs use the same vertex order without affecting
+  topology, document that chord-triangle orientation may differ from analytic
+  normals on folded/coarsely sampled cells, and omit attributes that require
+  vertex duplication.
+- Assert BRep polygonal conversion and old operation hooks are absent. Verify
+  exact `brep_to_tessellation` parity, BRep deflection defaults, validation,
+  degree-to-radian conversion exactly once, face delegation, winding, and
+  boundary polylines.
+- Exercise structural numerical operations directly with Python and NumPy
+  buffers without core geometry-object construction.
+- Assert removed symbols are absent from exports, serialization, examples,
+  documentation, typed fixtures, and built packages.
 - Run focused and full feasible tests, Ruff, formatting, Pyright, strict docs,
   distribution checks, and cross-package integration.
 
 ## Consequences
 
-- Users select algorithms by calling them rather than constructing nominal
-  flags.
-- Aggregate customization follows Python duck typing through a callable.
-- Each producer exposes only controls it can implement truthfully.
-- Delaunay remains planar and returns structural buffers.
-- Angular BRep controls have one public unit: degrees.
-- The C3 branch makes a clean break; migration is direct and no compatibility
-  layer remains.
+- Operation names follow the geometry being processed rather than the desired
+  face arity alone.
+- Structured producers have one primary discretization path and one exact
+  triangle representation conversion.
+- BRep `to_tessellation` has a precision-controlled tessellation contract and
+  no misleading polygonal-surface twin.
+- Aggregate customization follows Python duck typing.
+- Delaunay remains planar and structural at numerical boundaries.
+- The C3 branch makes a direct clean break without compatibility layers.
 
 ## Affected packages
 
-`compas`, `compas_cgal`, `compas_occ`, `compas_framework`, documentation,
-examples, serialization fixtures, plugin fixtures, and installed consumers.
+`compas`, `compas_cgal`, `compas_occ`, `compas_model`, `compas_viewer`,
+`compas_framework`, documentation, examples, serialization fixtures, plugin
+fixtures, and installed consumers.
 
 ## Dependencies
 
 - [012 — Structural triangle-mesh boundaries](012-structural-triangle-mesh-boundaries.md)
 - [013 — Explicit algorithms and discretization controls](013-explicit-algorithms-and-discretization-controls.md)
+- [016 — Core structural type vocabulary](016-core-structural-type-vocabulary.md)
+- Geometry-tessellation ADR 022 — operation terminology and producer boundaries
+- Geometry-tessellation ADR 023 — BRep deflection defaults
 
 ## Approval boundary
 
-All signatures, defaults, validation rules, removals, and the aggregate
-triangulator callable remain **Proposed**. WP7.4–WP7.7 implementation is
-blocked until the user explicitly approves this exact table. In particular,
-the callable aggregate contract is a new choice not settled by ADR 013.
+All signatures, defaults, validation rules, removals, the callable aggregate
+contract, the exact shape/surface conversions, BRep default policy, plugin
+hook naming, and removal of BRep polygonal conversion remain **Proposed**.
+WP7.4–WP7.7 implementation is blocked until the user explicitly approves
+Geometry ADRs 022–023 and this reconciled ADR.

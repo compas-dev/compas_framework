@@ -2,10 +2,12 @@
 
 ## Status
 
-Approved. ADRs 001–011 are Accepted. Implementation may proceed in dependency
+ADRs 001–014 are Accepted. ADRs 015–017 and Geometry ADRs 022–023 are
+Proposed. Work governed only by accepted decisions may proceed in dependency
 order, preserving duck typing through Python code and limiting normalization to
-explicit hard boundaries. The `compas_cgal` branch `initiative/typing-alignment`
-was created from modernization commit `d31ec0f`, and WP4 has started.
+explicit hard boundaries. The remaining exact geometry API, shared vocabulary,
+and native-binding alignment work stays blocked by its applicable Proposed
+decisions.
 
 ## Work packages
 
@@ -24,7 +26,7 @@ was created from modernization commit `d31ec0f`, and WP4 has started.
 
 ### WP1 — Core numeric and array vocabulary
 
-**Ownership:** `compas._typing`, datastructure type aliases, focused static and
+**Ownership:** public `compas.typing`, datastructure type aliases, focused static and
 runtime tests.
 
 - Add approved real/integral, coordinate, collection, and index input aliases.
@@ -122,35 +124,37 @@ For each family:
 and independent review.
 
 - Ship and verify `py.typed` in all wheels.
-- Verify CGAL stubs in installed wheels and against native exports.
+- Verify CGAL and libigl stubs in installed wheels and against native exports.
 - Type-check an external installed-package consumer.
 - Run lowest/latest NumPy runtime and typing matrices.
 - Run native import/ABI tests, full feasible tests, Ruff, format, Pyright, and
   documentation builds.
 - Independently review remaining ignores and runtime changes.
 
-**Depends on:** WP0–WP5; ADRs 009–010.
+**Depends on:** WP0–WP5, WP7.7, and WP8.4; ADRs 009–010 and every Accepted
+decision governing the integrated public/native surface.
 
 ### WP7 — Representation and numerical-boundary correction
 
-**Status:** partially approved. ADRs 012–014 are Accepted. ADR 015 is Proposed
-and supplies the exact API table needed for WP7.4–WP7.7. Those work packages
-remain blocked pending explicit approval of ADR 015. Retained `Tessellation`
+**Status:** partially approved. ADRs 012–014 are Accepted. Typing ADRs 015–016
+and Geometry ADRs 022–023 are Proposed and together supply the exact API and
+structural vocabulary needed for WP7.4–WP7.7. Those work packages remain
+blocked pending the applicable explicit approvals. Retained `Tessellation`
 representation semantics remain in scope.
 
 #### Affected-API migration table
 
 | Slice | Current public boundary | Approved destination | Principal dependents |
 |---|---|---|---|
-| Structural vocabulary | `Tessellation` or package-local `VerticesFaces` | One core `TriangleMeshInput` structural buffer contract; exact local NumPy result aliases | Core typing fixtures; CGAL native boundaries |
+| Structural vocabulary | `Tessellation`, `TriangleMeshInput`, tuple-valued `MeshType`, or package-local `VerticesFaces` | One core `VerticesFaces` structural contract; exact concrete result aliases | Core typing fixtures; CGAL/libigl native boundaries |
 | Mesh booleans | Public pluggables require and return `Tessellation` | Public raw-buffer dispatch plus private `_boolean_*` hooks; one backend conversion, minimal native-safety checks, native failure propagation, and shape-checked structural results | CGAL Boolean plugin/wrappers; `Polyhedron` Boolean methods |
 | Intersection and slicing | `Tessellation` mesh inputs | Structural mesh inputs; existing polyline/hit results | CGAL intersection/slicer plugins and examples |
 | Remeshing | `Tessellation` input/result | Structural mesh input/result | CGAL meshing plugin; Boolean documentation |
 | Curvature, parameterization, geodesics, isolines, matrices | `Tessellation` mesh input | Structural mesh input; existing scalar/vector results | Each installed backend and core plugin fixtures |
 | Planar Delaunay | `triangulate_planar_*` plus nominal strategy flags; `Tessellation` result | Named planar Delaunay/constrained/conforming operations and private hooks; structural result; no implicit curved-domain projection | CGAL triangulation; `Mesh.from_points` |
 | Polygon triangulation | Public strategy hierarchy and nested `FaceTriangulation` | Named operations; aggregate triangulator callable where approved; distinct no-argument region conversion | `Polygon`, `PolygonalSurface`, `Polyhedron`, `Mesh`, `PlanarRegion` |
-| Shape/surface tessellation | `Native`, `UGrid`, `UVGrid`, `Adaptive` | Producer-specific keyword-only resolution or approximation controls | Shape/surface tests, examples, scene conversion |
-| BRep tessellation | `Deflection` strategy | Explicit linear/angular deflection keywords with documented units | Core BRep, `compas_occ`, examples |
+| Shape/surface conversion | `polygonize`/`tessellate` plus `Native`, `UGrid`, `UVGrid`, `Adaptive` | `to_polygonal_surface`/`to_tessellation` with producer-specific keyword-only resolution controls and one shared structured path | Shape/surface tests, examples, scene conversion |
+| BRep conversion | `polygonize`/`tessellate` plus `Deflection` strategy | `to_tessellation` only, with explicit linear/angular deflection keywords and documented units | Core BRep, `compas_occ`, examples |
 | Cleanup | `tessellation_pluggable`, strategy exports and serialization | Remove after all consumers migrate | Core exports, docs, installed-wheel consumers |
 
 #### Dependency-ordered work packages
@@ -169,22 +173,23 @@ representation semantics remain in scope.
    with core. Accepted ADR 014 retains only verified core Gaussian angle defect
    and removes unsupported mean/principal core hooks after the verified libigl
    modernization checkpoint is integrated.
-4. **WP7.4 — Named planar triangulation.** **Blocked by Proposed ADR 015.**
+4. **WP7.4 — Named planar triangulation.** **Blocked by Proposed ADRs 015–016.**
    Replace nominal Delaunay flags and
    migrate CGAL plus `Mesh.from_points` in one cross-package slice. Reject
    non-planar inputs outside tolerance and keep non-planar polygon
    triangulation on its separate path.
-5. **WP7.5 — Polygon triangulation operations.** **Blocked by Proposed ADR
-   015.** Replace nested strategy objects using the approved named-operation
+5. **WP7.5 — Polygon triangulation operations.** **Blocked by Proposed ADRs
+   015–016.** Replace nested strategy objects using the approved named-operation
    and aggregate-callable table for `Polygon`, `PolygonalSurface`,
    `Polyhedron`, and `Mesh`. Migrate `PlanarRegion` separately to its
    no-argument `triangulated`, `to_polygonal_surface`, and `to_mesh` contract;
    it does not accept the aggregate triangulator callable.
-6. **WP7.6 — Producer-specific controls.** **Blocked by Proposed ADR 015.**
-   Migrate shapes/surfaces, then core
-   BRep and OCC together. Preserve no-argument generic tessellation.
-7. **WP7.7 — Export and integration cleanup.** **Blocked by Proposed ADR
-   015.** Remove obsolete decorators,
+6. **WP7.6 — Producer-specific controls.** **Blocked by Proposed Typing ADRs
+   015–016 and Geometry ADRs 022–023.** Migrate shape/surface representation
+   conversions, then core BRep and OCC together. Preserve documented
+   no-argument generic conversions through deterministic defaults.
+7. **WP7.7 — Export and integration cleanup.** **Blocked by Proposed ADRs
+   015–017.** Remove obsolete decorators,
    strategy classes, exports, serialization fixtures, and documentation only
    after their dependents have migrated.
 
@@ -200,12 +205,80 @@ needs for process safety, followed by native success/failure propagation and
 result-shape verification. Geometric validity remains a documented algorithm
 precondition unless an operation explicitly requires a different contract.
 
-No additional architectural approval is required for completed WP7.1–WP7.3
-work that follows ADRs 012–014. WP7.4–WP7.7 require approval of ADR 015 before
-source migration. Stop if a released compatibility obligation, a result
+No additional architectural approval is required for the behavior already
+migrated under ADRs 012–014, but its superseded alias vocabulary is corrected
+only after ADR 016 approval. WP7.4–WP7.7 require approval of their listed
+Typing and Geometry ADRs before source migration. Stop if a released
+compatibility obligation, a result
 requiring metadata beyond buffers, a backend incompatibility, a new
 representation class, an implicit conversion, or a second public path becomes
 necessary.
+
+### WP8 — Shared vocabulary and native-binding truthfulness
+
+**Status:** Proposed. No package source work is authorized until ADRs 016–017
+are explicitly accepted.
+
+#### WP8.1 — Core vocabulary and constructor interoperability
+
+**Ownership:** public `compas.typing`, removal of private `compas._typing`,
+affected core constructors, static/runtime fixtures, and public documentation.
+
+- replace `TriangleMeshInput` and tuple-valued `MeshType` with the sole neutral
+  `VerticesFaces` structural alias;
+- distinguish protocol, accepted-input, neutral structural, and concrete result
+  names according to ADR 016;
+- migrate every core and integration consumer without aliases or shims;
+- make copying core constructors accept the approved NumPy coordinate/index
+  values and align corresponding setters that use the same normalization path;
+  and
+- correct `PolygonalSurface`/`Polyhedron` NumPy integral index handling during
+  their existing ownership copy, without a separate validation pass.
+
+**Depends on:** accepted ADR 016; WP1–WP2 and WP7.1–WP7.3 evidence.
+
+#### WP8.2 — CGAL stub and wrapper correction
+
+**Ownership:** `compas_cgal` native `.pyi`, `types.py`, wrappers, exports,
+runtime ABI tests, typed consumers, and package verification.
+
+- import the core broad vocabulary instead of redefining it;
+- correct every measured native-stub/runtime mismatch;
+- type every supported public wrapper and make exports explicit;
+- retain exact concrete array and heterogeneous result aliases only where they
+  describe actual CGAL results; and
+- reach 100% known public type completeness and verify installed stubs.
+
+**Depends on:** WP8.1 and accepted ADR 017.
+
+#### WP8.3 — Libigl native stubs and public completion
+
+**Ownership:** `compas_libigl` 13 private extension stubs, 21 public wrappers,
+plugins, imports, consumers, and package verification.
+
+- add one accurate `.pyi` for every compiled extension and remove broad import
+  ignores;
+- type dense arrays, sparse matrices, Python containers, and mixed results as
+  actually returned;
+- replace casts and old structural aliases with the core vocabulary; and
+- reach 100% known public type completeness and verify every installed stub.
+
+**Depends on:** WP8.1 and accepted ADR 017. WP8.2 and WP8.3 may proceed in
+parallel with separate repository ownership.
+
+#### WP8.4 — Cross-package installed integration
+
+**Ownership:** `compas_framework` integration fixtures and independent review.
+
+- install exact candidate wheels outside their checkouts;
+- type-check every supported CGAL/libigl public family;
+- pass applicable backend results directly into core constructors;
+- verify no removed aliases, `.tolist()` workarounds, broad ignores, or casts
+  mask the shared contract; and
+- rerun the complete runtime, Pyright, Ruff, documentation, wheel, and native
+  matrix after review.
+
+**Depends on:** WP8.1–WP8.3; ADRs 016–017.
 
 ## Dependency graph
 
@@ -213,13 +286,18 @@ necessary.
 WP0 -> WP1 -> WP2
           \-> WP3 -> WP4
                   \-> WP5
-WP0 + WP2 + WP4 + WP5 -> WP6
+WP0 + WP2 + WP4 + WP5 + WP7.7 + WP8.4 -> WP6
 WP1 -> WP7.1 -> WP7.2 -> WP7.3
           \-> WP7.4 -> WP7.5
-WP7.0 -> WP7.6
-ADR015 -> WP7.4, WP7.5, WP7.6, WP7.7
+WP7.3 -> WP7.6
+Geometry ADR022 -> Geometry ADR023
+Typing ADR016 -> WP8.1 -> WP8.2 -> WP8.4
+Typing ADR016 -> WP8.1 -> WP8.3 -> WP8.4
+Typing ADR015 + Typing ADR016 -> WP7.4, WP7.5
+Typing ADR015 + Typing ADR016 + Geometry ADR022 + Geometry ADR023 -> WP7.6
+Typing ADR015 + Typing ADR016 + Typing ADR017 -> WP7.7
 ADR014 -> WP7.3 -> WP7.7
-WP7.2 + WP7.3 + WP7.4 + WP7.5 + WP7.6 -> WP7.7 -> WP6
+WP7.2 + WP7.3 + WP7.4 + WP7.5 + WP7.6 -> WP7.7
 ```
 
 ## Verification requirements per work package
@@ -235,12 +313,14 @@ WP7.2 + WP7.3 + WP7.4 + WP7.5 + WP7.6 -> WP7.7 -> WP6
 ## Final exit criteria
 
 - all ADRs governing implemented work are Accepted;
-- all three packages have zero Pyright errors in the approved scope;
+- core, OCC, CGAL, and libigl have zero Pyright errors in the approved scope;
 - no broad/global suppressions or frozen error baseline exist;
 - NumPy acceptance matches annotations and runtime tests;
 - plugin implementations conform to core contracts;
 - native ABI normalization and ownership are documented and tested;
-- `py.typed` and CGAL stubs are present in built wheels;
+- `py.typed` and all CGAL/libigl native stubs are present in built wheels;
+- CGAL and libigl reach 100% known types for their intentionally exported
+  public surfaces;
 - external installed-package consumers type-check;
 - relevant/full feasible tests, Ruff, formatting, Pyright, docs, and independent
   review pass.

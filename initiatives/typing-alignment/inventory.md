@@ -27,6 +27,32 @@ The initiative should first define the core runtime/static contract, then align
 native boundaries and backend overrides. Removing ignores before those
 contracts are explicit would hide rather than solve the design problems.
 
+## Follow-up structural and native-binding audit
+
+The 2026-11-05 follow-up expanded the initial CGAL/OCC inventory to
+`compas_libigl` and rechecked core constructor interoperability.
+
+- Core has two overlapping vertices/faces tuple aliases:
+  `TriangleMeshInput`, despite its use for results and inability to prove
+  triangle arity, and a NumPy-incompatible tuple-valued `MeshType` that can be
+  confused with the real `Mesh` class.
+- CGAL ships stubs for all 14 extension modules, but verify-types completeness
+  is 83% and runtime inspection found inaccurate list/array, parameter, native
+  vector, and literal contracts.
+- Libigl ships `py.typed` while committed source suppresses all 13 native
+  imports. Only 8 of 21 public wrappers are fully annotated; verify-types
+  completeness is 51.6%.
+- Exact CGAL/libigl `float64` vertex and `int32` face arrays are accepted by
+  `Mesh.from_vertices_and_faces` and `Tessellation`, but not consistently by
+  `Polygon`, `Polyline`, `Pointcloud`, `PolygonalSurface`, or `Polyhedron`.
+- `PolygonalSurface` and `Polyhedron` reject NumPy integer face indices at
+  runtime through a concrete `int` check, making the documented direct CGAL
+  handoff fail without `.tolist()`.
+
+Proposed ADRs 016–017 record the resulting core vocabulary, constructor,
+native-stub, public-wrapper, and installed-artifact decisions. No package
+source correction is authorized while those ADRs remain Proposed.
+
 ## Baseline
 
 | Repository | Python metadata | Pyright scope | Baseline | Typed distribution |

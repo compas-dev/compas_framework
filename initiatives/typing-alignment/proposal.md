@@ -2,12 +2,14 @@
 
 ## Status
 
-Approved. ADRs 001–011 are Accepted and authorize the phased implementation
-described below.
+The base architecture in ADRs 001–014 is Accepted. Refinements in Typing ADRs
+015–017 and Geometry ADRs 022–023 are Proposed; their source slices are not
+authorized until explicit approval.
 
 ## Summary
 
-Align `compas`, `compas_occ`, and `compas_cgal` around one truthful rule:
+Align `compas`, `compas_occ`, `compas_cgal`, and `compas_libigl` around one
+truthful rule:
 
 > Public annotations describe values the public API genuinely accepts; native
 > adapters normalize those values to exact backend buffers; return annotations
@@ -35,7 +37,7 @@ small Protocol only when concrete consumers and tests justify it.
 
 ### Version and tooling baseline
 
-- Python 3.12+ in all three packages.
+- Python 3.12+ in all four packages.
 - Integration packages require `compas>=3,<4`.
 - NumPy 1.26+ as the tested Python 3.12 baseline, plus current NumPy 2.x.
 - Pin Pyright 1.1.414, the version verified in `compas3` for the approved
@@ -122,11 +124,14 @@ Type only stable, versioned public records where it materially helps.
 
 ### Typed distribution
 
-All three packages ship `py.typed`. CGAL continues maintaining native `.pyi`
-files initially, with exported-name parity, typed smoke tests, and wheel-content
-verification. Stub generation is deferred until it demonstrably improves the
-maintained contracts. OCC relies on inline typing and upstream PythonOCC stubs,
-adding only narrow local corrections where evidence requires them.
+The Accepted base requires typed distributions for core, OCC, and CGAL. The
+Proposed ADR 017 extends the complete native-stub contract to libigl and
+strengthens CGAL's existing stubs: if accepted, both native packages maintain
+accurate private `.pyi` files with exported-name parity, typed smoke tests,
+semantic runtime fixtures, and wheel-content verification. Stub generation may
+bootstrap declarations but does not replace review. OCC relies on inline typing
+and upstream PythonOCC stubs, adding only narrow local corrections where
+evidence requires them.
 
 ## Alternatives and tradeoffs
 
@@ -183,6 +188,16 @@ worse APIs. Retain maintained stubs plus parity checks first.
 - Align plugin signatures and result representations with core.
 - Remove suppressions made unnecessary by truthful core buffer types.
 - Verify stubs and typed wheel contents.
+
+### `compas_libigl`
+
+- Add one accurate stub for every private native module.
+- Replace native import suppressions with verified ABI declarations.
+- Align public structural inputs and plugin signatures with core.
+- Type dense arrays, sparse matrices, Python containers, and heterogeneous
+  results as actually returned.
+- Verify the complete public surface and installed stubs, not only a curated
+  consumer subset.
 
 ### `compas_occ`
 
@@ -256,8 +271,13 @@ examples for Python and NumPy inputs and ownership-sensitive results.
 8. Public return normalization.
 9. Typed distribution and native stubs.
 10. Verification and error ratchet.
+11. Truthful independently failing BRep queries.
+12. Structural numerical mesh boundaries rather than representation gates.
+13. Named algorithms and producer-owned discretization controls.
+14. Verified discrete curvature contracts.
 
-ADRs 001–011 are Accepted and authorize the phased implementation below.
+ADRs 001–014 are Accepted and authorize their phased implementation below.
+Typing ADRs 015–017 and Geometry ADRs 022–023 remain Proposed.
 
 ## Phased implementation
 
@@ -270,6 +290,30 @@ ADRs 001–011 are Accepted and authorize the phased implementation below.
 7. Verify source, wheels, native imports, documentation, and downstream use.
 
 See `implementation-plan.md` for dependencies and ownership.
+
+## Proposed refinement: one structural vocabulary and typed native seams
+
+Follow-up evidence from core, CGAL, and libigl shows that the accepted broad
+numeric policy is implemented through inconsistent names and incomplete native
+typing. Proposed ADRs 016–017 refine the architecture without introducing new
+geometry representations:
+
+1. replace the directionally false `TriangleMeshInput` and tuple-valued
+   `MeshType` with one core-owned neutral `VerticesFaces` structural alias;
+2. make protocol names, input unions, and concrete result types visibly
+   distinct;
+3. accept appropriate NumPy coordinate/index buffers consistently in copying
+   core constructors, including NumPy integral faces in `PolygonalSurface` and
+   `Polyhedron`;
+4. require exact private native `.pyi` files for both CGAL and libigl, while
+   public wrappers accept the broad core contract and normalize once; and
+5. verify the complete exported surface and installed artifacts rather than a
+   curated subset of functions.
+
+This refinement keeps face arity as an operation invariant, retains
+`Tessellation`, `PolygonalSurface`, and `Mesh` in their existing representation
+roles, and adds no `TriangleMesh` or `QuadMesh` class. Package source work is
+blocked until the Proposed ADRs are explicitly approved.
 
 ## Proposed architecture correction: representations are not algorithm gates
 

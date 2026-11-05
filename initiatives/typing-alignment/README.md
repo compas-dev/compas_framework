@@ -4,8 +4,8 @@ This initiative aligns Python typing across `compas`, `compas_occ`,
 `compas_cgal`, and `compas_libigl`, with particular attention to NumPy and
 native-library boundaries.
 
-Current phase: **Implementation in progress; WP7.4–WP7.7 awaiting API
-approval**.
+Current phase: **Implementation in progress; exact geometry APIs, core
+structural vocabulary, and native-binding completion awaiting approval**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -13,11 +13,11 @@ approval**.
 - [Architecture decisions](decisions/README.md)
 - [Implementation plan](implementation-plan.md)
 
-The proposal and ADRs 001–014 are approved. ADR 015 is Proposed and defines the
-exact named triangulation functions, aggregate callable, producer controls,
-and direct removals required to finish WP7.4–WP7.7. Those work packages remain
-blocked until the user approves all exact signatures. Other approved work may
-continue.
+ADRs 001–014 are approved. ADRs 015–017 and Geometry ADRs 022–023 are Proposed.
+Together they define the exact geometry signatures, neutral `VerticesFaces`
+vocabulary, NumPy-compatible core constructors, and complete CGAL/libigl native
+stub policy required to finish WP7–WP8. Work governed only by accepted decisions
+may continue; the proposed slices remain blocked.
 
 Known limitation: `compas_cgal` skeletonisation currently produces incorrect
 results. Typing, stub, boundary, and packaging checks for that module do not

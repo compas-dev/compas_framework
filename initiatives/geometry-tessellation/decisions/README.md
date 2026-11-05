@@ -1,9 +1,10 @@
 # Geometry Tessellation Architecture Decisions
 
 This directory decomposes the architecture proposal into independently
-reviewable decisions. ADRs 001–021 are **Accepted**. The target architecture
-prioritizes one clean, coherent API over backward compatibility; breaking
-effects are recorded rather than mitigated through permanent aliases.
+reviewable decisions. ADRs 001–021 are **Accepted**. ADRs 022–023 are
+**Proposed** in response to the new user-authored operation definitions. The target
+architecture prioritizes one clean, coherent API over backward compatibility;
+breaking effects are recorded rather than mitigated through permanent aliases.
 
 ## Decision index
 
@@ -30,6 +31,8 @@ effects are recorded rather than mitigated through permanent aliases.
 | 19 | [019 — Twisted polygon triangulation](019-twisted-polygon-triangulation.md) | Accepted | 003, 007, 017 | Minimum-area 3D dynamic programming versus a misattributed or speculative multi-objective policy. |
 | 20 | [020 — Planar Delaunay naming](020-planar-delaunay-naming.md) | Accepted | 003, 011, 012, 013 | Explicit planar operation names while retaining standard Delaunay strategy names. |
 | 21 | [021 — Default tessellation strategy](021-default-tessellation-strategy.md) | Accepted | 003, 006, 014 | Deterministic Shape/Surface defaults versus mandatory policy or backend-chosen defaults. |
+| 22 | [022 — Operation concepts and conversion boundaries](022-operation-terminology-and-producer-boundaries.md) | Proposed | 001, 002, 009; Typing 012–013 | Representation-oriented `to_*` APIs backed by structured polygonization, discrete triangulation, or BRep tessellation as appropriate. |
+| 23 | [023 — BRep conversion deflection defaults](023-brep-deflection-defaults.md) | Proposed | 022 | Deterministic core tolerance defaults versus mandatory values or backend-owned defaults. |
 
 ## Dependency graph
 
@@ -55,6 +58,8 @@ effects are recorded rather than mitigated through permanent aliases.
 019 <- 003, 007, 017
 020 <- 003, 011, 012, 013
 021 <- 003, 006, 014
+022 <- 001, 002, 009, Typing 012, Typing 013
+023 <- 022
 ```
 
 ## Recommended implementation and review sequence
@@ -87,6 +92,13 @@ Apply and independently review the ADRs in numeric dependency order:
     operation names while retaining standard strategy names.
 12. **Default tessellation:** ADR 021 relaxes the mandatory-strategy rule only
     for ephemeral Shape and Surface tessellation.
+13. **Terminology reconciliation:** review Proposed ADR 022 before further
+    triangulation/discretization implementation. If accepted, it supersedes
+    the listed operation, strategy, and plugin-input clauses while preserving
+    the unaffected representation, trim-ownership, bounds, and clean-break
+    decisions.
+14. **BRep defaults:** review Proposed ADR 023 independently after ADR 022;
+    exact Typing ADR 015 signatures depend on both.
 
 ## Highest-impact accepted decisions
 

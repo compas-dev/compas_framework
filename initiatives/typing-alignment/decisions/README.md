@@ -1,7 +1,8 @@
 # Typing Alignment Architecture Decisions
 
-Decisions 001–014 are **Accepted**. Decision 015 is **Proposed**. WP7.4–WP7.7
-implementation is blocked until its exact API refinement is approved.
+Decisions 001–014 are **Accepted**. Decisions 015–017 are **Proposed**. The
+remaining API migration and native-binding alignment are blocked until their
+applicable refinements are explicitly approved.
 
 ## Decision index
 
@@ -21,7 +22,9 @@ implementation is blocked until its exact API refinement is approved.
 | 12 | [012 — Structural triangle-mesh boundaries](012-structural-triangle-mesh-boundaries.md) | Accepted | 002–006 | Raw structural buffers versus mandatory `Tessellation` objects at numerical boundaries. |
 | 13 | [013 — Explicit algorithms and discretization controls](013-explicit-algorithms-and-discretization-controls.md) | Accepted | 012 | Named operations and producer-specific keywords versus public strategy-object hierarchies. |
 | 14 | [014 — Discrete curvature contracts](014-discrete-curvature-contracts.md) | Accepted | 012 | Keep only verified core Gaussian curvature versus preserving unsupported or incompatible plugin contracts. |
-| 15 | [015 — Exact triangulation and discretization APIs](015-exact-triangulation-and-discretization-apis.md) | Proposed | 012–013 | Duck-typed aggregate callable and exact named/producer signatures versus inventing the missing API during implementation. |
+| 15 | [015 — Exact triangulation and discretization APIs](015-exact-triangulation-and-discretization-apis.md) | Proposed | 012–013, 016, Geometry 022–023 | Duck-typed triangulation plus exact representation-oriented structured/BRep conversion signatures versus inventing the API during implementation. |
+| 16 | [016 — Core structural type vocabulary](016-core-structural-type-vocabulary.md) | Proposed | 002–005, 008, 012 | One neutral NumPy-aware `VerticesFaces` vocabulary and truthful constructors versus overlapping directional/class-like aliases. |
+| 17 | [017 — Native binding stubs and public contracts](017-native-binding-stubs-and-public-contracts.md) | Proposed | 005–006, 008–010, 016 | Exact private native stubs plus coordinated complete wrappers versus package-specific stubs and ignores. |
 
 ## Dependency graph
 
@@ -40,7 +43,9 @@ implementation is blocked until its exact API refinement is approved.
 012 <- 002, 003, 004, 005, 006
 013 <- 012
 014 <- 012
-015 <- 012, 013
+016 <- 002, 003, 004, 005, 008, 012
+015 <- 012, 013, 016, Geometry 022, Geometry 023
+017 <- 005, 006, 008, 009, 010, 016
 ```
 
 ## Recommended review order
@@ -52,8 +57,11 @@ implementation is blocked until its exact API refinement is approved.
 5. Decide how partially supported OCC BRep queries fail (011).
 6. Reconsider triangle-mesh algorithm boundaries and public strategy objects
    in light of direct NumPy use and namespace clarity (012–013).
-7. Approve the exact polygon, Delaunay, shape/surface, and BRep migration table,
-   especially the aggregate triangulator callable (015).
+7. Resolve the shared structural vocabulary and core constructor contract
+   (016), then approve the exact polygon, Delaunay, shape/surface, and BRep
+   migration table, especially the aggregate triangulator callable (015).
+8. Approve the common CGAL/libigl native-stub, public-wrapper, completeness,
+   and artifact-verification policy (017).
 
 ## Highest-impact approvals
 
@@ -64,4 +72,8 @@ implementation is blocked until its exact API refinement is approved.
 - OCC aligns to core signatures rather than preserving incompatible override
   annotations.
 - Ordinary APIs return Python/core values; NumPy outputs remain explicit.
-- All three packages become verified PEP 561 typed distributions.
+- Core, OCC, CGAL, and libigl become verified PEP 561 typed distributions.
+- Core owns one `VerticesFaces` structural type; `TriangleMeshInput` and the
+  tuple-valued `MeshType` are removed without aliases.
+- CGAL and libigl native modules ship accurate stubs, and supported public
+  surfaces reach 100% known type completeness.
