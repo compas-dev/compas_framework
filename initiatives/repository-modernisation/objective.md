@@ -149,9 +149,10 @@ Phase 4 is active. `compas_session` modernization commit
 `10b2d6332eed42b16b57c4d95c7866844cfb90bd` is reviewed and pushed. The
 ordinary `compas_framework` patch is independently reviewed and locally green
 and is now authorized by Accepted ADR 020 but remains uncommitted; its native
-integration gate is likewise authorized by Accepted Geometry ADRs 022–023 and
-Typing ADRs 015–017 but remains unimplemented. Gmsh ADRs 014–016 and ShapeOp
-ADRs 017–019 remain Proposed. Model and viewer migration,
+integration contract is likewise authorized by Accepted Geometry ADRs 022–023
+and Typing ADRs 015–017, while its cross-repository artifact provenance and
+credential boundary remains blocked on Proposed ADR 021. Gmsh ADRs 014–016
+and ShapeOp ADRs 017–019 remain Proposed. Model and viewer migration,
 final cross-package integration, repository settings, publishing, deployment,
 and merges remain pending or explicitly approval-gated.
 

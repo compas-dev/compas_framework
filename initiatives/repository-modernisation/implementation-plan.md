@@ -147,8 +147,10 @@ In parallel where file ownership is independent:
   [ADR 020](decisions/020-framework-host-extras.md) now authorizes removal of
   its incompatible COMPAS 2 host extras and regeneration of the root lock; the
   patch remains uncommitted pending that implementation. The separate native
-  integration gate is authorized by Accepted Geometry ADRs 022–023 and Typing
-  ADRs 015–017 but remains unimplemented;
+  integration contract is authorized by Accepted Geometry ADRs 022–023 and
+  Typing ADRs 015–017, but its cross-repository artifact provenance and
+  credential mechanism remains blocked on Proposed
+  [ADR 021](decisions/021-cross-repository-candidate-artifacts.md);
 - after explicit approval of Proposed ADRs 014–016 in
   [`compas-gmsh.md`](compas-gmsh.md), establish meaningful `compas_gmsh`
   tests and its evidence-based external-runtime matrix; source implementation
