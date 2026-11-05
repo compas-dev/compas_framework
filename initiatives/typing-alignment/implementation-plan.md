@@ -9,6 +9,14 @@ explicit hard boundaries. The remaining exact geometry API, shared vocabulary,
 and native-binding alignment work stays blocked by its applicable Proposed
 decisions.
 
+Hosted draft-PR checks are green for the current pushed checkpoints: core PR
+1539 at `4973c5fcfc53f0217a5fca20d0765e74b30459e2`, OCC PR 32 at
+`5a4cf9701007266e517996181c8476488c4030d9`, CGAL PR 81 at
+`a46eecab71de5dfea6df7380d2eafb7185cc789a`, and libigl PR 47 at
+`86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877`. Those runs prove the
+existing package, platform, and typed-wheel checkpoints only. WP7.4–WP7.7 and
+WP8 remain blocked and unverified under the Proposed decisions below.
+
 ## Work packages
 
 ### WP0 — Baseline, tooling, and fixtures
@@ -73,8 +81,9 @@ topology queries through independently failing contracts as approved in ADR
 
 ### WP4 — CGAL NumPy and native stubs
 
-**Status:** in progress on `initiative/typing-alignment`, based on modernization
-commit `d31ec0f`.
+**Status:** current checkpoint hosted-verified on draft PR 81 at `a46eecab`,
+with the deeper stub correction and 100% completeness contract deferred to
+Proposed WP8.2. The branch is based on modernization commit `d31ec0f`.
 
 **Ownership:** `compas_cgal` wrapper modules, `types.py`, native stubs, native
 boundary tests, packaging.
@@ -96,6 +105,10 @@ verification remains open pending a separate diagnosis and geometry regression
 tests.
 
 ### WP5 — OCC core-contract alignment
+
+**Status:** current pushed checkpoint hosted-verified on draft PR 32 at
+`5a4cf970`; further work that depends on Proposed geometry/type vocabulary
+remains blocked with WP7–WP8.
 
 **Ownership:** separate non-overlapping families:
 
@@ -226,8 +239,20 @@ affected core constructors, static/runtime fixtures, and public documentation.
 
 - replace `TriangleMeshInput` and tuple-valued `MeshType` with the sole neutral
   `VerticesFaces` structural alias;
-- distinguish protocol, accepted-input, neutral structural, and concrete result
-  names according to ADR 016;
+- distinguish protocol, semantic accepted-input, structural interchange, and
+  concrete result names according to ADR 016, using one rich indexed/sliced
+  `CoordinateProtocol` and structurally identical `PointLike`/`VectorLike`
+  unions for positional and directional roles;
+- migrate quaternion and generic linear-algebra consumers to neutral
+  `FloatSequenceLike` over `RealInput`, preserving existing direct arithmetic
+  without new conversions, validation, casts, or ignores for typing;
+- make core `Point` and `Vector` explicitly conform to
+  `CoordinateProtocol[float]`, preserve the runtime-checkable coordinate and
+  point-collection membership used by equality, and use only unparameterized
+  protocols in those runtime guards;
+- inventory every indexed consumer and migrate it to a semantic alias or exact
+  result type with accepted/error static fixtures and runtime duck fixtures;
+- forbid runtime protocols as general input-validation gates;
 - migrate every core and integration consumer without aliases or shims;
 - make copying core constructors accept the approved NumPy coordinate/index
   values and align corresponding setters that use the same normalization path;

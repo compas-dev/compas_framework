@@ -23,7 +23,7 @@ applicable refinements are explicitly approved.
 | 13 | [013 — Explicit algorithms and discretization controls](013-explicit-algorithms-and-discretization-controls.md) | Accepted | 012 | Named operations and producer-specific keywords versus public strategy-object hierarchies. |
 | 14 | [014 — Discrete curvature contracts](014-discrete-curvature-contracts.md) | Accepted | 012 | Keep only verified core Gaussian curvature versus preserving unsupported or incompatible plugin contracts. |
 | 15 | [015 — Exact triangulation and discretization APIs](015-exact-triangulation-and-discretization-apis.md) | Proposed | 012–013, 016, Geometry 022–023 | Duck-typed triangulation plus exact representation-oriented structured/BRep conversion signatures versus inventing the API during implementation. |
-| 16 | [016 — Core structural type vocabulary](016-core-structural-type-vocabulary.md) | Proposed | 002–005, 008, 012 | One neutral NumPy-aware `VerticesFaces` vocabulary and truthful constructors versus overlapping directional/class-like aliases. |
+| 16 | [016 — Core structural type vocabulary](016-core-structural-type-vocabulary.md) | Proposed | 002–005, 008, 012 | One layered coordinate protocol with semantic NumPy-aware `PointLike`/`VectorLike` aliases and one neutral `VerticesFaces` vocabulary versus overlapping names. |
 | 17 | [017 — Native binding stubs and public contracts](017-native-binding-stubs-and-public-contracts.md) | Proposed | 005–006, 008–010, 016 | Exact private native stubs plus coordinated complete wrappers versus package-specific stubs and ignores. |
 
 ## Dependency graph

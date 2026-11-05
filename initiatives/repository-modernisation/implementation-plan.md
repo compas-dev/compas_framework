@@ -1,8 +1,9 @@
 # Repository Modernisation Implementation Plan
 
-Status: approved; Phase 0 complete, Phase 2 independently reviewed Ready and
-pushed, and Phase 1 locally Ready with hosted verification complete except for
-`compas` and the explicitly deferred CGAL macOS Intel target
+Status: implementation in progress. Phases 0–3 are complete through reviewed
+initiative branches and hosted draft-PR evidence. Phase 4 is active, Phase 5
+has a hosted-verified libigl checkpoint, and Phase 6 remains pending. No
+initiative changes have been merged into a target/default branch or published.
 
 ## Dependencies
 
@@ -17,9 +18,10 @@ access and explicit approval.
 
 Status: complete. The measured results, exact Phase 1 debt manifests, migration
 surfaces, rollback commits, and environmental limitations are recorded in
-[baseline.md](baseline.md). Recoverable preservation remains an explicit gate
-before later edits to the dirty `compas_framework` and `compas_session`
-worktrees; the clean Phase 1 reference repositories are not blocked.
+[baseline.md](baseline.md). The session and framework changes use isolated
+worktrees, preserving the original local branches and the dirty framework
+coordination worktree. The clean Phase 1 reference repositories are not
+blocked.
 
 Record current tests, Ruff, formatter, Pyright, docs, source/wheel builds,
 native imports, workflow behavior, supported matrices, and release settings for
@@ -33,9 +35,8 @@ Outputs: baseline report, exact migration file list, rollback point.
 
 ## Phase 1: correct and validate the three references
 
-Status: locally Ready; hosted verification remains. Final local review is
-recorded below. The current
-`compas-actions` v2 consumer pin is
+Status: complete through local review and hosted draft-PR verification. The
+current `compas-actions` v2 consumer pin is
 `5c64e6e2b576a1232d28fed47d9478ca8eb63b2d`; it is pushed and remotely
 resolvable.
 
@@ -59,28 +60,29 @@ repository-owned Invoke conveniences may remain, normally run as
 own environment, dependency, system, or native provisioning, and broader Invoke
 removal requires a coordinated team decision.
 
-### Final local review state
+### Reviewed and hosted-verified checkpoints
 
-- **`compas`: Ready locally.** The reviewed modernization checkpoint is
-  `943d9fdc366bf4bc55a2942dad259d112b23ab6c` on
-  `initiative/repository-modernisation`. A successful hosted run using the
-  immutable shared-action pin remains required.
-- **`compas_occ`: Ready, including hosted verification.** Commit `572fa1b5` on
-  `initiative/typing-alignment` closes the modernization gates on top of the
-  typing-alignment successor: tests, blocking Pyright, Ruff, strict docs,
-  frozen lock, wheel/sdist build, and Twine checks pass locally. Draft PR 32
-  passes release policy, strict docs, and the Linux, macOS, and Windows Conda
-  test matrix with the pinned shared actions.
-- **`compas_cgal`: Ready with bounded hosted evidence.** Modernization commit
-  `d31ec0f` passes hosted Linux x86_64, Windows AMD64, and macOS ARM64 wheel
-  builds, the sdist build, documentation, release-policy, and quality checks.
-  macOS Intel remains explicitly deferred and unverified because a suitable
-  hosted runner has not been available; this is not evidence that the target
-  passes. The successor branch `initiative/typing-alignment` was created from
-  `d31ec0f` so typing work can proceed without waiting for that runner.
+- **`compas`: Ready on the initiative successor.** The reviewed modernization
+  checkpoint is `943d9fdc366bf4bc55a2942dad259d112b23ab6c`. Draft
+  [PR 1539](https://github.com/compas-dev/compas/pull/1539) at
+  `4973c5fcfc53f0217a5fca20d0765e74b30459e2` passes the full Linux, macOS,
+  and Windows Python 3.12–3.14 matrix, minimum/current NumPy jobs, coverage,
+  changelog, release-metadata, and package-build checks.
+- **`compas_occ`: Ready on the initiative successor.** Modernization checkpoint
+  `572fa1b5` is included in draft
+  [PR 32](https://github.com/compas-dev/compas_occ/pull/32) at
+  `5a4cf9701007266e517996181c8476488c4030d9`. Its strict docs,
+  release-metadata, and Linux, macOS, and Windows PythonOCC test jobs pass.
+- **`compas_cgal`: Ready on the initiative successor.** Modernization checkpoint
+  `d31ec0f` is included in draft
+  [PR 81](https://github.com/compas-dev/compas_cgal/pull/81) at
+  `a46eecab71de5dfea6df7380d2eafb7185cc789a`. Quality, policy, sdist,
+  Linux, Windows, macOS ARM64, and macOS Intel wheel and smoke jobs all pass.
+  The earlier macOS Intel evidence gap is therefore closed.
 
-Phase 1 is not complete. Local readiness must not be reported as hosted or
-distributed migration completion.
+This evidence proves the Phase 1 repository and workflow gates at the cited
+heads. It is not evidence of a merge, published distribution, documentation
+deployment, or repository-setting configuration.
 
 ## Phase 2: prepare shared actions
 
@@ -112,29 +114,41 @@ its hosted run succeeds with that SHA.
 
 ## Phase 3: finish OCC and CGAL workflow migration
 
-Status: OCC is hosted-verified at commit `572fa1b5`; CGAL's hosted evidence at
-commit `d31ec0f` covers Linux, Windows, macOS ARM, sdist, documentation, policy,
-and quality. macOS Intel remains explicitly deferred and unverified because of
-hosted-runner availability.
+Status: complete through hosted draft-PR verification. OCC's modernization
+checkpoint `572fa1b5` is covered by the fully green PR 32 successor head, and
+CGAL's `d31ec0f` checkpoint is covered by the fully green PR 81 successor head,
+including macOS Intel.
 
 OCC's groups, uv lock, commands, Pyright/docs debt, workflows, and
-PythonOCC-bounded matrix are verified locally and through draft PR 32. CGAL's dependency consolidation,
-visible CMake/cibuildwheel workflows, and exact-artifact promotion flow are
-locally verified. Hosted PR runs have proved the available CGAL native
-wheel/sdist matrix except for macOS Intel; that target remains deferred rather
-than treated as passing. Trusted-publishing configuration and any
-publishing dry run remain explicitly approval-gated.
+PythonOCC-bounded matrix are verified locally and through draft PR 32. CGAL's
+dependency consolidation, visible CMake/cibuildwheel workflows, exact-artifact
+promotion, full native wheel matrix, and sdist path are verified locally and
+through draft PR 81. Trusted-publisher and protected-environment settings, any
+publication, and merges remain explicitly outside this evidence.
 
 ## Phase 4: pure and hybrid core repositories
 
+Status: in progress. `compas_session` is reviewed, committed, and pushed;
+`compas_framework` has a reviewed but uncommitted ordinary modernization patch;
+Gmsh has approval-ready package ADRs; model and viewer remain pending.
+
 In parallel where file ownership is independent:
 
-- migrate `compas_session` to the pure uv profile and from Sphinx to MkDocs;
+- `compas_session`: modernization commit
+  `10b2d6332eed42b16b57c4d95c7866844cfb90bd` is pushed on
+  `initiative/repository-modernisation`. Its frozen lock, 16-test suite,
+  Pyright, Ruff, doctest, strict MkDocs, wheel/sdist verification, Twine, and
+  isolated installed-wheel import passed locally and independent review found
+  no remaining code findings. Protected environments, trusted publishing,
+  required checks, and Pages/Mike settings remain owner configuration work;
 - migrate `compas_framework` ordinary checks to the pure profile and add a
   separate coordinated native integration/release-order job; the ordinary
-  patch remains blocked on Proposed
+  patch is independently reviewed and locally green, but remains uncommitted
+  and blocked on Proposed
   [ADR 020](decisions/020-framework-host-extras.md), which resolves its
-  incompatible COMPAS 2 host extras and root lock;
+  incompatible COMPAS 2 host extras and root lock. The separate native
+  integration gate remains uncommitted and blocked on Proposed Geometry ADRs
+  022–023 and Typing ADRs 015–017;
 - after explicit approval of Proposed ADRs 014–016 in
   [`compas-gmsh.md`](compas-gmsh.md), establish meaningful `compas_gmsh`
   tests and its evidence-based external-runtime matrix; source implementation
@@ -146,22 +160,26 @@ In parallel where file ownership is independent:
 
 ## Phase 5: native core repositories
 
-- `compas_libigl` is active in this phase as of 2026-11-05. Its
-  `initiative/repository-modernisation` branch starts independently from
-  `c3-upgrade` commit `70acf99`; the later typing branch is an integration
-  successor and must not be duplicated into this mechanical modernization
-  work.
-- For libigl: replace the moving upstream `main` source with a reviewed
-  immutable revision; record verified hashes for libigl, Eigen, and Clipper;
-  reconcile Python dependency sources and commit `uv.lock`; preserve thin
-  Invoke aliases over direct `uv run` commands; migrate Sphinx/RST to strict
-  MkDocs/mkdocstrings Markdown; adopt immutable action pins and repository-owned
-  native provisioning; verify all 13 native modules in every wheel and clean
-  sdist; promote exact tested artifacts without rebuilding.
-- Integrate the verified libigl modernization checkpoint into
-  `initiative/typing-alignment` before making Pyright and typed-wheel checks
-  blocking. Preserve the current Python 3.12+ and stable-ABI intent unless
-  wheel evidence demonstrates a change requiring explicit approval.
+Status: in progress. The libigl modernization/typing successor is hosted
+verified; ShapeOp source work remains blocked on Proposed ADRs 017–019.
+
+- `compas_libigl` entered this phase on an independent
+  `initiative/repository-modernisation` branch from `c3-upgrade` commit
+  `70acf99`; the later typing branch is its integration successor. Draft
+  [PR 47](https://github.com/compas-dev/compas_libigl/pull/47) at
+  `86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877` passes policy, quality,
+  typing, sdist, wheel typing, and Linux, Windows, and macOS ARM64 wheel/smoke
+  checks. This closes the modernization artifact evidence at that checkpoint;
+  the newly Proposed native-stub completeness work belongs to typing ADR 017.
+- That checkpoint uses reviewed immutable libigl, Eigen, and Clipper sources,
+  reconciled dependency metadata and lock, thin Invoke aliases, strict MkDocs,
+  immutable workflow pins, repository-owned native provisioning, native-module
+  wheel and clean-sdist verification, and exact tested-artifact promotion.
+- The modernization checkpoint is integrated into
+  `initiative/typing-alignment`; Pyright and typed-wheel checks are blocking at
+  the cited PR head. Preserve the current Python 3.12+ and stable-ABI intent
+  unless later wheel evidence demonstrates a change requiring explicit
+  approval.
 - After explicit approval of Proposed ADRs 017–019 in
   [`shapeop-modernisation-proposal.md`](shapeop-modernisation-proposal.md),
   resolve ShapeOp's Python-support/native-ABI inconsistency, migrate its Sphinx

@@ -22,7 +22,7 @@ are accepted or implemented.
 ### Default operation
 
 ```python
-def triangulate_polygon(vertices: CoordinatesInput) -> list[list[int]]: ...
+def triangulate_polygon(vertices: PointsLike) -> list[list[int]]: ...
 ```
 
 The function:
@@ -37,23 +37,23 @@ The function:
 
 ```python
 def triangulate_quadrilateral(
-    vertices: CoordinatesInput,
+    vertices: PointsLike,
     *,
     diagonal: Literal["shortest", "02", "13"] = "shortest",
 ) -> list[list[int]]: ...
 
 def triangulate_polygon_earclip(
-    vertices: CoordinatesInput,
+    vertices: PointsLike,
 ) -> list[list[int]]: ...
 
 def triangulate_polygon_projected(
-    vertices: CoordinatesInput,
+    vertices: PointsLike,
     *,
     max_deviation: float,
 ) -> list[list[int]]: ...
 
 def triangulate_polygon_minimum_area(
-    vertices: CoordinatesInput,
+    vertices: PointsLike,
 ) -> list[list[int]]: ...
 ```
 
@@ -104,7 +104,7 @@ the requested diagonal are nondegenerate.
 Choose option 5:
 
 ```python
-Triangulator = Callable[[CoordinatesInput], list[list[int]]]
+Triangulator = Callable[[PointsLike], list[list[int]]]
 
 def triangulated(
     self,
@@ -160,26 +160,26 @@ intersecting rings rather than silently repairing them.
 
 ```python
 def delaunay_triangulation(
-    points: CoordinatesInput,
+    points: PointsLike,
     *,
     frame: Frame | None = None,
 ) -> VerticesFaces: ...
 
 def constrained_delaunay_triangulation(
-    boundary: CoordinatesInput,
+    boundary: PointsLike,
     *,
-    holes: CoordinatesCollectionInput = (),
-    constraints: CoordinatesCollectionInput = (),
-    points: CoordinatesInput = (),
+    holes: PointGroupsLike = (),
+    constraints: PointGroupsLike = (),
+    points: PointsLike = (),
     frame: Frame | None = None,
 ) -> VerticesFaces: ...
 
 def conforming_delaunay_triangulation(
-    boundary: CoordinatesInput,
+    boundary: PointsLike,
     *,
-    holes: CoordinatesCollectionInput = (),
-    constraints: CoordinatesCollectionInput = (),
-    points: CoordinatesInput = (),
+    holes: PointGroupsLike = (),
+    constraints: PointGroupsLike = (),
+    points: PointsLike = (),
     max_edge_length: float | None = None,
     frame: Frame | None = None,
 ) -> VerticesFaces: ...
@@ -325,7 +325,7 @@ polygonization.
 Numerical mesh operations use the structural contract accepted in ADR 012:
 
 ```python
-VerticesFaces = tuple[CoordinatesInput, IndicesCollectionInput]
+VerticesFaces = tuple[PointsLike, IndexGroupsLike]
 ```
 
 They accept suitable Python sequences and NumPy buffers directly and return

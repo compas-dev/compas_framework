@@ -48,6 +48,23 @@ The 2026-11-05 follow-up expanded the initial CGAL/OCC inventory to
 - `PolygonalSurface` and `Polyhedron` reject NumPy integer face indices at
   runtime through a concrete `int` check, making the documented direct CGAL
   handoff fail without `.tolist()`.
+- Pyright 1.1.414 rejects lists, tuples, memoryviews, COMPAS `Point`/`Vector`,
+  and NumPy arrays against a point protocol that requires only the exact
+  signature `__getitem__(int) -> SupportsFloat`, because their real indexing
+  signatures include slices or overloads. A length-plus-iteration protocol
+  accepts those values but cannot prove current indexing. A measured layered
+  design passes both cases: one rich `CoordinateProtocol[T_co]` overloads
+  integer access to `T_co` and slice access to `Sequence[T_co]`, while semantic
+  `PointLike` and `VectorLike` aliases add ordinary `Sequence` and
+  `NumericArray` branches. Nested NumPy matrices still require explicit array
+  branches because of NumPy stub limitations.
+- A follow-up arithmetic probe confirmed that `SupportsFloat` cannot type the
+  direct multiplication and addition used by existing consumers without new
+  runtime conversion. The same layered design with `RealInput` passed Python
+  and NumPy values, indexing, slicing, nominal point implementations, and
+  direct arithmetic with zero errors. ADR 016 therefore keeps neutral
+  quaternion/generic inputs under `FloatSequenceLike` and introduces no new
+  runtime conversion for typing.
 
 Proposed ADRs 016–017 record the resulting core vocabulary, constructor,
 native-stub, public-wrapper, and installed-artifact decisions. No package

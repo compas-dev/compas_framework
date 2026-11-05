@@ -52,6 +52,24 @@ inputs, coordinate collections, and index collections. The aliases include
 NumPy arrays and NumPy scalar values only where runtime behavior intentionally
 supports them.
 
+Proposed ADR 016 refines the coordinate vocabulary around one rich
+`CoordinateProtocol`: length, iteration, integer indexing, and slicing with
+distinct scalar and `Sequence` overloads. Semantic `PointLike` and
+`VectorLike` aliases combine that protocol with ordinary `Sequence` and
+`NumericArray` branches. The aliases accept the same structures but make
+position and direction roles legible in signatures. This layered form is
+necessary because an exact protocol alone rejects built-ins and NumPy arrays,
+while an iteration-only protocol cannot prove current indexing. Explicit
+NumPy branches remain necessary where NumPy's stubs do not satisfy nested
+collection protocols.
+
+Their shared element boundary is `RealInput`, so existing Python and NumPy
+scalar arithmetic remains unchanged and typing introduces no conversion.
+Generic linear-algebra and quaternion inputs use the neutral
+`FloatSequenceLike` name over the same capability instead of a geometric alias.
+`SupportsFloat` is reserved for an individual scalar parameter only when its
+existing implementation already performs that conversion.
+
 Do not use `numpy.typing.ArrayLike` as the default geometry input type. It is
 appropriate for APIs that really call `np.asarray` on broad numerical input,
 but it overstates many ordinary geometry contracts.
@@ -218,8 +236,8 @@ worse APIs. Retain maintained stubs plus parity checks first.
 - Typed consumers may see deliberate changes where current annotations are
   wrong or backend overrides are incompatible.
 - Python/NumPy metadata alignment removes unsupported combinations.
-- Python scalar normalization for ordinary APIs is a small runtime change and
-  requires explicit tests.
+- Python scalar return normalization for ordinary APIs is a small runtime
+  change and requires explicit tests.
 - Adding `py.typed` exposes annotations to downstream checkers; wheel checks
   must precede that claim.
 - OCC stale-API and override corrections may reveal real runtime defects and

@@ -125,42 +125,39 @@ CI and should pass its applicable:
 
 ## Current status
 
-Implementation in progress. ADRs 001–013 are Accepted and Phase 0 is complete.
-Recoverable preservation points remain required before
-later edits to the dirty `compas_framework` and `compas_session` worktrees.
-Phase 1 modernization of the three reference repositories is locally complete.
-OCC's hosted workflow evidence is complete. CGAL modernization commit `d31ec0f`
-passes hosted Linux x86_64, Windows AMD64, and macOS ARM64 wheels, sdist,
-documentation, release-policy, and quality checks. Its macOS Intel target is
-explicitly deferred and remains unverified because a suitable hosted runner has
-not been available; `compas` also retains hosted gates. The bounded `compas-actions` v2
-prerequisite is independently reviewed Ready. Its initial commit is
+Implementation is in progress. ADRs 001–013 are Accepted. Phases 0–3 are
+complete through reviewed initiative branches and hosted draft-PR evidence;
+the initial migration wave and final integration are not complete. The bounded
+`compas-actions` v2 prerequisite is independently reviewed Ready. Its initial
+commit is
 `42216af0d21a53f0c234996b2fe664b1548af9eb`; reviewed follow-up commit
 `5c64e6e2b576a1232d28fed47d9478ca8eb63b2d` adds prepared Conda documentation
 environments and is the current consumer pin. Both commits are on branch
 `initiative/repository-modernisation` and have been pushed. The follow-up SHA
 is the current remotely resolvable action pin.
 
-The final local Phase 1 review marks all three references Ready locally.
-`compas` is checkpointed at `943d9fdc366bf4bc55a2942dad259d112b23ab6c`.
-`compas_occ` is checkpointed at `572fa1b5` on
-`initiative/typing-alignment`; its former Pyright and strict-documentation
-blockers are resolved and draft PR 32 passes policy, strict docs, and the Linux,
-macOS, and Windows test matrix. `compas_cgal` is checkpointed at `d31ec0f` on
-`initiative/repository-modernisation`; its reproducible lock, exact-candidate
-boundary, native artifact verification, and build-once release flow are locally
-reviewed Ready. Branch `initiative/typing-alignment` was created from that
-checkpoint. Phase 1 is not complete while the remaining `compas` hosted gates
-and deferred CGAL macOS Intel evidence remain open. Direct local commands
-remain canonical; shared actions
-retain bounded repeated CI mechanics without hiding repository-owned
-orchestration. Repository settings, publishing, deployment, and merges still
-require explicit approval.
+The three reference checkpoints are covered by fully green hosted successor
+draft PRs: core PR 1539 at
+`4973c5fcfc53f0217a5fca20d0765e74b30459e2`, OCC PR 32 at
+`5a4cf9701007266e517996181c8476488c4030d9`, and CGAL PR 81 at
+`a46eecab71de5dfea6df7380d2eafb7185cc789a`. CGAL's macOS Intel wheel and
+smoke jobs now pass, closing the former runner gap. Direct local commands remain
+canonical; shared actions retain bounded repeated CI mechanics without hiding
+repository-owned orchestration.
 
-`compas_libigl` joined the active modernization scope on 2026-11-05. Its
-`initiative/repository-modernisation` branch begins at `c3-upgrade` commit
-`70acf99`, independently of its later typing branch. The initial blocking issue
-is the mutable libigl `main` source in CMake; reproducible native inputs precede
-dependency, documentation, CI, wheel, and release modernization. The accepted
-ADRs apply unchanged. A new decision is required only if evidence recommends a
-different Python, stable-ABI, or public platform-support contract.
+Phase 4 is active. `compas_session` modernization commit
+`10b2d6332eed42b16b57c4d95c7866844cfb90bd` is reviewed and pushed. The
+ordinary `compas_framework` patch is independently reviewed and locally green
+but uncommitted pending Proposed ADR 020; its native integration gate also
+depends on Proposed Geometry ADRs 022–023 and Typing ADRs 015–017. Gmsh ADRs
+014–016 and ShapeOp ADRs 017–019 remain Proposed. Model and viewer migration,
+final cross-package integration, repository settings, publishing, deployment,
+and merges remain pending or explicitly approval-gated.
+
+`compas_libigl` joined the active modernization scope on 2026-11-05 from
+`c3-upgrade` commit `70acf99`. Its successor draft PR 47 at
+`86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877` now passes policy, quality,
+typing, sdist, wheel-typing, and Linux, Windows, and macOS ARM64 wheel/smoke
+checks. The additional native-stub truthfulness and completeness work discovered
+later is tracked by Proposed Typing ADR 017 rather than being retroactively
+claimed by this modernization checkpoint.
