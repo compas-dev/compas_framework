@@ -2,12 +2,11 @@
 
 ## Status
 
-ADRs 001–014 are Accepted. ADRs 015–017 and Geometry ADRs 022–023 are
-Proposed. Work governed only by accepted decisions may proceed in dependency
-order, preserving duck typing through Python code and limiting normalization to
-explicit hard boundaries. The remaining exact geometry API, shared vocabulary,
-and native-binding alignment work stays blocked by its applicable Proposed
-decisions.
+ADRs 001–017 and Geometry ADRs 022–023 are Accepted. Remaining work may proceed
+in dependency order, preserving duck typing through Python code and limiting
+normalization to explicit hard boundaries. Acceptance authorizes the exact
+geometry API, shared vocabulary, and native-binding alignment work; it does not
+mark those source or verification slices complete.
 
 Hosted draft-PR checks are green for the current pushed checkpoints: core PR
 1539 at `4973c5fcfc53f0217a5fca20d0765e74b30459e2`, OCC PR 32 at
@@ -15,7 +14,7 @@ Hosted draft-PR checks are green for the current pushed checkpoints: core PR
 `a46eecab71de5dfea6df7380d2eafb7185cc789a`, and libigl PR 47 at
 `86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877`. Those runs prove the
 existing package, platform, and typed-wheel checkpoints only. WP7.4–WP7.7 and
-WP8 remain blocked and unverified under the Proposed decisions below.
+WP8 are now authorized but remain unimplemented and unverified.
 
 ## Work packages
 
@@ -82,8 +81,8 @@ topology queries through independently failing contracts as approved in ADR
 ### WP4 — CGAL NumPy and native stubs
 
 **Status:** current checkpoint hosted-verified on draft PR 81 at `a46eecab`,
-with the deeper stub correction and 100% completeness contract deferred to
-Proposed WP8.2. The branch is based on modernization commit `d31ec0f`.
+with the deeper stub correction and 100% completeness contract scheduled in
+accepted WP8.2. The branch is based on modernization commit `d31ec0f`.
 
 **Ownership:** `compas_cgal` wrapper modules, `types.py`, native stubs, native
 boundary tests, packaging.
@@ -107,8 +106,8 @@ tests.
 ### WP5 — OCC core-contract alignment
 
 **Status:** current pushed checkpoint hosted-verified on draft PR 32 at
-`5a4cf970`; further work that depends on Proposed geometry/type vocabulary
-remains blocked with WP7–WP8.
+`5a4cf970`; further work that depends on the accepted geometry/type vocabulary
+remains pending with WP7–WP8.
 
 **Ownership:** separate non-overlapping families:
 
@@ -149,11 +148,10 @@ decision governing the integrated public/native surface.
 
 ### WP7 — Representation and numerical-boundary correction
 
-**Status:** partially approved. ADRs 012–014 are Accepted. Typing ADRs 015–016
-and Geometry ADRs 022–023 are Proposed and together supply the exact API and
-structural vocabulary needed for WP7.4–WP7.7. Those work packages remain
-blocked pending the applicable explicit approvals. Retained `Tessellation`
-representation semantics remain in scope.
+**Status:** approved and in progress. ADRs 012–016 and Geometry ADRs 022–023
+supply the exact API and structural vocabulary needed for WP7.4–WP7.7. Those
+work packages are authorized in dependency order and remain incomplete.
+Retained `Tessellation` representation semantics remain in scope.
 
 #### Affected-API migration table
 
@@ -186,22 +184,23 @@ representation semantics remain in scope.
    with core. Accepted ADR 014 retains only verified core Gaussian angle defect
    and removes unsupported mean/principal core hooks after the verified libigl
    modernization checkpoint is integrated.
-4. **WP7.4 — Named planar triangulation.** **Blocked by Proposed ADRs 015–016.**
+4. **WP7.4 — Named planar triangulation.** **Authorized by Accepted ADRs
+   015–016.**
    Replace nominal Delaunay flags and
    migrate CGAL plus `Mesh.from_points` in one cross-package slice. Reject
    non-planar inputs outside tolerance and keep non-planar polygon
    triangulation on its separate path.
-5. **WP7.5 — Polygon triangulation operations.** **Blocked by Proposed ADRs
+5. **WP7.5 — Polygon triangulation operations.** **Authorized by Accepted ADRs
    015–016.** Replace nested strategy objects using the approved named-operation
    and aggregate-callable table for `Polygon`, `PolygonalSurface`,
    `Polyhedron`, and `Mesh`. Migrate `PlanarRegion` separately to its
    no-argument `triangulated`, `to_polygonal_surface`, and `to_mesh` contract;
    it does not accept the aggregate triangulator callable.
-6. **WP7.6 — Producer-specific controls.** **Blocked by Proposed Typing ADRs
+6. **WP7.6 — Producer-specific controls.** **Authorized by Accepted Typing ADRs
    015–016 and Geometry ADRs 022–023.** Migrate shape/surface representation
    conversions, then core BRep and OCC together. Preserve documented
    no-argument generic conversions through deterministic defaults.
-7. **WP7.7 — Export and integration cleanup.** **Blocked by Proposed ADRs
+7. **WP7.7 — Export and integration cleanup.** **Authorized by Accepted ADRs
    015–017.** Remove obsolete decorators,
    strategy classes, exports, serialization fixtures, and documentation only
    after their dependents have migrated.
@@ -218,10 +217,9 @@ needs for process safety, followed by native success/failure propagation and
 result-shape verification. Geometric validity remains a documented algorithm
 precondition unless an operation explicitly requires a different contract.
 
-No additional architectural approval is required for the behavior already
-migrated under ADRs 012–014, but its superseded alias vocabulary is corrected
-only after ADR 016 approval. WP7.4–WP7.7 require approval of their listed
-Typing and Geometry ADRs before source migration. Stop if a released
+No additional architectural approval is required for WP7.1–WP7.7. Correct the
+superseded alias vocabulary under accepted ADR 016 and execute the remaining
+work packages in dependency order. Stop if a released
 compatibility obligation, a result
 requiring metadata beyond buffers, a backend incompatibility, a new
 representation class, an implicit conversion, or a second public path becomes
@@ -229,8 +227,8 @@ necessary.
 
 ### WP8 — Shared vocabulary and native-binding truthfulness
 
-**Status:** Proposed. No package source work is authorized until ADRs 016–017
-are explicitly accepted.
+**Status:** Accepted and authorized; source implementation and verification are
+pending.
 
 #### WP8.1 — Core vocabulary and constructor interoperability
 

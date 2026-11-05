@@ -75,4 +75,6 @@ that package remains incomplete.
 ## Current status
 
 Reconnaissance and architecture are complete. The proposal and ADRs 001–006
-await explicit approval. No implementation may begin before approval.
+are Accepted. Implementation is authorized for the approved six-package
+Waves 0–1 scope; it remains incomplete and subject to the dependency and
+verification gates in the implementation plan.

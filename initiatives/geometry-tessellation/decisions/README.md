@@ -1,10 +1,11 @@
 # Geometry Tessellation Architecture Decisions
 
 This directory decomposes the architecture proposal into independently
-reviewable decisions. ADRs 001–021 are **Accepted**. ADRs 022–023 are
-**Proposed** in response to the new user-authored operation definitions. The target
-architecture prioritizes one clean, coherent API over backward compatibility;
-breaking effects are recorded rather than mitigated through permanent aliases.
+reviewable decisions. ADRs 001–023 are **Accepted**. ADRs 022–023 reconcile
+the earlier architecture with the user-authored operation definitions. The
+target architecture prioritizes one clean, coherent API over backward
+compatibility; breaking effects are recorded rather than mitigated through
+permanent aliases.
 
 ## Decision index
 
@@ -31,8 +32,8 @@ breaking effects are recorded rather than mitigated through permanent aliases.
 | 19 | [019 — Twisted polygon triangulation](019-twisted-polygon-triangulation.md) | Accepted | 003, 007, 017 | Minimum-area 3D dynamic programming versus a misattributed or speculative multi-objective policy. |
 | 20 | [020 — Planar Delaunay naming](020-planar-delaunay-naming.md) | Accepted | 003, 011, 012, 013 | Explicit planar operation names while retaining standard Delaunay strategy names. |
 | 21 | [021 — Default tessellation strategy](021-default-tessellation-strategy.md) | Accepted | 003, 006, 014 | Deterministic Shape/Surface defaults versus mandatory policy or backend-chosen defaults. |
-| 22 | [022 — Operation concepts and conversion boundaries](022-operation-terminology-and-producer-boundaries.md) | Proposed | 001, 002, 009; Typing 012–013 | Representation-oriented `to_*` APIs backed by structured polygonization, discrete triangulation, or BRep tessellation as appropriate. |
-| 23 | [023 — BRep conversion deflection defaults](023-brep-deflection-defaults.md) | Proposed | 022 | Deterministic core tolerance defaults versus mandatory values or backend-owned defaults. |
+| 22 | [022 — Operation concepts and conversion boundaries](022-operation-terminology-and-producer-boundaries.md) | Accepted | 001, 002, 009; Typing 012–013 | Representation-oriented `to_*` APIs backed by structured polygonization, discrete triangulation, or BRep tessellation as appropriate. |
+| 23 | [023 — BRep conversion deflection defaults](023-brep-deflection-defaults.md) | Accepted | 022 | Deterministic core tolerance defaults versus mandatory values or backend-owned defaults. |
 
 ## Dependency graph
 
@@ -92,13 +93,13 @@ Apply and independently review the ADRs in numeric dependency order:
     operation names while retaining standard strategy names.
 12. **Default tessellation:** ADR 021 relaxes the mandatory-strategy rule only
     for ephemeral Shape and Surface tessellation.
-13. **Terminology reconciliation:** review Proposed ADR 022 before further
-    triangulation/discretization implementation. If accepted, it supersedes
-    the listed operation, strategy, and plugin-input clauses while preserving
-    the unaffected representation, trim-ownership, bounds, and clean-break
+13. **Terminology reconciliation:** implement accepted ADR 022 before further
+    triangulation/discretization integration. It supersedes the listed
+    operation, strategy, and plugin-input clauses while preserving the
+    unaffected representation, trim-ownership, bounds, and clean-break
     decisions.
-14. **BRep defaults:** review Proposed ADR 023 independently after ADR 022;
-    exact Typing ADR 015 signatures depend on both.
+14. **BRep defaults:** implement accepted ADR 023 after ADR 022; exact accepted
+    Typing ADR 015 signatures depend on both.
 
 ## Highest-impact accepted decisions
 
@@ -106,40 +107,34 @@ Apply and independently review the ADRs in numeric dependency order:
   operation result and avoids confusion with serializable `PolygonalSurface`
   and half-edge `Mesh`; reject additional `TriangleSurface`, `TriangleMesh`,
   `QuadMesh`, and universal `TessellationResult` containers (ADR 002).
-- All policies share `TessellationStrategy(Data)`: `Native` for fixed topology,
-  `UGrid` for one-parameter shapes, `UVGrid` for two-parameter geometry, plus
-  `Deflection` and `Adaptive`. `Capsule`, `Sphere`, and `Torus` use both
-  `UVGrid` dimensions. Invalid type/dimension combinations error and dimensions
-  are never ignored (ADR 003).
+- Public strategy hierarchies are removed. Shapes and untrimmed surfaces use
+  producer-owned cell-count keywords; BReps use explicit linear/angular
+  deflection keywords; numerical triangulation uses named functions and
+  structural buffers (ADR 022 and Typing ADR 015, superseding affected clauses
+  of ADR 003).
 - Runtime capability discovery and its reserved error schemas are removed
   without replacement. Producers validate explicit strategies directly and
   document support; discovery or measured-error results return only for a
   concrete future consumer and backend source (ADR 016, superseding ADR 004).
-- Discretization is the broad umbrella; continuous surface-like geometry uses
-  fresh, non-mutating `polygonize(strategy) -> PolygonalSurface` for
-  independent serializable natural-cell topology; curves remain `Polyline`,
-  and `Mesh` requires an explicit `.to_mesh()` conversion (ADR 005).
-- Direct `tessellate(strategy) -> Tessellation` remains canonical for triangles;
-  callers who care about face triangulation use
-  `polygonize(strategy).triangulated(triangulation_strategy)`. Connectivity may
-  differ when geometry and documented seam/boundary behavior remain consistent
-  (ADR 006).
-- Discrete triangulation uses serializable `DiagonalSplit` and `EarClipping`
-  strategies with deterministic diagonals, standard tolerance, explicit
-  mutation/attribute/key behavior, and no initial vertex insertion (ADR 007).
-- Mixed collections use `FaceTriangulation` for explicit arity dispatch.
-  `ProjectedEarClipping` is an explicit bounded-deviation interpretation of
-  near-planar rings, while `MinimumAreaTriangulation` handles twisted ordered
-  3D boundaries without projection and documents that its combinatorial disk
-  may geometrically self-intersect (ADRs 017–019).
-- Planar Delaunay operations are named `triangulate_planar_points` and
-  `triangulate_planar_domain`; the conventional `Delaunay`,
-  `ConstrainedDelaunay`, and `ConformingDelaunay` strategy names remain concise
-  (ADR 020).
-- Ephemeral Shape and Surface tessellation accepts an omitted strategy and
-  resolves it deterministically to `Native()`, `UGrid(64)`, or
-  `UVGrid(64, 64)` according to geometry arity. Persistent polygonization and
-  deflection-based BRep/BRepFace tessellation remain explicit (ADR 021).
+- Shapes and untrimmed surfaces expose fresh, non-mutating
+  `to_polygonal_surface(...)` and exact composed `to_tessellation(...)`
+  conversions. BReps expose only precision-controlled `to_tessellation(...)`;
+  public `polygonize` and `tessellate` verbs are removed (ADR 022, superseding
+  affected clauses of ADRs 005–006).
+- Discrete triangulation uses named functions and an optional duck-typed
+  aggregate triangulator callable. Nominal face-strategy objects are removed
+  without aliases (Typing ADR 015, superseding affected clauses of ADR 007).
+- Named strict/projected/minimum-area polygon functions retain the approved
+  algorithms for planar, near-planar, and twisted ordered rings without the
+  superseded nominal strategy classes (ADRs 017–019 and Typing ADR 015).
+- Named Delaunay functions operate only on planar domains and return structural
+  vertex/triangle buffers. The `Delaunay`, `ConstrainedDelaunay`, and
+  `ConformingDelaunay` flag classes are removed (Typing ADR 015, superseding
+  the naming choice in ADR 020).
+- Shape and Surface conversions resolve producer-owned cell-count defaults;
+  BRep/BRepFace conversions resolve omitted deflections from core tolerance
+  before plugin dispatch (ADRs 022–023, superseding affected clauses of ADR
+  021).
 - Trims remain owned by BRep faces/BReps instead of changing standalone
   `NurbsSurface` (ADR 009).
 - Enriched tessellation results are deferred: initial APIs have no report flag,
@@ -150,9 +145,10 @@ Apply and independently review the ADRs in numeric dependency order:
   validated model-unit/degree quality targets, tolerance-checked world/frame
   planes, exact input-coordinate preservation, and on-plane generated Steiner
   vertices (ADR 011).
-- Plugins accept only `Tessellation` through one core-dispatched API; core owns
-  validation/buffer extraction while backend helpers own native coercion, with
-  raw tuples and divergent direct APIs relegated to internals (ADRs 008, 012).
+- Numerical plugins accept core-owned structural buffers and normalize once at
+  native boundaries; `Tessellation` remains a useful representation but is not
+  a mandatory algorithm gate (Typing ADRs 012 and 015–017, superseding affected
+  clauses of Geometry ADRs 008 and 012).
 - All superseded APIs are removed in the coordinated COMPAS 3.0 breaking
   release without compatibility aliases or a deprecation period. Affected
   plugins require `compas>=3.0.0`; existing major upper bounds advance to `<4`

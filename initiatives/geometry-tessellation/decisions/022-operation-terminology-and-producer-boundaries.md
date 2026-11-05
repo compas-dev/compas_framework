@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -27,7 +27,8 @@ This ADR reconciles those decisions before Typing ADR 015 fixes the exact
 signatures. The user has selected representation-oriented public names:
 continuous geometry converts with `to_polygonal_surface` and
 `to_tessellation`, while the operation concepts remain polygonization and
-tessellation. This ADR changes no package source while Proposed.
+tessellation. Acceptance authorizes the coordinated implementation; it does
+not claim that package source has already migrated.
 
 ## Definitions
 
@@ -257,10 +258,11 @@ of trims, ADR 013's clean-break policy, ADR 015's continuous bounds, and ADR
 - Typing-alignment ADR 012 — structural triangle-mesh boundaries
 - Typing-alignment ADR 013 — explicit algorithms and producer controls
 
-## Approval boundary
+## Decision
 
-This decision is **Proposed**. The representation-oriented naming choice is
-recorded, but the exact conversions, BRep-only restriction, removal of public
-operation verbs, and supersession of the listed strategy/input clauses still
-require approval as one coherent contract. No source implementation may
-proceed before then.
+Approved on 2026-11-05 as one coherent contract. The accepted choice keeps
+public names representation-oriented, restricts BReps to
+`to_tessellation`, removes overlapping operation verbs and strategy/input
+abstractions without compatibility aliases, and preserves raw structural
+numerical boundaries. The rationale is to keep the API simple, transparent,
+and usable without requiring core geometry objects at numerical boundaries.

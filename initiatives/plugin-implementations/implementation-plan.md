@@ -39,10 +39,11 @@ Work is split into three dependency classes:
 1. **Independent:** requirement-selection tests, runtime requirements, orphan
    decorator cleanup, stale legacy guidance, and installed/wheel evidence.
 2. **Typing/geometry dependent:** shared structural annotation and native-stub
-   parity waits for Proposed Typing ADRs 016–017. Triangulation and conversion
-   signatures wait for Typing ADR 015 and Geometry ADR 022. BRep default-value
-   tests additionally wait for Geometry ADR 023. Real model/viewer rendering
-   paths follow the specific conversion contracts they consume.
+   parity follow Accepted Typing ADRs 016–017. Triangulation and conversion
+   signatures follow Accepted Typing ADR 015 and Geometry ADR 022. BRep
+   default-value tests additionally follow Accepted Geometry ADR 023. Real
+   model/viewer rendering paths follow the specific conversion contracts they
+   consume.
 3. **Model/viewer design dependent:** base versus Viewer-context registration,
    manual activation helpers, viewer package initialization, and scene
    lifecycle ownership require the corresponding package architecture work.

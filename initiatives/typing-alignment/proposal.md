@@ -2,9 +2,9 @@
 
 ## Status
 
-The base architecture in ADRs 001–014 is Accepted. Refinements in Typing ADRs
-015–017 and Geometry ADRs 022–023 are Proposed; their source slices are not
-authorized until explicit approval.
+Typing ADRs 001–017 and Geometry ADRs 022–023 are Accepted. Their remaining
+source slices are authorized in dependency order but are not yet implemented
+or verified.
 
 ## Summary
 
@@ -52,7 +52,7 @@ inputs, coordinate collections, and index collections. The aliases include
 NumPy arrays and NumPy scalar values only where runtime behavior intentionally
 supports them.
 
-Proposed ADR 016 refines the coordinate vocabulary around one rich
+Accepted ADR 016 refines the coordinate vocabulary around one rich
 `CoordinateProtocol`: length, iteration, integer indexing, and slicing with
 distinct scalar and `Sequence` overloads. Semantic `PointLike` and
 `VectorLike` aliases combine that protocol with ordinary `Sequence` and
@@ -146,9 +146,9 @@ Type only stable, versioned public records where it materially helps.
 
 ### Typed distribution
 
-The Accepted base requires typed distributions for core, OCC, and CGAL. The
-Proposed ADR 017 extends the complete native-stub contract to libigl and
-strengthens CGAL's existing stubs: if accepted, both native packages maintain
+The Accepted base requires typed distributions for core, OCC, and CGAL.
+Accepted ADR 017 extends the complete native-stub contract to libigl and
+strengthens CGAL's existing stubs: both native packages maintain
 accurate private `.pyi` files with exported-name parity, typed smoke tests,
 semantic runtime fixtures, and wheel-content verification. Stub generation may
 bootstrap declarations but does not replace review. OCC relies on inline typing
@@ -298,8 +298,8 @@ examples for Python and NumPy inputs and ownership-sensitive results.
 13. Named algorithms and producer-owned discretization controls.
 14. Verified discrete curvature contracts.
 
-ADRs 001–014 are Accepted and authorize their phased implementation below.
-Typing ADRs 015–017 and Geometry ADRs 022–023 remain Proposed.
+ADRs 001–017 and Geometry ADRs 022–023 are Accepted and authorize their phased
+implementation below.
 
 ## Phased implementation
 
@@ -313,11 +313,11 @@ Typing ADRs 015–017 and Geometry ADRs 022–023 remain Proposed.
 
 See `implementation-plan.md` for dependencies and ownership.
 
-## Proposed refinement: one structural vocabulary and typed native seams
+## Accepted refinement: one structural vocabulary and typed native seams
 
 Follow-up evidence from core, CGAL, and libigl shows that the accepted broad
 numeric policy is implemented through inconsistent names and incomplete native
-typing. Proposed ADRs 016–017 refine the architecture without introducing new
+typing. Accepted ADRs 016–017 refine the architecture without introducing new
 geometry representations:
 
 1. replace the directionally false `TriangleMeshInput` and tuple-valued
@@ -335,9 +335,9 @@ geometry representations:
 This refinement keeps face arity as an operation invariant, retains
 `Tessellation`, `PolygonalSurface`, and `Mesh` in their existing representation
 roles, and adds no `TriangleMesh` or `QuadMesh` class. Package source work is
-blocked until the Proposed ADRs are explicitly approved.
+authorized in the implementation-plan dependency order.
 
-## Proposed architecture correction: representations are not algorithm gates
+## Accepted architecture correction: representations are not algorithm gates
 
 New evidence from the core and `compas_cgal` implementation shows that the
 current design conflates retained discrete representations, numerical mesh

@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -485,9 +485,12 @@ shared aliases, and `compas_framework` integration fixtures.
 - [008 — Return normalization](008-return-normalization.md)
 - [012 — Structural triangle-mesh boundaries](012-structural-triangle-mesh-boundaries.md)
 
-## Approval boundary
+## Decision
 
-This decision is **Proposed**. The public `compas.typing` module, vocabulary
-replacement, removal without aliases, constructor annotations, NumPy-integer
-widening, and boolean-index rejection require explicit approval before package
-source changes. No new runtime conversion is approved merely for typing.
+Approved on 2026-11-05. Core owns one public structural vocabulary with
+semantic `PointLike` and `VectorLike` roles, NumPy-aware collection aliases,
+and neutral `VerticesFaces` interchange. Misleading and overlapping names are
+removed without aliases. The rationale is to make static types describe
+existing duck-typed runtime behavior, including direct Python/NumPy handoff,
+without adding conversions, validation, casts, or nominal input gates merely
+for typing.

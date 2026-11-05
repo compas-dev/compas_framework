@@ -2,20 +2,21 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
 Accepted ADR 013 chose named algorithms and producer-specific keyword controls
-over public strategy hierarchies. Geometry-tessellation ADR 022 is Proposed in
-response to the user-authored operation definitions and distinguishes
+over public strategy hierarchies. Accepted Geometry-tessellation ADR 022 was
+introduced in response to the user-authored operation definitions and
+distinguishes
 structured polygonization, discrete triangulation, and precision-controlled
 BRep tessellation.
 
 This ADR supplies the exact signatures and invariants needed by WP7.4–WP7.7.
-It assumes Geometry ADRs 022–023 and Typing ADR 016 are accepted as proposed.
-If any changes, this table must be reconciled before the affected decisions
-are accepted or implemented.
+It depends on accepted Geometry ADRs 022–023 and Typing ADR 016. If any of
+those decisions changes, this table must be reconciled before the affected
+implementation changes.
 
 ## Polygon triangulation functions
 
@@ -424,10 +425,11 @@ fixtures, and installed consumers.
 - Geometry-tessellation ADR 022 — operation terminology and producer boundaries
 - Geometry-tessellation ADR 023 — BRep deflection defaults
 
-## Approval boundary
+## Decision
 
-All signatures, defaults, validation rules, removals, the callable aggregate
-contract, the exact shape/surface conversions, BRep default policy, plugin
-hook naming, and removal of BRep polygonal conversion remain **Proposed**.
-WP7.4–WP7.7 implementation is blocked until the user explicitly approves
-Geometry ADRs 022–023 and this reconciled ADR.
+Approved on 2026-11-05 together with Geometry ADRs 022–023 and Typing ADRs
+016–017. The accepted contract uses named planar algorithms, duck-typed
+aggregate triangulators, producer-specific conversion controls, raw structural
+numerical boundaries, and one BRep tessellation hook. The rationale is to keep
+the public API explicit and composable without nominal strategy objects or
+mandatory core representation wrappers.

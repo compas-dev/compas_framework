@@ -66,9 +66,10 @@ The 2026-11-05 follow-up expanded the initial CGAL/OCC inventory to
   quaternion/generic inputs under `FloatSequenceLike` and introduces no new
   runtime conversion for typing.
 
-Proposed ADRs 016–017 record the resulting core vocabulary, constructor,
-native-stub, public-wrapper, and installed-artifact decisions. No package
-source correction is authorized while those ADRs remain Proposed.
+Accepted ADRs 016–017 record the resulting core vocabulary, constructor,
+native-stub, public-wrapper, and installed-artifact decisions. Package source
+correction is authorized in the implementation-plan dependency order but is
+not yet verified.
 
 ## Baseline
 

@@ -143,12 +143,12 @@ In parallel where file ownership is independent:
   required checks, and Pages/Mike settings remain owner configuration work;
 - migrate `compas_framework` ordinary checks to the pure profile and add a
   separate coordinated native integration/release-order job; the ordinary
-  patch is independently reviewed and locally green, but remains uncommitted
-  and blocked on Proposed
-  [ADR 020](decisions/020-framework-host-extras.md), which resolves its
-  incompatible COMPAS 2 host extras and root lock. The separate native
-  integration gate remains uncommitted and blocked on Proposed Geometry ADRs
-  022–023 and Typing ADRs 015–017;
+  patch is independently reviewed and locally green. Accepted
+  [ADR 020](decisions/020-framework-host-extras.md) now authorizes removal of
+  its incompatible COMPAS 2 host extras and regeneration of the root lock; the
+  patch remains uncommitted pending that implementation. The separate native
+  integration gate is authorized by Accepted Geometry ADRs 022–023 and Typing
+  ADRs 015–017 but remains unimplemented;
 - after explicit approval of Proposed ADRs 014–016 in
   [`compas-gmsh.md`](compas-gmsh.md), establish meaningful `compas_gmsh`
   tests and its evidence-based external-runtime matrix; source implementation
@@ -170,7 +170,7 @@ verified; ShapeOp source work remains blocked on Proposed ADRs 017–019.
   `86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877` passes policy, quality,
   typing, sdist, wheel typing, and Linux, Windows, and macOS ARM64 wheel/smoke
   checks. This closes the modernization artifact evidence at that checkpoint;
-  the newly Proposed native-stub completeness work belongs to typing ADR 017.
+  the newly Accepted native-stub completeness work belongs to typing ADR 017.
 - That checkpoint uses reviewed immutable libigl, Eigen, and Clipper sources,
   reconciled dependency metadata and lock, thin Invoke aliases, strict MkDocs,
   immutable workflow pins, repository-owned native provisioning, native-module

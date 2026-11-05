@@ -1,6 +1,6 @@
 # ADR 020: `compas_framework` Host Extras During the COMPAS 3 Transition
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Context
 
@@ -91,6 +91,14 @@ This is the smallest truthful contract:
 Do not publish empty extras, aliases, placeholder packages, conditional
 constraints, or a compatibility shim. Those would preserve names without
 providing the advertised functionality.
+
+## Decision
+
+Approved on 2026-11-05. Remove and explicitly defer the incompatible COMPAS 2
+host extras from the COMPAS 3 metapackage. The rationale is to keep published
+metadata, the root lock, and installation documentation truthful rather than
+override dependency evidence or advertise combinations that cannot resolve.
+Host support returns only through separately verified package decisions.
 
 ## Compatibility implications
 

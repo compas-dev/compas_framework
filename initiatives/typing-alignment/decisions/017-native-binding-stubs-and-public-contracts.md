@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -182,8 +182,11 @@ installed integration fixtures in `compas_framework`.
 - [010 — Verification ratchet](010-verification-ratchet.md)
 - [016 — Core structural type vocabulary](016-core-structural-type-vocabulary.md)
 
-## Approval boundary
+## Decision
 
-This decision is **Proposed**. Adding libigl stubs, correcting CGAL stubs,
-removing ignores, changing public annotations, and making 100% public type
-completeness blocking require explicit approval before package source changes.
+Approved on 2026-11-05. CGAL and libigl must publish accurate private native
+stubs and complete public wrapper contracts coordinated through core-owned
+structural types. The rationale is that `py.typed` must represent a verified
+package-wide promise rather than conceal native seams with broad ignores;
+runtime representations remain unchanged unless another accepted contract
+explicitly requires a change.

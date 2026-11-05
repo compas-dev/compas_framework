@@ -8,8 +8,9 @@ This proposal defines a repository standard for the initial core scope:
 `compas_viewer`. The first three provide the initial evidence and profile
 examples, and also receive focused corrective work. Host repositories
 `compas_rhino`, `compas_ghpython`, and `compas_blender` form a later wave.
-This proposal changes no package, workflow, or repository setting. The Proposed
-ADRs are the decision authority once approved.
+This proposal changes no package, workflow, or repository setting. Accepted
+ADRs are the implementation authority; package-specific ADRs that remain
+Proposed do not authorize source work.
 
 ## Recommendation
 
@@ -223,7 +224,7 @@ tasks that only sequence the documented direct commands.
   those integrations do not belong in its ordinary pure-Python job.
 - `compas_framework` keeps ordinary pure-Python checks separate from a
   coordinated native-package integration/release-order job. Its incompatible
-  COMPAS 2 host extras and root-lock conflict are resolved by Proposed
+  COMPAS 2 host extras and root-lock conflict are resolved by Accepted
   [ADR 020](decisions/020-framework-host-extras.md) before the ordinary
   modernization patch is committed.
 - `compas_viewer` keeps its current modular actions and uv profile, while
@@ -260,7 +261,8 @@ For each repository:
 
 ## Approval boundary
 
-No implementation should begin until the Proposed ADRs are reviewed and
-accepted. Repository settings, trusted-publisher configuration, deployment,
-publishing, merging, and removal of active environment paths require explicit
-execution approval in their implementation phase.
+Implementation may proceed only under Accepted ADRs. Gmsh ADRs 014–016 and
+ShapeOp ADRs 017–019 remain Proposed and do not authorize their source work.
+Repository settings, trusted-publisher configuration, deployment, publishing,
+merging, and removal of active environment paths require explicit execution
+approval in their implementation phase.

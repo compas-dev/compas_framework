@@ -90,7 +90,7 @@ registration in the current process. The cross-package audit supplied
 fresh-process evidence, but the package still lacks its own installed and
 built-wheel metadata proof. Exact parity is tested for only eight intersection
 wrappers; 48 curve/surface wrappers omit annotations present on their core
-pluggables. Final annotation parity depends on the Proposed typing contracts.
+pluggables. Final annotation parity follows the Accepted typing contracts.
 
 ### Measured Wave 1 evidence
 
@@ -133,7 +133,7 @@ at 2.2 even though exact plugin parity is verified only against COMPAS 3.
 
 Both packages' real scene/render consumers still use stored resolutions,
 cached tessellations, strategy objects, or the old `polygonize`/`tessellate`
-paths. Their final dispatch evidence depends on Proposed Geometry ADRs 022–023
+paths. Their final dispatch evidence depends on Accepted Geometry ADRs 022–023
 and Typing ADR 015.
 
 ## Legacy-only packages
@@ -173,9 +173,9 @@ The initiative must preserve the contracts currently established in package
 source while tracking approved replacements explicitly:
 
 - triangle algorithms currently use core `TriangleMeshInput` structural
-  buffers and general-face operations use `MeshType` where supported; Proposed
+  buffers and general-face operations use `MeshType` where supported; Accepted
   Typing ADRs 016–017 replace both with a coordinated public vocabulary, so
-  final parity work must wait for their disposition;
+  final parity work follows their accepted migration order;
 - planar triangulation uses the core planar point/domain hooks and their
   approved result contract;
 - OCC implements existing BRep, curve, surface, intersection, tessellation,

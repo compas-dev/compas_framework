@@ -2,13 +2,13 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
 Accepted ADR 021 deliberately kept BRep and BRepFace deflection controls
-mandatory because no backend-independent default had been approved. Proposed
-Typing ADR 015 subsequently used `None` to resolve deterministic defaults from
+mandatory because no backend-independent default had been approved. Accepted
+Typing ADR 015 subsequently uses `None` to resolve deterministic defaults from
 the core tolerance object. The user-authored terminology now makes BRep
 tessellation the sole precision-controlled tessellation operation, which makes
 the default policy more consequential rather than resolving it implicitly.
@@ -86,8 +86,9 @@ deterministically and is covered by tests.
 
 - [022 — Operation terminology and producer boundaries](022-operation-terminology-and-producer-boundaries.md)
 
-## Approval boundary
+## Decision
 
-This decision is **Proposed**. Typing ADR 015 may describe the optional public
-signature, but implementation remains blocked until this default policy is
-explicitly approved.
+Approved on 2026-11-05. Deterministic core tolerance defaults support generic
+no-argument visualization while keeping explicit overrides, public units, and
+backend-independent behavior visible. Core resolves defaults before dispatch;
+plugins never choose them.

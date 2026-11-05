@@ -148,9 +148,10 @@ repository-owned orchestration.
 Phase 4 is active. `compas_session` modernization commit
 `10b2d6332eed42b16b57c4d95c7866844cfb90bd` is reviewed and pushed. The
 ordinary `compas_framework` patch is independently reviewed and locally green
-but uncommitted pending Proposed ADR 020; its native integration gate also
-depends on Proposed Geometry ADRs 022–023 and Typing ADRs 015–017. Gmsh ADRs
-014–016 and ShapeOp ADRs 017–019 remain Proposed. Model and viewer migration,
+and is now authorized by Accepted ADR 020 but remains uncommitted; its native
+integration gate is likewise authorized by Accepted Geometry ADRs 022–023 and
+Typing ADRs 015–017 but remains unimplemented. Gmsh ADRs 014–016 and ShapeOp
+ADRs 017–019 remain Proposed. Model and viewer migration,
 final cross-package integration, repository settings, publishing, deployment,
 and merges remain pending or explicitly approval-gated.
 
@@ -159,5 +160,5 @@ and merges remain pending or explicitly approval-gated.
 `86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877` now passes policy, quality,
 typing, sdist, wheel-typing, and Linux, Windows, and macOS ARM64 wheel/smoke
 checks. The additional native-stub truthfulness and completeness work discovered
-later is tracked by Proposed Typing ADR 017 rather than being retroactively
+later is tracked by Accepted Typing ADR 017 rather than being retroactively
 claimed by this modernization checkpoint.

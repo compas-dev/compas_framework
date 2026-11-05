@@ -207,7 +207,8 @@ registration boundary.
 - Incompatible legacy hooks require contract migration before metadata.
 - No compatibility shims or duplicate registration paths are proposed.
 
-## Approval boundary
+## Approval record
 
-ADRs 001–006 are Proposed. Implementation must not begin until the user
-approves the proposal and decisions.
+ADRs 001–006 are Accepted. Implementation is authorized only for the approved
+six-package Waves 0–1 scope. Later waves still require a scope amendment and
+new explicit approval; merge and publication remain separately gated.

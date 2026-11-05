@@ -93,12 +93,12 @@ Use the `compas3` environment. Before completion, affected packages must pass:
 
 ## Current status
 
-Implementation is in progress. ADRs 001–014 are Accepted. Typing ADRs 015–017
-and Geometry ADRs 022–023 are Proposed, and their source slices remain blocked
-until explicit approval. Approved work preserves duck typing through Python
-code and localizes normalization to explicit native, serialization, ownership,
-and retained-representation boundaries. `compas_libigl` joined the initiative
-on 2026-11-05 to align its native mesh plugins and replace incomplete native
-typing with the shared contract. CGAL skeletonisation output remains a known
-correctness limitation: typing, stub, or packaging checks must not be treated
+Implementation is in progress. ADRs 001–017 and Geometry ADRs 022–023 are
+Accepted. Their remaining source slices are authorized in dependency order but
+remain incomplete and unverified. Approved work preserves duck typing through
+Python code and localizes normalization to explicit native, serialization,
+ownership, and retained-representation boundaries. `compas_libigl` joined the
+initiative on 2026-11-05 to align its native mesh plugins and replace
+incomplete native typing with the shared contract. CGAL skeletonisation output
+remains a known correctness limitation: typing, stub, or packaging checks must not be treated
 as functional validation of that module.

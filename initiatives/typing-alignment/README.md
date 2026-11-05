@@ -5,7 +5,8 @@ This initiative aligns Python typing across `compas`, `compas_occ`,
 native-library boundaries.
 
 Current phase: **Implementation in progress; exact geometry APIs, core
-structural vocabulary, and native-binding completion awaiting approval**.
+structural vocabulary, and native-binding completion approved and pending
+implementation**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -13,12 +14,12 @@ structural vocabulary, and native-binding completion awaiting approval**.
 - [Architecture decisions](decisions/README.md)
 - [Implementation plan](implementation-plan.md)
 
-ADRs 001–014 are approved. ADRs 015–017 and Geometry ADRs 022–023 are Proposed.
-Together they define the exact geometry signatures, layered semantic
+ADRs 001–017 and Geometry ADRs 022–023 are approved. Together they define the
+exact geometry signatures, layered semantic
 `PointLike`/`VectorLike` and neutral `VerticesFaces` vocabulary,
 NumPy-compatible core constructors, and complete CGAL/libigl native stub policy
-required to finish WP7–WP8. Work governed only by accepted decisions may
-continue; the proposed slices remain blocked.
+required to finish WP7–WP8. These slices may now proceed in dependency order;
+acceptance does not mean that their source or verification work is complete.
 
 Hosted checkpoint evidence is green at the current draft-PR heads:
 
@@ -32,7 +33,7 @@ Hosted checkpoint evidence is green at the current draft-PR heads:
   `86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877`.
 
 These green checks verify the already-pushed checkpoints. They do not cover the
-newly Proposed exact geometry APIs, shared type-vocabulary replacement, or full
+newly Accepted exact geometry APIs, shared type-vocabulary replacement, or full
 CGAL/libigl native-stub completeness contracts, and therefore do not close the
 typing initiative.
 
@@ -46,4 +47,4 @@ verified.
 `initiative/typing-alignment` branch starts from local `c3-upgrade` commit
 `70acf99`; the pushed checkpoint includes structural plugin alignment, lazy
 plugin discovery, and typed-wheel verification. The next libigl work is the
-complete native-stub and public-wrapper contract in Proposed ADR 017.
+complete native-stub and public-wrapper contract in Accepted ADR 017.
