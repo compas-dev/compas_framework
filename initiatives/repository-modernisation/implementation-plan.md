@@ -150,7 +150,7 @@ In parallel where file ownership is independent:
   automation is structurally unable to publish, tag, create a GitHub release,
   or deploy documentation. The separate native integration contract authorized
   by Accepted [ADR 021](decisions/021-cross-repository-candidate-artifacts.md)
-  is implemented at `7f624b6b70dae732206905909e4a9b26b088c449` on framework
+  is implemented at `58405b03fa8d79b0b7ceb381924b6b6bd9e822b9` on framework
   draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2); its
   hosted positive remains a Phase 6 gate;
 - `compas_gmsh` implements Accepted ADRs 014–016 at
@@ -210,7 +210,7 @@ implemented at the cited head and do not block the accepted packaging work.
 ## Phase 6: integration and documentation
 
 Status: active. Accepted ADR 021 is implemented and independently reviewed on
-framework draft PR 2 at `7f624b6b70dae732206905909e4a9b26b088c449`.
+framework draft PR 2 at `58405b03fa8d79b0b7ceb381924b6b6bd9e822b9`.
 The live manifest passes schema and semantic validation with exact hashes for
 all four wheels. Local verification passes offline bundle revalidation,
 `--no-index --no-deps` staging, exact versions, installed entry-point/plugin
@@ -218,6 +218,13 @@ discovery, OCC BRep/tessellation behavior, strict exact-wheel typing, 44
 candidate-contract tests, Ruff, Pyright, actionlint, and strict MkDocs.
 Ordinary PR runs also exercise schema, provenance, security, and negative
 contracts without credentials.
+
+The workflow-fix head is fully green. Build runs `42239563143` and
+`42239583235` pass the Linux, macOS, and Windows Python 3.12–3.14 matrix plus
+the package job. Docs runs `42239563067` and `42239582829` pass.
+Candidate-contract/all-workflow-actionlint runs `42239563062` and
+`42239582804` pass, as does release metadata. No hidden framework workflow
+failure remains at this head.
 
 Current exact producer heads are core
 `99b82a6673ff7d05c1c323c8921135c274993f11`, OCC
@@ -231,13 +238,12 @@ builds plus all Python 3.12/3.14 wheel-smoke jobs. Candidate artifact
 
 The Linux x86-64 CGAL→core→libigl native runtime path was not executable
 locally on Darwin ARM64 and is reserved for the hosted positive. That only
-remaining Phase 6 gate is externally blocked: the
-`candidate-artifact-retrieval` environment does not exist (GitHub API 404),
-and both `initiative/geometry-tessellation` and
-`initiative/repository-modernisation` report `protected=false`. ADR 021
-requires owner configuration of a protected non-main integration ref plus the
-protected GitHub App environment and secrets. No settings were changed, and
-`main` remains untouched.
+remaining Phase 6 gate now has its protected non-main integration ref and
+`candidate-artifact-retrieval` environment configured, but the environment
+secret list is empty. Organization owners must create and install the read-only
+GitHub App, add `CANDIDATE_ARTIFACT_APP_ID` and
+`CANDIDATE_ARTIFACT_PRIVATE_KEY`, and run the hosted positive. `main` remains
+untouched.
 
 1. Run clean-environment verification for all ten core repositories and every
    profile.

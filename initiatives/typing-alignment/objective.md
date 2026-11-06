@@ -104,18 +104,18 @@ complete and hosted green for CGAL WP8.2 and libigl WP8.3. CGAL run
 `42231235319` attempt 1 passed every quality, compatibility, distribution,
 platform-wheel, and Python 3.12/3.14 wheel-smoke job. Accepted ADR 021 is
 implemented and independently reviewed in `compas_framework` for WP8.4 at
-`7f624b6b70dae732206905909e4a9b26b088c449`. The exact live manifest and local
+`58405b03fa8d79b0b7ceb381924b6b6bd9e822b9`. The exact live manifest and local
 schema/semantic, hash, offline staging, version, discovery, OCC behavior,
 strict typing, and tooling contracts pass. The Linux x86-64
 CGAL→core→libigl runtime path remains unexecuted locally on Darwin ARM64
 and is reserved for the hosted positive.
 
-The trusted hosted positive remains externally blocked because the required
-GitHub environment does not exist and the current non-main integration refs
-are unprotected. Repository owners must configure a protected non-main ref
-plus the protected GitHub App environment and secrets. This hosted positive is
-the only remaining WP8.4/final WP6 gate; both initiatives remain incomplete
-until it passes. `main` remains untouched.
+The framework workflow matrix is fully green at this head. The protected
+non-main integration ref and GitHub environment are configured, but the
+environment secret list is empty. Organization owners must create and install
+the read-only GitHub App, add its App ID and private key secrets, and run the
+hosted positive. This is the only remaining WP8.4/final WP6 gate; both
+initiatives remain incomplete until it passes. `main` remains untouched.
 
 `compas_libigl` joined the initiative on 2026-11-05 to align its native mesh
 plugins and replace incomplete native typing with the shared contract. CGAL

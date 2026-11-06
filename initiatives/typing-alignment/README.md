@@ -41,17 +41,18 @@ the approved native-stub/public-wrapper contract and are hosted green.
 Framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) implements the
 WP8.4 exact-artifact mechanism and live manifest at
-`7f624b6b70dae732206905909e4a9b26b088c449`. Schema/semantic validation,
+`58405b03fa8d79b0b7ceb381924b6b6bd9e822b9`. Schema/semantic validation,
 exact hashes, offline revalidation and staging, versions, installed plugin/OCC
 behavior, strict exact-wheel typing, and all 44 contract/tooling checks pass
 locally. The Linux x86-64 CGAL→core→libigl runtime path remains unexecuted
 on Darwin ARM64 and is reserved for the hosted positive.
 
-That only remaining WP8.4/WP6 gate is externally blocked because no
-`candidate-artifact-retrieval` environment exists and the current non-main
-integration refs are unprotected. Owners must configure a protected non-main
-ref plus the protected GitHub App environment and secrets. Until it passes,
-the typing initiative is not complete. `main` remains untouched.
+The framework build, docs, candidate-contract/actionlint, package, and release
+metadata workflows are green at that head. The protected non-main integration
+ref and environment are configured, but the environment has no secrets.
+Organization owners must create/install the read-only GitHub App, add its App
+ID and private key secrets, and run the hosted positive. Until it passes, the
+typing initiative is not complete. `main` remains untouched.
 
 Known limitation: `compas_cgal` skeletonisation currently produces incorrect
 results. Typing, stub, boundary, and packaging checks for that module do not

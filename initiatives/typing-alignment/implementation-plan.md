@@ -320,18 +320,25 @@ parallel with separate repository ownership.
 
 **Status:** mechanism implemented and independently reviewed on framework
 draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
-`7f624b6b70dae732206905909e4a9b26b088c449`. The live manifest passes
+`58405b03fa8d79b0b7ceb381924b6b6bd9e822b9`. The live manifest passes
 schema/semantic validation with exact hashes for all four wheels. Offline
 bundle revalidation, `--no-index --no-deps` staging, exact versions, installed
 entry-point/plugin discovery, OCC BRep/tessellation behavior, strict
 exact-wheel typing, 44 tests, Ruff, Pyright, actionlint, and strict MkDocs pass.
 
+Both framework build runs (`42239563143`, `42239583235`), docs runs
+(`42239563067`, `42239582829`), and candidate-contract/all-workflow-actionlint
+runs (`42239563062`, `42239582804`) pass. They cover Linux, macOS, and Windows
+on Python 3.12–3.14, the package job, documentation, and release metadata. No
+hidden workflow failure remains at this head.
+
 The Linux x86-64 CGAL→core→libigl native runtime path remains unexecuted
 locally on Darwin ARM64 and is reserved for the hosted positive. That only
-remaining WP8.4 blocker is external: the required GitHub environment does not
-exist and the current non-main integration refs are unprotected. Owners must
-configure a protected non-main ref plus the protected GitHub App environment
-and secrets; `main` remains untouched.
+remaining WP8.4 blocker has its protected non-main integration ref and GitHub
+environment configured, but the environment secret list is empty. Organization
+owners must create/install the read-only GitHub App, add
+`CANDIDATE_ARTIFACT_APP_ID` and `CANDIDATE_ARTIFACT_PRIVATE_KEY`, and run the
+hosted positive; `main` remains untouched.
 
 **Ownership:** `compas_framework` integration fixtures and independent review.
 

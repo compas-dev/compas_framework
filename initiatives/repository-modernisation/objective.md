@@ -168,7 +168,7 @@ artifact for provenance admission.
 
 Accepted ADR 021 is implemented on framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
-`7f624b6b70dae732206905909e4a9b26b088c449`. The independently reviewed live
+`58405b03fa8d79b0b7ceb381924b6b6bd9e822b9`. The independently reviewed live
 manifest passes schema and semantic validation with exact hashes for all four
 wheels. Local evidence covers offline bundle revalidation, `--no-index
 --no-deps` staging, exact distribution versions, installed entry-point/plugin
@@ -179,13 +179,17 @@ The Linux x86-64 CGAL→core→libigl native runtime path was not executed
 locally on Darwin ARM64 and is reserved for the hosted positive. The
 modernization initiative remains incomplete until that gate passes.
 
-The trusted hosted positive remains externally blocked. The
-`candidate-artifact-retrieval` environment does not currently exist (GitHub
-API returned 404), and both `initiative/geometry-tessellation` and
-`initiative/repository-modernisation` report `protected=false`. ADR 021
-requires repository-owner configuration of a protected non-main integration
-ref plus the protected GitHub App environment and secrets. No settings were
-changed, and `main` remains untouched.
+The current framework head has no unresolved hosted workflow failure. Both
+build runs (`42239563143`, `42239583235`), both docs runs (`42239563067`,
+`42239582829`), and both candidate-contract/actionlint runs (`42239563062`,
+`42239582804`) succeeded; release metadata also passes.
+
+The protected non-main integration ref and `candidate-artifact-retrieval`
+environment are now configured. The environment secret list is empty. The only
+remaining modernization gate is organization-owner creation and installation
+of the read-only GitHub App, addition of `CANDIDATE_ARTIFACT_APP_ID` and
+`CANDIDATE_ARTIFACT_PRIVATE_KEY`, and a successful hosted positive. `main`
+remains untouched.
 
 ShapeOp ADRs 022–023 are Proposed in the separate follow-up draft PR and are
 not prerequisites for completing the accepted packaging modernization. They
