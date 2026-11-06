@@ -122,7 +122,8 @@ Apply and independently review the ADRs in numeric dependency order:
   public `polygonize` and `tessellate` verbs are removed (ADR 022, superseding
   affected clauses of ADRs 005–006).
 - Discrete triangulation uses named functions and an optional duck-typed
-  aggregate triangulator callable. Nominal face-strategy objects are removed
+  aggregate triangulator callable. Omitted and explicit `None` selectors use
+  the default polygon triangulator. Nominal face-strategy objects are removed
   without aliases (Typing ADR 015, superseding affected clauses of ADR 007).
 - Named strict/projected/minimum-area polygon functions retain the approved
   algorithms for planar, near-planar, and twisted ordered rings without the

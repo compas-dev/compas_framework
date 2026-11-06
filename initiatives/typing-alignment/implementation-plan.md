@@ -193,7 +193,9 @@ Retained `Tessellation` representation semantics remain in scope.
 5. **WP7.5 — Polygon triangulation operations.** **Authorized by Accepted ADRs
    015–016.** Replace nested strategy objects using the approved named-operation
    and aggregate-callable table for `Polygon`, `PolygonalSurface`,
-   `Polyhedron`, and `Mesh`. Migrate `PlanarRegion` separately to its
+   `Polyhedron`, and `Mesh`. Omitted and explicit `None` aggregate selectors
+   both resolve to the default `triangulate_polygon`; a provided callable is
+   the only customization path. Migrate `PlanarRegion` separately to its
    no-argument `triangulated`, `to_polygonal_surface`, and `to_mesh` contract;
    it does not accept the aggregate triangulator callable.
 6. **WP7.6 — Producer-specific controls.** **Authorized by Accepted Typing ADRs

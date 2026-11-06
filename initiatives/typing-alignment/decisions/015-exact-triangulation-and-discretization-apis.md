@@ -109,7 +109,7 @@ Triangulator = Callable[[PointsLike], list[list[int]]]
 
 def triangulated(
     self,
-    triangulator: Triangulator = triangulate_polygon,
+    triangulator: Triangulator | None = None,
 ) -> Tessellation: ...
 ```
 
@@ -119,9 +119,15 @@ def triangulated(
 ```python
 def triangulate(
     self,
-    triangulator: Triangulator = triangulate_polygon,
+    triangulator: Triangulator | None = None,
 ) -> None: ...
 ```
+
+An omitted selector and an explicit `None` both resolve to
+`triangulate_polygon`. This keeps the normal aggregate call concise and lets
+callers forward an optional selector without substituting the default
+themselves. A provided callable remains the sole customization mechanism; the
+removed nominal strategy classes are not accepted.
 
 The callable keeps aggregate code independent of nominal strategy types and
 allows algorithm-specific options to be bound transparently with
@@ -372,8 +378,9 @@ public paths:
 - Verify polygon triangle counts, index bounds and distinctness, source-only
   references, nonzero areas, winding, reversed boundaries, warped quads,
   degeneracy rejection, and minimum-area cyclic orientation.
-- Verify aggregate face mapping, atomic mutation, attribute transfer, and
-  callable customization including `functools.partial`.
+- Verify aggregate face mapping, atomic mutation, attribute transfer, omitted
+  and explicit-`None` default equivalence, and callable customization including
+  `functools.partial`.
 - Verify no-argument `PlanarRegion` triangulation, either hole winding,
   exterior-then-holes flattening, region-normal winding, no Steiner vertices,
   invalid ring rejection, and conversion delegation.
@@ -433,3 +440,8 @@ aggregate triangulators, producer-specific conversion controls, raw structural
 numerical boundaries, and one BRep tessellation hook. The rationale is to keep
 the public API explicit and composable without nominal strategy objects or
 mandatory core representation wrappers.
+
+On 2026-11-06, the aggregate selector contract was clarified by explicit user
+direction: omitted and explicit `None` selectors both mean the default
+`triangulate_polygon` operation. This does not restore the removed strategy
+hierarchy or add a second customization path.

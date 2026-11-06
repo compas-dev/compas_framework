@@ -194,11 +194,13 @@ verified; ShapeOp source work remains blocked on Proposed ADRs 017–019.
 
 1. Run clean-environment verification for all ten core repositories and every
    profile.
-2. Request independent review of configuration, security, and release flow.
-3. Resolve findings and rerun every affected gate.
-4. Publish contributor and maintainer documentation changes in the same
+2. Verify that Ruff and Pyright enumerate every executable Python example, and
+   modernize stale framework idioms exposed by those gates.
+3. Request independent review of configuration, security, and release flow.
+4. Resolve findings and rerun every affected gate.
+5. Publish contributor and maintainer documentation changes in the same
    repository commits as their configuration.
-5. Record deviations from the standard with rationale.
+6. Record deviations from the standard with rationale.
 
 ## Later wave: host integrations
 
