@@ -12,10 +12,10 @@ This proposal changes no package, workflow, or repository setting. Accepted
 ADRs are the implementation authority; package-specific ADRs that remain
 Proposed do not authorize source work.
 
-Proposed ADR 021 records the separately discovered cross-repository candidate
+Accepted ADR 021 records the separately discovered cross-repository candidate
 artifact and credential boundary. Accepted ADR 013 requires an exact candidate
-gate, but does not itself choose between source builds, already-published
-artifacts, or authenticated hosted candidate artifacts.
+gate, while ADR 021 selects authenticated hosted candidate artifacts and their
+provenance contract.
 
 ## Recommendation
 

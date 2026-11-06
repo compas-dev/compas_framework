@@ -147,12 +147,15 @@ In parallel where file ownership is independent:
   COMPAS 2 host extras are removed, the lock is regenerated, and candidate
   automation is structurally unable to publish, tag, create a GitHub release,
   or deploy documentation. The separate native integration contract remains
-  authorized by Accepted Geometry ADRs 022–023 and Typing ADRs 015–017, but its
-  cross-repository artifact provenance and credential mechanism is blocked on
-  Proposed [ADR 021](decisions/021-cross-repository-candidate-artifacts.md).
+  authorized by Accepted Geometry ADRs 022–023, Typing ADRs 015–017, and
+  Accepted
+  [ADR 021](decisions/021-cross-repository-candidate-artifacts.md). The
+  candidate artifact provenance and credential mechanism is not yet
+  implemented.
   The two strategy-era native integration fixtures are explicitly
-  non-authoritative and deferred to Typing WP8.4/Phase 6 after ADR 021 and the
-  proposed Mesh return amendment are resolved;
+  non-authoritative and deferred to Typing WP8.4/Phase 6 after the accepted ADR
+  021 mechanism is implemented and the proposed Mesh return amendment is
+  resolved;
 - after explicit approval of Proposed ADRs 014–016 in
   [`compas-gmsh.md`](compas-gmsh.md), establish meaningful `compas_gmsh`
   tests and its evidence-based external-runtime matrix; source implementation

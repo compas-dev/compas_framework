@@ -1,7 +1,7 @@
 # Repository Modernisation Decisions
 
-ADRs 001–013 and package-specific ADR 020 are **Accepted**. Package-specific
-ADRs 014–019 and cross-repository artifact ADR 021 remain **Proposed**, and
+ADRs 001–013 and cross-repository ADR 021, together with package-specific ADR
+020, are **Accepted**. Package-specific ADRs 014–019 remain **Proposed**, and
 their source implementation is blocked until explicit approval. All work
 remains subject to the repository-setting, publishing, deployment, and merge
 approval boundaries.
@@ -28,7 +28,7 @@ approval boundaries.
 | [018](018-shapeop-native-dependencies-and-portability.md) | ShapeOp native dependencies and build portability | Proposed | 001, 002, 008, 010, 011, 012, 017 |
 | [019](019-shapeop-distribution-and-quality-contract.md) | ShapeOp distribution and quality contract | Proposed | 002–006, 008, 010, 011, 013, 017, 018 |
 | [020](020-framework-host-extras.md) | `compas_framework` host extras during the COMPAS 3 transition | Accepted | 001, 002, 003, 009, 011, 013 |
-| [021](021-cross-repository-candidate-artifacts.md) | Cross-repository candidate artifact provenance | Proposed | 008, 010, 012, 013 |
+| [021](021-cross-repository-candidate-artifacts.md) | Cross-repository candidate artifact provenance | Accepted | 008, 010, 012, 013 |
 
 ## Recommended review order
 
@@ -49,5 +49,6 @@ approval boundaries.
     portability, then its distribution and quality contract.
 11. Implement accepted ADR 020 to resolve the framework host-extra metadata
     conflict before the ordinary framework modernization patch is committed.
-12. ADR 021: approve the candidate-artifact provenance and credential boundary
-    before implementing the native integration and release-order gate.
+12. ADR 021: implement the accepted candidate-artifact provenance and
+    credential boundary before enabling the native integration and
+    release-order gate.

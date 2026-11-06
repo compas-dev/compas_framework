@@ -1,6 +1,6 @@
 # ADR 021: Cross-Repository Candidate Artifact Provenance
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Context
 

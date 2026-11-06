@@ -151,9 +151,9 @@ ordinary `compas_framework` patch is independently reviewed, committed, and
 pushed as `ae3b28e`; it implements Accepted ADR 020 and keeps candidate
 publication structurally disabled. Its native integration contract is likewise
 authorized by Accepted Geometry ADRs 022–023 and Typing ADRs 015–017, while
-its cross-repository artifact provenance and credential boundary remains
-blocked on Proposed ADR 021. Gmsh ADRs 014–016
-and ShapeOp ADRs 017–019 remain Proposed. Model and viewer migration,
+its cross-repository artifact provenance and credential boundary is now
+authorized by Accepted ADR 021 but not yet implemented. Gmsh ADRs 014–016 and
+ShapeOp ADRs 017–019 remain Proposed. Model and viewer migration,
 final cross-package integration, repository settings, publishing, deployment,
 and merges remain pending or explicitly approval-gated.
 
