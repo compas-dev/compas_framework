@@ -50,6 +50,12 @@ def test_candidate_integration_push_runs_build_and_docs_but_not_release():
     assert "branches: [main]" in release
 
 
+def test_native_candidate_integration_runs_from_the_protected_initiative_branch():
+    workflow = (Path(__file__).parents[1] / ".github" / "workflows" / "native-candidate-integration.yml").read_text()
+
+    assert "push:\n    branches:\n      - initiative/candidate-artifact-integration" in workflow
+
+
 def test_framework_examples_page_is_link_oriented():
     page = (Path(__file__).parents[1] / "docs" / "examples.md").read_text()
 

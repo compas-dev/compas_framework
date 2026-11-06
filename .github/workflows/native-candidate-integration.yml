@@ -1,6 +1,9 @@
 name: native-candidate-integration
 
 on:
+  push:
+    branches:
+      - initiative/candidate-artifact-integration
   workflow_call:
     inputs:
       manifest_path:
