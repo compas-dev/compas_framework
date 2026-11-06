@@ -44,30 +44,35 @@ the repository checkout.
 
 ## Native integration
 
-`tests/test_native_geometry_backends.py` and
-`tests/test_geometry_tessellation_integration.py` are pending geometry and
-typing candidate-integration fixtures. The ordinary modernization checkpoint
-deliberately excludes them from Ruff, Pyright, and runtime execution. They are
-not authoritative proof of the accepted target contracts.
+`native-candidate-integration.yml` is the authoritative Linux x86-64,
+Python 3.12 candidate gate. A reviewed JSON manifest selects the exact COMPAS,
+OCC, CGAL, and libigl wheels by owning workflow run, artifact, filename, and
+SHA-256. Credentialed retrieval produces a verified offline bundle. A separate
+secret-free job installs that bundle and the framework wheel with
+`--no-index --no-deps`, then verifies installed distribution versions, plugin
+discovery, CGAL-to-core-to-libigl data flow, OCC BRep construction, and the
+external typing consumer.
 
-Their strategy-era source must not be hidden behind suppressions or presented
-as current usage. Migration belongs to typing WP8.4 and modernization Phase 6,
-after the `Mesh.triangulated()` amendment in ADR 024 and the cross-repository
-candidate-artifact contract in ADR 021 are accepted and implemented. The final
-candidate gate must then install the exact coordinated artifacts, run Ruff and
-Pyright over the migrated fixtures, and execute the applicable integration and
-native-backend cases.
+The JUnit post-check rejects a failed, errored, skipped, or empty suite and
+requires every named integration test. A skip is therefore useful diagnostic
+information but never passing candidate evidence. The manifest and protected
+GitHub App environment are not yet configured; until they are, no hosted
+positive result may be claimed.
 
-When that gate exists, tests needing a display or native backend must skip with
-a precise reason when the capability is unavailable. A skip is not passing
-evidence. Mixing installed native extensions with unchecked sibling Python
-wrappers is not an approved substitute for exact candidate artifacts.
+`candidate-contracts.yml` runs on ordinary pull requests without secrets. It
+checks the schema, provenance rules, archive safety, wheel metadata, offline
+revalidation, release-order fixtures, and focused negative cases proving that
+a changed digest and a skipped backend are rejected.
+
+The larger `tests/test_native_geometry_backends.py` and
+`tests/test_geometry_tessellation_integration.py` files remain pending
+strategy-era fixtures outside the ordinary gates. They are not substituted
+for the installed-artifact contracts or cited as current integration evidence.
 
 Geometry-tessellation performance thresholds are deferred until the framework
 has an environment-normalized benchmark runner. Wall-clock assertions in this
 suite would primarily measure plugin discovery, native-library loading, and CI
-machine variance rather than tessellation regressions. Functional integration
-coverage will enter the final candidate gate under `integration` and
-`native_backend`; future benchmarks should use the existing `performance`
+machine variance rather than tessellation regressions. Future benchmarks
+should use the existing `performance`
 marker with recorded input sizes, warm-up policy, backend versions, and
 per-backend baselines.

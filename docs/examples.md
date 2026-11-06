@@ -52,8 +52,7 @@ are pending geometry and typing candidate-integration fixtures. They are
 outside the ordinary Ruff, Pyright, and runtime gates and are not authoritative
 proof of the accepted target contracts.
 
-Their source migration belongs to typing WP8.4 and modernization Phase 6 after
-the `Mesh.triangulated()` amendment in ADR 024 and the cross-repository
-candidate-artifact contract in ADR 021 are accepted and implemented. Until
-then, do not run or cite these fixtures as integration evidence. Candidate
-provenance and coordinated publication remain disabled.
+They are not used as the candidate gate. The installed-artifact contracts in
+`.github/candidates` exercise the approved current boundaries without source
+checkout fallbacks. Until a reviewed live manifest and successful hosted run
+exist, do not cite either fixture set as positive candidate evidence.

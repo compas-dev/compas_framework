@@ -77,6 +77,13 @@ build = [
     "wheel>=0.45,<1",
     { include-group = "tests" },
 ]
+candidate = [
+    "jsonschema>=4.26,<5",
+    "packaging>=26,<27",
+    "pyright==1.1.414",
+    "pytest>=9,<10",
+    "ruff>=0.14,<1",
+]
 
 [tool.uv.sources]
 compas = { git = "https://github.com/compas-dev/compas.git", rev = "9b1518f74fe7d0315626954d8b893756f8dae06d" }

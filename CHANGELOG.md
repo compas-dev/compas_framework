@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Added the geometry-tessellation initiative inventory, architecture proposal, accepted decision records, and coordinated implementation plan.
 * Added cross-package integration tests for continuous-geometry tessellation, triangle-processing plugin boundaries, serialization, and native geometry backends.
+* Added immutable cross-repository candidate manifests, provenance and wheel
+  verification, secret-isolated native integration, and release-order checks.
 
 ### Changed
 
@@ -18,7 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Replaced legacy development extras and mutable workflows with locked PEP 735 tool groups, uv-based contributor commands, immutable actions, and Python 3.12–3.14 checks.
 * Modernized release-candidate automation to build and verify one temporary
   artifact set while keeping publication, GitHub releases, and documentation
-  deployment disabled pending the candidate-provenance decision.
+  deployment disabled until the reviewed live candidate set passes its hosted
+  integration gate.
 
 ### Removed
 

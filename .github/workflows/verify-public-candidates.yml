@@ -1,0 +1,51 @@
+name: verify-public-candidates
+
+on:
+  workflow_call:
+    inputs:
+      manifest_path:
+        required: false
+        default: .github/candidates/native-linux-py312.json
+        type: string
+      before:
+        description: Verify only transitive upstreams required before this distribution is promoted
+        required: false
+        type: string
+  workflow_dispatch:
+    inputs:
+      manifest_path:
+        required: false
+        default: .github/candidates/native-linux-py312.json
+        type: string
+      before:
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  public-file-match:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          version: "0.12.7"
+      - run: uv sync --frozen --only-group candidate --no-install-project
+      - name: Match published files to the reviewed candidate manifest
+        shell: bash
+        env:
+          MANIFEST_PATH: ${{ inputs.manifest_path }}
+          BEFORE: ${{ inputs.before }}
+        run: |
+          args=(verify-public "${MANIFEST_PATH}")
+          if [[ -n "${BEFORE}" ]]; then
+            args+=(--before "${BEFORE}")
+          fi
+          uv run --no-sync python .github/scripts/candidate_artifacts.py "${args[@]}"
