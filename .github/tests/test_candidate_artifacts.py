@@ -729,7 +729,7 @@ def test_live_manifest_records_reviewed_producer_evidence():
             "initiative/repository-modernisation",
             13522038906,
             "43656e3da434149e6f628fb178d0751633fdb5cdbd60c92a8d8022a3cc88887d",
-            "a72572f36bd2a6af1b435cb7f2f59809ea7d59616f91f93522db7efa52d112d1",
+            "2483ccd14527d5cc0f0e217ebf5f713a177769b51f80944c964d43d073bc4e1a",
         ),
         "compas-occ": (
             "7fdf2ffb57d1de16308020e14ec626d79e65a034",
@@ -739,7 +739,7 @@ def test_live_manifest_records_reviewed_producer_evidence():
             "c3-upgrade",
             13522347968,
             "2976ab5f671f690b6c27e48dc30f4dabda2441b69ec1e70e28699518efefe328",
-            "2e1321ca45d402a8b60a5cbb43abb1ffa1efe4609be37f243c2ad1345c2c4f4a",
+            "f851c41423c5f688998dcb77e25ebb3a84fd5179c0aef59387c497492acd7290",
         ),
         "compas-cgal": (
             "bb3624e714719d543c61768320d91811ba96cc6c",
@@ -749,7 +749,7 @@ def test_live_manifest_records_reviewed_producer_evidence():
             "c3-upgrade",
             13522578476,
             "7d97384c4d976678658ae8d25bb19caad840fc39f39683da73f45a9335647254",
-            "af5602a2ae9605823350d33bd3b88ef9588bc7aeb953c4793719c504fc7bca8d",
+            "451ef996386d0de0fea015ea802b267296048148facbdd7277721d1483743337",
         ),
         "compas-libigl": (
             "710b2b6714839a203fc8a6c62c437c0f6735ba0e",
@@ -759,7 +759,7 @@ def test_live_manifest_records_reviewed_producer_evidence():
             "c3-upgrade",
             13523406749,
             "3c4c88f264a48cb0cc2201a6b5d2541418bb80415e23d143348ed567c92fa31a",
-            "c2b90448727a64f61fa037aa3bb48c77097d783f8966f4536388ff4ba5447771",
+            "28bbf0944676c4809ce615d4301a72a7c6c2355143e3ccdc8366cdcdbb9230cf",
         ),
     }
     actual = {
