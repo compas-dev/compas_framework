@@ -95,9 +95,10 @@ redefine them.
 
 ## Current status
 
-Phase 1 reconnaissance and the original Phase 2 architecture are complete.
-ADRs 001–010 are Accepted and the approved rollout is implementation-ready.
-ADR 011 proposes an initiative-first intake path for future framework-wide
-proposals and awaits approval. Public Agent Plugin publication, MCP server
-creation, external account connections, merging, and releasing remain
-separately approval-gated.
+Phase 1 reconnaissance and Phase 2 architecture are complete. ADRs 001–011
+are Accepted and the approved rollout is implementation-ready. ADR 011 makes
+initiative-first review the default for future framework-wide architectural
+proposals while preserving direct PRs for narrow fixes and mechanical
+maintenance. Public Agent Plugin publication, MCP server creation, external
+account connections, merging, and releasing remain separately
+approval-gated.

@@ -229,8 +229,7 @@ later, independently approved server.
 
 ## Approval boundary
 
-This proposal and ADRs 001–010 are Accepted. ADR 011 is Proposed and is not yet
-part of the implementation authorization. Existing approval authorizes only
-the rollout above. It does not authorize publicly publishing either Agent
-Plugin bundle, adding an MCP server, connecting external accounts, merging, or
-releasing.
+This proposal and ADRs 001–011 are Accepted. The approval authorizes the
+rollout above, including the hybrid initiative-first framework intake policy.
+It does not authorize publicly publishing either Agent Plugin bundle, adding
+an MCP server, connecting external accounts, merging, or releasing.

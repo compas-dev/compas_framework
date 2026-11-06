@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -57,3 +57,9 @@ authorize changes to `main`.
 ## Dependencies
 
 ADRs 002, 006, 007, and 010.
+
+## Approval record
+
+Accepted by the user on 2026-11-06. Acceptance establishes the hybrid
+initiative-first review policy described above. It does not authorize package
+implementation, merging, publishing, or changes to `main`.
