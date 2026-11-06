@@ -1,9 +1,10 @@
 # Repository Modernisation Implementation Plan
 
-Status: implementation in progress. Phases 0–3 are complete through reviewed
-initiative branches and hosted draft-PR evidence. Phase 4 is active, Phase 5
-has a hosted-verified libigl checkpoint, and Phase 6 remains pending. No
-initiative changes have been merged into a target/default branch or published.
+Status: final integration in progress. Phases 0–5 are complete through
+reviewed initiative branches and hosted draft-PR evidence. Phase 6 is active;
+the exact native-candidate manifest and protected hosted positive remain open.
+No initiative changes have been merged into a target/default branch or
+published.
 
 ## Dependencies
 
@@ -60,7 +61,7 @@ repository-owned Invoke conveniences may remain, normally run as
 own environment, dependency, system, or native provisioning, and broader Invoke
 removal requires a coordinated team decision.
 
-### Reviewed and hosted-verified checkpoints
+### Phase 1 reviewed and hosted-verified checkpoints
 
 - **`compas`: Ready on the initiative successor.** The reviewed modernization
   checkpoint is `943d9fdc366bf4bc55a2942dad259d112b23ab6c`. Draft
@@ -81,8 +82,10 @@ removal requires a coordinated team decision.
   The earlier macOS Intel evidence gap is therefore closed.
 
 This evidence proves the Phase 1 repository and workflow gates at the cited
-heads. It is not evidence of a merge, published distribution, documentation
-deployment, or repository-setting configuration.
+heads. Later typing and candidate-producer commits supersede these source
+checkpoints without invalidating that evidence; their current status is
+recorded under Phase 6. This is not evidence of a merge, published
+distribution, documentation deployment, or repository-setting configuration.
 
 ## Phase 2: prepare shared actions
 
@@ -128,58 +131,60 @@ publication, and merges remain explicitly outside this evidence.
 
 ## Phase 4: pure and hybrid core repositories
 
-Status: in progress. `compas_session` and the ordinary `compas_framework`
-modernization are reviewed, committed, and pushed; Gmsh has approved package
-ADRs and is ready for implementation; model and viewer remain pending.
+Status: complete through local review and hosted draft-PR verification.
 
 In parallel where file ownership is independent:
 
 - `compas_session`: modernization commit
-  `10b2d6332eed42b16b57c4d95c7866844cfb90bd` is pushed on
-  `initiative/repository-modernisation`. Its frozen lock, 16-test suite,
-  Pyright, Ruff, doctest, strict MkDocs, wheel/sdist verification, Twine, and
-  isolated installed-wheel import passed locally and independent review found
-  no remaining code findings. Protected environments, trusted publishing,
-  required checks, and Pages/Mike settings remain owner configuration work;
+  `e0bdd02aa8490248c6f2f36042651d8ebfc4442b` is pushed on
+  `initiative/repository-modernisation` and hosted green on draft
+  [PR 1](https://github.com/compas-dev/compas_session/pull/1). Its frozen lock,
+  tests, Pyright, Ruff, doctest, strict MkDocs, wheel/sdist verification,
+  Twine, and isolated installed-wheel import pass. Protected environments,
+  trusted publishing, required checks, and Pages/Mike settings remain owner
+  configuration work;
 - `compas_framework` ordinary checks now use the pure profile in reviewed
   commit `ae3b28e` on `initiative/repository-modernisation`. Accepted
   [ADR 020](decisions/020-framework-host-extras.md) is implemented: incompatible
   COMPAS 2 host extras are removed, the lock is regenerated, and candidate
   automation is structurally unable to publish, tag, create a GitHub release,
-  or deploy documentation. The separate native integration contract remains
-  authorized by Accepted Geometry ADRs 022–023, Typing ADRs 015–017, and
-  Accepted
-  [ADR 021](decisions/021-cross-repository-candidate-artifacts.md). The
-  candidate artifact provenance and credential mechanism is not yet
-  implemented.
-  The two strategy-era native integration fixtures are explicitly
-  non-authoritative and deferred to Typing WP8.4/Phase 6 after the accepted ADR
-  021 mechanism and accepted Geometry ADR 024 Mesh return contract are
-  implemented;
-- implement Accepted ADRs 014–016 in
-  [`compas-gmsh.md`](compas-gmsh.md): establish meaningful `compas_gmsh` tests,
-  its evidence-based external-runtime matrix, the approved license boundary,
-  typed artifacts, and exact artifact verification. Publishing, deployment,
-  repository settings, and merging remain separately approval-gated;
-- migrate `compas_model` while keeping optional Coal/OCC integration jobs
-  separate and explicit;
-- correct `compas_viewer` within the uv profile while preserving explicit
-  Qt/OpenGL provisioning and headless tests.
+  or deploy documentation. The separate native integration contract authorized
+  by Accepted [ADR 021](decisions/021-cross-repository-candidate-artifacts.md)
+  is implemented at `df97253f2797490bca3f027fc70d7f5154cadfe3` on framework
+  draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2); its
+  hosted positive remains a Phase 6 gate;
+- `compas_gmsh` implements Accepted ADRs 014–016 at
+  `c47af195bf04d0d2e874255bfe9c5f351beda672` on draft
+  [PR 7](https://github.com/compas-dev/compas_gmsh/pull/7). Its real Gmsh
+  matrix, macOS 15 migration, typed artifacts, strict docs, and separate OCC
+  integration are hosted green;
+- `compas_model` keeps Coal, OCC, and Viewer integration explicit at
+  `83df4167f7ba1539ae205a837e0238afecc0a36b` on draft
+  [PR 68](https://github.com/BlockResearchGroup/compas_model/pull/68). Its
+  Linux, macOS, Windows, optional-runtime, documentation, artifact, policy,
+  and installed-typing gates pass; and
+- `compas_viewer` preserves explicit Qt/OpenGL provisioning and graphics-free
+  plugin discovery at `cf5a5195bda840a511319d6b7201978af68c15e3` on draft
+  [PR 232](https://github.com/compas-dev/compas_viewer/pull/232), whose hosted
+  matrix is green.
+
+A future, separate Gmsh architecture initiative may remove modeling concerns
+and retain only COMPAS meshing infrastructure. `compas_fea2` is explicitly
+excluded from that future scope while its independent refactor is underway; it
+is a known deferred external consumer, not a migration or compatibility target.
 
 ## Phase 5: native core repositories
 
-Status: in progress. The libigl modernization/typing successor is hosted
-verified; ShapeOp source work is authorized by Accepted ADRs 017–019 and not
-yet implemented.
+Status: complete through local review and hosted draft-PR verification.
 
 - `compas_libigl` entered this phase on an independent
   `initiative/repository-modernisation` branch from `c3-upgrade` commit
   `70acf99`; the later typing branch is its integration successor. Draft
   [PR 47](https://github.com/compas-dev/compas_libigl/pull/47) at
-  `86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877` passes policy, quality,
+  `710b2b6714839a203fc8a6c62c437c0f6735ba0e` passes policy, quality,
   typing, sdist, wheel typing, and Linux, Windows, and macOS ARM64 wheel/smoke
-  checks. This closes the modernization artifact evidence at that checkpoint;
-  the newly Accepted native-stub completeness work belongs to typing ADR 017.
+  checks. The accepted native-stub completeness work is included at this
+  successor head and remains part of final typing integration evidence.
 - That checkpoint uses reviewed immutable libigl, Eigen, and Clipper sources,
   reconciled dependency metadata and lock, thin Invoke aliases, strict MkDocs,
   immutable workflow pins, repository-owned native provisioning, native-module
@@ -191,12 +196,42 @@ yet implemented.
   approval.
 - Under Accepted ADRs 017–019 in
   [`shapeop-modernisation-proposal.md`](shapeop-modernisation-proposal.md),
-  resolve ShapeOp's Python-support/native-ABI inconsistency, migrate its Sphinx
-  docs to MkDocs, then modernize and verify its wheel matrix.
+  ShapeOp's Python-support/native-ABI inconsistency, native dependency
+  portability, Sphinx-to-MkDocs migration, and wheel matrix are implemented at
+  `930619a9aecd3e37515be9ce342ac20746ccf6d3` on hosted-green draft
+  [PR 7](https://github.com/compas-dev/compas_shapeop/pull/7).
 - Reuse the native-wheel policy proven by CGAL, but keep each repository's
   build commands and dependency versions visible.
 
+Proposed ShapeOp ADRs 022–023 remain separate public-contract follow-ups for
+the similarity correspondence flags and point-buffer lifecycle. They are not
+implemented at the cited head and do not block the accepted packaging work.
+
 ## Phase 6: integration and documentation
+
+Status: active. Accepted ADR 021 is implemented and independently reviewed on
+framework draft PR 2. Forty-four candidate-contract tests, the combined
+package/distribution suite, Ruff, focused and strict external-consumer Pyright,
+targeted actionlint, strict MkDocs, and local native smoke contracts pass.
+Ordinary PR runs exercise schema, provenance, security, and negative contracts
+without credentials; both push and pull-request candidate-contract runs pass,
+as does release-metadata policy.
+
+Current exact producer heads are core `99b82a6673ff7d05c1c323c8921135c274993f11`,
+OCC `7fdf2ffb57d1de16308020e14ec626d79e65a034`, CGAL
+`7537d58154f62f38c0b2d4118972d0a326f86c9b`, and libigl
+`710b2b6714839a203fc8a6c62c437c0f6735ba0e`. Core, OCC, and libigl have green
+hosted evidence. CGAL passes the corrected wheel-typing consumer locally; its
+superseding hosted run has passed quality, minimum/current NumPy, sdist, Linux
+wheel, and macOS ARM wheel jobs. Windows and macOS Intel wheel builds are still
+running and wheel smoke has not started; the complete run must succeed before
+fresh artifact provenance can be admitted.
+
+After that run, the remaining sequence is: record the exact four-package live
+manifest, revalidate and run it locally, then run the trusted hosted positive.
+The hosted positive requires a protected GitHub App environment with read-only
+Actions access to the four producer repositories. That owner configuration is
+not authorized by ADR 021 and remains the only external configuration blocker.
 
 1. Run clean-environment verification for all ten core repositories and every
    profile.

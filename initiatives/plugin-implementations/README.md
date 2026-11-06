@@ -4,8 +4,8 @@ This initiative standardizes how COMPAS packages declare, discover, load,
 test, and document plugin implementations without introducing a new plugin
 system.
 
-Current phase: **Implementation reconnaissance complete; Waves 0–1
-implementation incomplete**.
+Current phase: **Waves 0–1 source migration substantially implemented;
+coordinated artifact and remaining selection/parity gates incomplete**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -14,10 +14,13 @@ implementation incomplete**.
 - [Implementation plan](implementation-plan.md)
 
 ADRs 001–006 are **Accepted**. Implementation is authorized only for the six
-packages in Waves 0–1. The post-approval audit found that entry-point metadata
-and lazy registration are already substantially in place, but runtime
-requirements, complete contract parity, built-wheel evidence, and the
-model/viewer activation boundaries still have open work.
+packages in Waves 0–1. Subsequent modernization and typing work completed the
+CGAL registration cleanup, the model optional-runtime boundary, graphics-free
+viewer discovery, built-wheel metadata checks, and substantial wrapper/type
+parity. Remaining initiative work includes the core requirement-selection
+matrix, libigl's explicit compiled-runtime requirements, package-owned OCC
+built-wheel discovery evidence, the coordinated model/viewer registry test,
+and the final installed cross-package review.
 
 The approved initial implementation scope is limited to Waves 0–1:
 `compas`, `compas_cgal`, `compas_libigl`, `compas_occ`, `compas_model`, and

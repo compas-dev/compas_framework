@@ -75,6 +75,15 @@ that package remains incomplete.
 ## Current status
 
 Reconnaissance and architecture are complete. The proposal and ADRs 001–006
-are Accepted. Implementation is authorized for the approved six-package
-Waves 0–1 scope; it remains incomplete and subject to the dependency and
-verification gates in the implementation plan.
+are Accepted. Source migration has advanced across all six approved Wave 0–1
+packages through the typing and modernization branches: CGAL now has four
+category entry points and no orphan decorators, model declares its Viewer
+runtime, and viewer discovery no longer imports Qt/OpenGL. Built-wheel evidence
+exists for model and viewer, and the native framework gate exercises installed
+CGAL, libigl, and OCC discovery.
+
+The initiative remains incomplete. The core requirement-selection matrix,
+libigl compiled-runtime requirements, package-owned OCC artifact evidence,
+coordinated model/viewer registration, and final installed cross-package
+review still have to satisfy the implementation-plan gates. No later wave is
+authorized.

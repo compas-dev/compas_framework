@@ -125,43 +125,69 @@ CI and should pass its applicable:
 
 ## Current status
 
-Implementation is in progress. ADRs 001–021 are Accepted. Phases 0–3 are
-complete through reviewed initiative branches and hosted draft-PR evidence;
-the initial migration wave and final integration are not complete. The bounded
-`compas-actions` v2 prerequisite is independently reviewed Ready. Its initial
-commit is
-`42216af0d21a53f0c234996b2fe664b1548af9eb`; reviewed follow-up commit
-`5c64e6e2b576a1232d28fed47d9478ca8eb63b2d` adds prepared Conda documentation
-environments and is the current consumer pin. Both commits are on branch
-`initiative/repository-modernisation` and have been pushed. The follow-up SHA
-is the current remotely resolvable action pin.
+Implementation is in final integration. ADRs 001–021 are Accepted. Phases 0–5
+are complete through reviewed initiative branches and hosted draft-PR
+evidence; Phase 6 remains open because the coordinated native-candidate
+positive gate has not yet run with its protected credential boundary. No
+initiative branch has been merged into a target/default branch and no package
+or documentation site has been published.
 
-The three reference checkpoints are covered by fully green hosted successor
-draft PRs: core PR 1539 at
-`4973c5fcfc53f0217a5fca20d0765e74b30459e2`, OCC PR 32 at
-`5a4cf9701007266e517996181c8476488c4030d9`, and CGAL PR 81 at
-`a46eecab71de5dfea6df7380d2eafb7185cc789a`. CGAL's macOS Intel wheel and
-smoke jobs now pass, closing the former runner gap. Direct local commands remain
-canonical; shared actions retain bounded repeated CI mechanics without hiding
-repository-owned orchestration.
+The bounded `compas-actions` v2 prerequisite is independently reviewed Ready.
+Commit `5c64e6e2b576a1232d28fed47d9478ca8eb63b2d` is pushed on
+`initiative/repository-modernisation` and is the immutable consumer pin. Direct
+local commands remain canonical; shared actions retain bounded repeated CI
+mechanics without hiding repository-owned orchestration.
 
-Phase 4 is active. `compas_session` modernization commit
-`10b2d6332eed42b16b57c4d95c7866844cfb90bd` is reviewed and pushed. The
-ordinary `compas_framework` patch is independently reviewed, committed, and
-pushed as `ae3b28e`; it implements Accepted ADR 020 and keeps candidate
-publication structurally disabled. Its native integration contract is likewise
-authorized by Accepted Geometry ADRs 022–023 and Typing ADRs 015–017, while
-its cross-repository artifact provenance and credential boundary is now
-authorized by Accepted ADR 021 but not yet implemented. Accepted Gmsh ADRs
-014–016 and ShapeOp ADRs 017–019 authorize their bounded package migrations.
-Model and viewer migration, final cross-package integration, repository
-settings, publishing, deployment, and merges remain pending or explicitly
-approval-gated.
+The current package checkpoints are carried by draft PRs and remain outside
+`main`:
 
-`compas_libigl` joined the active modernization scope on 2026-11-05 from
-`c3-upgrade` commit `70acf99`. Its successor draft PR 47 at
-`86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877` now passes policy, quality,
-typing, sdist, wheel-typing, and Linux, Windows, and macOS ARM64 wheel/smoke
-checks. The additional native-stub truthfulness and completeness work discovered
-later is tracked by Accepted Typing ADR 017 rather than being retroactively
-claimed by this modernization checkpoint.
+- core [PR 1539](https://github.com/compas-dev/compas/pull/1539) at
+  `99b82a6673ff7d05c1c323c8921135c274993f11`;
+- OCC [PR 32](https://github.com/compas-dev/compas_occ/pull/32) at
+  `7fdf2ffb57d1de16308020e14ec626d79e65a034`;
+- CGAL [PR 81](https://github.com/compas-dev/compas_cgal/pull/81) at
+  `7537d58154f62f38c0b2d4118972d0a326f86c9b`;
+- libigl [PR 47](https://github.com/compas-dev/compas_libigl/pull/47) at
+  `710b2b6714839a203fc8a6c62c437c0f6735ba0e`;
+- model [PR 68](https://github.com/BlockResearchGroup/compas_model/pull/68) at
+  `83df4167f7ba1539ae205a837e0238afecc0a36b`;
+- viewer [PR 232](https://github.com/compas-dev/compas_viewer/pull/232) at
+  `cf5a5195bda840a511319d6b7201978af68c15e3`;
+- Gmsh [PR 7](https://github.com/compas-dev/compas_gmsh/pull/7) at
+  `c47af195bf04d0d2e874255bfe9c5f351beda672`;
+- ShapeOp [PR 7](https://github.com/compas-dev/compas_shapeop/pull/7) at
+  `930619a9aecd3e37515be9ce342ac20746ccf6d3`; and
+- session [PR 1](https://github.com/compas-dev/compas_session/pull/1) at
+  `e0bdd02aa8490248c6f2f36042651d8ebfc4442b`.
+
+All cited package PR heads except the newly superseding CGAL head have complete
+green hosted evidence. CGAL's local gates pass, including the corrected
+installed-wheel Pyright environment. In its new hosted matrix, quality,
+minimum/current NumPy, sdist, Linux wheel, and macOS ARM wheel jobs pass;
+Windows and macOS Intel wheel jobs are still running and wheel smoke has not
+started. The complete run must succeed before its artifact can enter the live
+candidate manifest.
+
+Accepted ADR 021 is implemented on framework draft
+[PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
+`df97253f2797490bca3f027fc70d7f5154cadfe3`. Its schema, provenance,
+security-negative, offline-installation, runtime/type integration, JUnit, and
+public-release-order contracts pass locally and the ordinary credential-free
+PR contracts pass on both push and pull-request events; release metadata also
+passes. The live four-package manifest remains intentionally
+absent until the superseding CGAL run supplies successful, unexpired artifact
+evidence. The trusted hosted positive then still requires an explicitly
+configured, protected GitHub App environment; ADR 021 does not authorize that
+repository-owner configuration.
+
+ShapeOp ADRs 022–023 are Proposed in the separate follow-up draft PR and are
+not prerequisites for completing the accepted packaging modernization. They
+cover the misleading correspondence flags and post-initialization point-buffer
+lifecycle respectively; neither contract is implemented by the green ShapeOp
+modernization checkpoint.
+
+A larger future refactor may narrow `compas_gmsh` to COMPAS meshing
+infrastructure rather than modeling features. `compas_fea2` is explicitly
+outside that future initiative: it is only a known deferred external consumer
+while its independent refactor proceeds. No `compas_fea2` migration,
+compatibility layer, or coordinated source change is authorized here.

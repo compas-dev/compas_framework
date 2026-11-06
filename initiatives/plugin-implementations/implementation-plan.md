@@ -3,9 +3,10 @@
 ## Status
 
 Architecture complete and ADRs 001–006 **Accepted**. Post-approval Wave 0–1
-reconnaissance is complete; implementation and artifact-level verification are
-incomplete. No initiative changes have been merged into a target/default
-branch or published.
+reconnaissance is complete and source migration is substantially implemented
+on the coordinated initiative branches. Remaining selection, artifact, and
+cross-package gates are listed below. No initiative changes have been merged
+into a target/default branch or published.
 
 ## Dependency graph
 
@@ -52,34 +53,38 @@ Work is split into three dependency classes:
 
 In-scope packages: `compas`, `compas_cgal`, `compas_libigl`, and `compas_occ`.
 
-Status: audit complete; source/editable discovery is substantially compliant;
-remaining work is listed below.
+Status: source migration substantially complete. CGAL uses four lightweight
+category modules, actual compiled-module requirements, and nine valid core
+plugins; its three orphan direct APIs are no longer decorated. Libigl retains
+three lightweight category modules and eight core plugins, but still lacks
+explicit compiled-runtime requirements. OCC retains four lightweight modules
+and 130 plugins with the accepted signature/type corrections. Exact installed
+CGAL/libigl/OCC discovery passes in the local native integration smoke; final
+live-candidate and package-owned evidence remain open.
 
 1. Add core tests for module-name and callable requirement selection,
    non-selection, default behavior, and `PluginNotInstalledError`.
 2. Establish reusable assertions for installed metadata, fresh-process
    isolation, parity, delegation, and built artifacts.
-3. Correct CGAL contributor guidance and remove obsolete `__all_plugins__`
-   instructions where they remain active.
-4. Remove decorators from CGAL's three functions without a core pluggable,
-   retaining them as direct APIs unless a separate core extension point is
-   approved.
-5. Make CGAL and libigl requirements identify the actual compiled runtime and
-   test registration-but-non-selection when that runtime is unavailable.
+3. Keep CGAL contributor guidance free of obsolete `__all_plugins__`
+   instructions. **Complete.**
+4. Keep CGAL's three functions without a core pluggable as undecorated direct
+   APIs. **Complete.**
+5. Keep CGAL requirements bound to the actual compiled runtime. Add equivalent
+   libigl requirements and registration-but-non-selection coverage when that
+   runtime is unavailable. **CGAL complete; libigl open.**
 6. Add representative real public dispatch and complete lazy-delegation
    coverage for libigl's registered categories.
 7. Replace OCC synthetic-only metadata evidence with installed, fresh-process,
    and built-wheel checks while preserving no-OCC discovery.
 8. Add built-wheel entry-point metadata, registration-count, isolation, and
    runtime-selection checks for every provider.
-9. After Typing ADRs 016–017 are resolved, require exhaustive shared-type,
-   wrapper/core annotation, native-stub, and result parity, including OCC's 48
-   incomplete curve/surface wrappers. Operation-specific wrappers also follow
-   Typing ADR 015 where applicable.
-10. After Geometry ADR 022 and Typing ADR 015 are resolved, consolidate OCC's
-    BRep conversion hook and verify the final triangulation/BRep extension-point
-    names. Add BRep default-value parity only after Geometry ADR 023 is
-    resolved.
+9. Require exhaustive shared-type, wrapper/core annotation, native-stub, and
+   result parity under Accepted Typing ADRs 015–017. **The approved source
+   migration is complete; final installed parity remains part of integration.**
+10. Keep the consolidated OCC BRep conversion hook and final triangulation/BRep
+    extension-point names aligned with Accepted Geometry ADRs 022–023 and
+    Typing ADR 015. **Source migration complete; installed parity open.**
 
 Exit criteria: all reference packages pass the verification contract that is
 applicable to their runtime.
@@ -88,35 +93,35 @@ applicable to their runtime.
 
 In-scope packages: `compas_model` and `compas_viewer`.
 
-Status: audit complete; built metadata is correct, model discovery is isolated,
-and viewer discovery is graphics-eager. Neither package satisfies the complete
-verification contract.
+Status: source and package-local artifact migration complete on the current
+modernization heads. Model discovery is isolated and requirement-gated; viewer
+package initialization is lazy and entry-point discovery is graphics-free.
+Both build workflows inspect the wheel entry point and run installed discovery.
+The coordinated two-package registry/lifecycle test remains open.
 
 ### Model
 
-- remove obsolete `__all_plugins__`;
-- decide whether the dormant default-context base registration is intentional
-  alongside the discoverable Viewer-context registration; do not describe the
-  current collect-all behavior as an equal-priority conflict;
-- declare the actual optional viewer requirement and stop swallowing arbitrary
-  implementation `ImportError` exceptions;
-- resolve or explicitly preserve `ensure_scene_objects_registered` with the
-  model/viewer scene-lifecycle design;
-- add installed metadata, wheel, fresh-process isolation, parity, lazy
-  delegation, unavailable-runtime, and registry-result tests; and
+- keep obsolete `__all_plugins__` removed;
+- keep the discoverable Viewer-context registration as the sole plugin while
+  retaining the documented `ensure_scene_objects_registered` helper for
+  editable/source activation;
+- keep the actual optional `compas_viewer` requirement and propagate
+  implementation import failures;
+- retain installed metadata, wheel, fresh-process isolation,
+  unavailable-runtime, and registry-result tests; and
 - migrate real geometry/render consumers only after Geometry ADRs 022–023 and
   Typing ADR 015 establish their final conversion APIs.
 
 ### Viewer
 
-- make actual entry-point loading graphics-free, including package-initializer
+- keep actual entry-point loading graphics-free, including package-initializer
   execution, while preserving the approved public Viewer import contract;
-- remove test-collection imports that invalidate isolation evidence;
-- resolve or explicitly preserve manual `ensure_scene_objects_registered`
-  activation with core scene lifecycle;
-- align the supported COMPAS range with the verified C3 plugin contract;
-- add installed metadata, wheel, external-process isolation, parity,
-  delegation, unavailable-runtime, drawing-semantics, and artifact tests; and
+- keep isolation evidence independent of test-collection scene imports;
+- retain the explicit activation helper where source/editable lifecycle needs
+  it, without adding a second installed discovery path;
+- keep the supported COMPAS range aligned with the verified C3 contract;
+- retain installed metadata, wheel, external-process isolation, parity,
+  delegation, drawing-semantics, and artifact tests; and
 - migrate scene objects away from stored resolution and cached tessellation
   only after the approved geometry conversion contract is implemented.
 

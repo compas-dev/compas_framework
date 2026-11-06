@@ -2,19 +2,20 @@
 
 ## Status
 
-ADRs 001–017 and Geometry ADRs 022–023 are Accepted. Remaining work may proceed
-in dependency order, preserving duck typing through Python code and limiting
-normalization to explicit hard boundaries. Acceptance authorizes the exact
-geometry API, shared vocabulary, and native-binding alignment work; it does not
-mark those source or verification slices complete.
+ADRs 001–017 and Geometry ADRs 022–023 are Accepted. The approved source work
+is implemented at the coordinated candidate heads, preserving duck typing
+through Python code and limiting normalization to explicit hard boundaries.
+Final installed integration remains open.
 
-Hosted draft-PR checks are green for the current pushed checkpoints: core PR
-1539 at `4973c5fcfc53f0217a5fca20d0765e74b30459e2`, OCC PR 32 at
-`5a4cf9701007266e517996181c8476488c4030d9`, CGAL PR 81 at
-`a46eecab71de5dfea6df7380d2eafb7185cc789a`, and libigl PR 47 at
-`86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877`. Those runs prove the
-existing package, platform, and typed-wheel checkpoints only. WP7.4–WP7.7 and
-WP8 are now authorized but remain unimplemented and unverified.
+Current draft-PR heads are core PR 1539 at
+`99b82a6673ff7d05c1c323c8921135c274993f11`, OCC PR 32 at
+`7fdf2ffb57d1de16308020e14ec626d79e65a034`, CGAL PR 81 at
+`7537d58154f62f38c0b2d4118972d0a326f86c9b`, and libigl PR 47 at
+`710b2b6714839a203fc8a6c62c437c0f6735ba0e`. Core, OCC, and libigl are hosted
+green. CGAL passes the corrected installed-wheel consumer locally and its
+superseding hosted matrix is in progress. WP7 source work and WP8.1–WP8.3 are
+implemented; WP8.4 and WP6 remain open until the exact four-package manifest
+and protected hosted positive pass.
 
 ## Work packages
 
@@ -80,9 +81,10 @@ topology queries through independently failing contracts as approved in ADR
 
 ### WP4 — CGAL NumPy and native stubs
 
-**Status:** current checkpoint hosted-verified on draft PR 81 at `a46eecab`,
-with the deeper stub correction and 100% completeness contract scheduled in
-accepted WP8.2. The branch is based on modernization commit `d31ec0f`.
+**Status:** source and installed-wheel contracts complete at `7537d581`. Local
+Pyright reports zero errors and installed `--verifytypes` reports 100% of the
+89 public symbols with `py.typed` present. The superseding hosted draft-PR
+matrix is in progress.
 
 **Ownership:** `compas_cgal` wrapper modules, `types.py`, native stubs, native
 boundary tests, packaging.
@@ -105,9 +107,8 @@ tests.
 
 ### WP5 — OCC core-contract alignment
 
-**Status:** current pushed checkpoint hosted-verified on draft PR 32 at
-`5a4cf970`; further work that depends on the accepted geometry/type vocabulary
-remains pending with WP7–WP8.
+**Status:** source, plugin-contract, installed-typing, and package matrix work
+complete and hosted green on draft PR 32 at `7fdf2ffb`.
 
 **Ownership:** separate non-overlapping families:
 
@@ -132,6 +133,10 @@ For each family:
 
 ### WP6 — Typed distribution and integration
 
+**Status:** open. The package-level typed distribution gates pass at the
+current candidate heads, but completion depends on the live WP8.4 candidate
+manifest and trusted hosted positive.
+
 **Ownership:** package build configuration plus `compas_framework` integration
 and independent review.
 
@@ -148,10 +153,10 @@ decision governing the integrated public/native surface.
 
 ### WP7 — Representation and numerical-boundary correction
 
-**Status:** approved and in progress. ADRs 012–016 and Geometry ADRs 022–023
-supply the exact API and structural vocabulary needed for WP7.4–WP7.7. Those
-work packages are authorized in dependency order and remain incomplete.
-Retained `Tessellation` representation semantics remain in scope.
+**Status:** source implementation complete at the coordinated candidate heads.
+ADRs 012–016 and Geometry ADRs 022–023 supply the exact API and structural
+vocabulary implemented by WP7.1–WP7.7. Retained `Tessellation` representation
+semantics remain in scope; exact installed integration is tracked by WP8.4.
 
 #### Affected-API migration table
 
@@ -233,10 +238,15 @@ necessary.
 
 ### WP8 — Shared vocabulary and native-binding truthfulness
 
-**Status:** Accepted and authorized; source implementation and verification are
-pending.
+**Status:** WP8.1–WP8.3 source and package-level verification are implemented.
+WP8.4 has its reviewed framework mechanism but awaits the live manifest and
+trusted hosted positive.
 
 #### WP8.1 — Core vocabulary and constructor interoperability
+
+**Status:** complete at core source checkpoint
+`3c1a2e8e0e5c4c14292ecf4bb38c82e5b977273e`; candidate-producer successor
+`99b82a6673ff7d05c1c323c8921135c274993f11` is hosted green.
 
 **Ownership:** public `compas.typing`, removal of private `compas._typing`,
 affected core constructors, static/runtime fixtures, and public documentation.
@@ -272,6 +282,10 @@ affected core constructors, static/runtime fixtures, and public documentation.
 
 #### WP8.2 — CGAL stub and wrapper correction
 
+**Status:** complete locally at `7537d58154f62f38c0b2d4118972d0a326f86c9b`;
+the superseding hosted run is in progress. The corrected wheel smoke test now
+creates one exact consumer environment for the wheel and Pyright.
+
 **Ownership:** `compas_cgal` native `.pyi`, `types.py`, wrappers, exports,
 runtime ABI tests, typed consumers, and package verification.
 
@@ -285,6 +299,9 @@ runtime ABI tests, typed consumers, and package verification.
 **Depends on:** WP8.1 and accepted ADR 017.
 
 #### WP8.3 — Libigl native stubs and public completion
+
+**Status:** complete and hosted green at
+`710b2b6714839a203fc8a6c62c437c0f6735ba0e`.
 
 **Ownership:** `compas_libigl` 13 private extension stubs, 21 public wrappers,
 plugins, imports, consumers, and package verification.
@@ -300,6 +317,13 @@ plugins, imports, consumers, and package verification.
 parallel with separate repository ownership.
 
 #### WP8.4 — Cross-package installed integration
+
+**Status:** mechanism implemented and independently reviewed on framework
+draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
+`df97253f2797490bca3f027fc70d7f5154cadfe3`. Forty-four candidate-contract
+tests and the local native smoke pass. The live manifest awaits a successful
+fresh CGAL artifact; the hosted positive additionally awaits the separately
+configured protected GitHub App environment.
 
 **Ownership:** `compas_framework` integration fixtures and independent review.
 

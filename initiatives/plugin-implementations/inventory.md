@@ -1,21 +1,22 @@
 # Plugin Implementations Inventory
 
-Inventory date: 2026-11-05. Updated after the approved Wave 0–1 implementation
-audit.
+Inventory date: 2026-11-06. Updated after the approved Wave 0–1 implementation
+audit and the subsequent typing/modernization checkpoints.
 
 ## Audited checkpoints
 
-The audit used the following package checkpoints. Concurrent uncommitted CGAL
-and libigl typing experiments did not touch the plugin files measured here.
+The current coordination record uses these pushed candidate or modernization
+heads. Counts below were re-inspected from these source checkpoints; hosted
+claims are limited to the package evidence recorded by the owning initiative.
 
 | Package | Branch | Audited checkpoint |
 |---|---|---|
-| `compas` | `initiative/typing-alignment` | `afc4d31d2501bac2c542f17d4c8b05592e45ee7b` |
-| `compas_cgal` | `initiative/typing-alignment` | `a46eecab71de5dfea6df7380d2eafb7185cc789a` |
-| `compas_libigl` | `initiative/typing-alignment` | `86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877` |
-| `compas_occ` | `initiative/typing-alignment` | `5a4cf9701007266e517996181c8476488c4030d9` |
-| `compas_model` | `c3-upgrade` | `fdb37df8ee343bbaea5f6420d987e8a4ea468ed3` |
-| `compas_viewer` | `c3-upgrade` | `ff1c81f37b7233c783a5e44f87adf4e8ca583f2a` |
+| `compas` | `initiative/typing-alignment` | `99b82a6673ff7d05c1c323c8921135c274993f11` |
+| `compas_cgal` | `initiative/typing-alignment` | `7537d58154f62f38c0b2d4118972d0a326f86c9b` |
+| `compas_libigl` | `initiative/typing-alignment` | `710b2b6714839a203fc8a6c62c437c0f6735ba0e` |
+| `compas_occ` | `initiative/typing-alignment` | `7fdf2ffb57d1de16308020e14ec626d79e65a034` |
+| `compas_model` | `initiative/repository-modernisation` | `83df4167f7ba1539ae205a837e0238afecc0a36b` |
+| `compas_viewer` | `initiative/repository-modernisation` | `cf5a5195bda840a511319d6b7201978af68c15e3` |
 
 ## Core discovery contract
 
@@ -44,16 +45,15 @@ function-local optional imports.
 
 | Package | Entry-point modules | Decorated functions | Current state |
 |---|---:|---:|---|
-| `compas_cgal` | 5 | 11 | Lightweight category modules and function-local implementation imports. |
-| `compas_libigl` | 3 | 8 | Lightweight `trimesh`, `intersections`, and `quadmesh` modules; discovery is native-import-free. |
-| `compas_occ` | 4 | 131 | Lightweight BRep, curve, surface, and intersection modules guarded by the OCC requirement. |
-| `compas_model` | 1 | 2 total, 1 discoverable | Built entry point is isolated, but obsolete legacy registration, silent optional-runtime failure, and an alternate activation path remain. |
-| `compas_viewer` | 1 | 4 | Registration functions defer scene imports, but Python first executes an eager package initializer that loads the GUI stack. |
+| `compas_cgal` | 4 | 9 | Lightweight category modules, function-local implementation imports, and per-family compiled-module requirements. |
+| `compas_libigl` | 3 | 8 | Lightweight `trimesh`, `intersections`, and `quadmesh` modules; discovery is native-import-free, but requirements do not yet name the compiled runtime. |
+| `compas_occ` | 4 | 130 | Lightweight BRep, curve, surface, and intersection modules guarded by the OCC requirement. |
+| `compas_model` | 1 | 1 | Built entry point is isolated, requires `compas_viewer`, and preserves implementation import failures. |
+| `compas_viewer` | 1 | 4 | Lazy package exports make actual entry-point loading Qt/OpenGL-free; implementation imports remain inside wrappers. |
 
 ### Measured Wave 0 evidence
 
-Discovery from a clean external working directory in the required `compas3`
-environment produced:
+The initial clean external-process audit produced:
 
 | Provider | Installed entry-point modules | Registered plugins | Selected plugins |
 |---|---:|---:|---:|
@@ -62,74 +62,70 @@ environment produced:
 | `compas_occ` | 4 | 131 | 131 |
 
 Fresh-process discovery did not import backend implementation or native
-modules for any of the three providers. Focused source/editable tests passed:
-11 core plugin tests, 1 CGAL plugin test, 3 libigl plugin tests, and 11 OCC
-plugin tests. These checks do not by themselves establish built-wheel
-metadata, isolation, or runtime-unavailability behavior.
+modules for any of the three providers. The later CGAL cleanup intentionally
+reduced its entry-point/decorator counts from 5/11 to 4/9, and the OCC contract
+consolidation reduced its decorator count from 131 to 130. Therefore the table
+above is historical evidence, not the expected count for the current heads.
+
+At the current heads, package tests verify the changed registration contracts,
+and framework ADR 021's local native smoke discovers installed CGAL, libigl,
+and OCC entry-point modules before exercising representative implementations.
+The lightweight source modules are inspected separately. The final
+live-candidate run is still required before that cross-package artifact
+evidence is complete.
 
 ### Reference implementation state
 
 CGAL and libigl are the clearest category-oriented references. Both declare
 entry points, keep contract imports type-only, and import implementations
-inside wrapper bodies. CGAL's adapters currently require only the provider
-package rather than the actual compiled module. Three decorated CGAL functions
-(`split_mesh_mesh`, `mesh_skeleton`, and `mesh_skeleton_with_mapping`) have no
-current core pluggable and therefore belong on the undecorated direct-API path
-unless a separately approved core contract is introduced. Active CGAL
-contributor documentation still mentions `__all_plugins__`.
+inside wrapper bodies. CGAL now requires the actual compiled module for each
+family. `split_mesh_mesh`, `mesh_skeleton`, and
+`mesh_skeleton_with_mapping` have no current core pluggable and are retained as
+undecorated direct APIs. Active contributor guidance explicitly forbids legacy
+`__all_plugins__` discovery.
 
-Libigl's eight adapters all map structurally to current core extension points,
-but none declares a runtime requirement. Its discovery tests cover installed
-metadata and selected lazy paths, not unavailable-runtime selection, every
-adapter, representative public dispatch per category, or built-wheel
-entry-point metadata.
+Libigl's eight adapters map structurally to current core extension points and
+now use the approved private hook names and complete native stubs. None yet
+declares a compiled-runtime requirement. Its discovery and wheel tests cover
+installed metadata and selected lazy paths; unavailable-runtime selection and
+the complete per-category public-dispatch matrix remain open.
 
 OCC follows the same lazy principle and correctly names `OCC` as the optional
-runtime. Its repository tests construct synthetic entry points and check
-registration in the current process. The cross-package audit supplied
-fresh-process evidence, but the package still lacks its own installed and
-built-wheel metadata proof. Exact parity is tested for only eight intersection
-wrappers; 48 curve/surface wrappers omit annotations present on their core
-pluggables. Final annotation parity follows the Accepted typing contracts.
+runtime. Its accepted curve, surface, BRep, and intersection signature/type
+corrections are present at the current head. Repository plugin tests still use
+synthetic entry points, so package-owned installed and built-wheel discovery
+proof remains open even though the framework native smoke supplies
+cross-package installed evidence.
 
 ### Measured Wave 1 evidence
 
-Wheels built from isolated `git archive` source copies contained the intended
-entry points:
+Current built wheels contain the intended entry points:
 
 - `compas_model = compas_model.plugins`;
 - `compas_viewer = compas_viewer.plugins`.
 
-The current editable installations were stale: model exposed no entry point,
-while viewer still pointed to `compas_viewer.scene`. Existing tests therefore
-do not prove the metadata of the checked-out branches.
+Model's installed consumer verifies the exact wheel entry point, registers one
+Viewer-context plugin, proves that `compas_viewer` is absent, and confirms the
+requirement prevents selection. Viewer makes its package exports lazy, so
+loading the real installed entry point registers four plugins without loading
+PySide6, OpenGL, or scene implementation modules. Its build workflow checks
+the wheel metadata and repeats graphics-free discovery in a clean wheel
+environment.
 
-Loading the built model entry point in a fresh process registered one plugin
-without importing `compas_model.viewer`, `compas_viewer`, PySide6, or OpenGL.
-Loading the built viewer entry point imported PySide6, OpenGL, and the complete
-viewer scene package because Python executes `compas_viewer.__init__` before
-`compas_viewer.plugins`.
+### Current Wave 1 packages
 
-### Partial modern packages
-
-`compas_model` still declares `__all_plugins__` entries for obsolete or missing
-modules and has two scene-registration implementations. This is not currently
-an equal-priority conflict: core's scene registration hook uses
-`selector="collect_all"`. The unresolved question is whether the dormant base
-registration is intentional alongside the discoverable Viewer-context
-registration. The discoverable wrapper declares no requirement, catches every
-`ImportError`, and returns silently, so a missing viewer runtime, a broken GUI
-dependency, and an implementation defect are indistinguishable. The manual
-`ensure_scene_objects_registered` path is an alternate activation mechanism
-that must be resolved with model/viewer ownership and core scene lifecycle.
+`compas_model` removes the legacy list and dormant second decorated
+registration. Its sole plugin declares `requires=["compas_viewer"]`, performs
+implementation imports in the function body, and does not swallow
+implementation failures. `ensure_scene_objects_registered` is documented as
+an explicit helper for editable/source activation and does not create a second
+installed discovery mechanism.
 
 `compas_viewer.plugins` keeps implementation imports inside wrapper bodies,
-but the entry-point module is not actually lightweight because the package
-initializer eagerly imports `Viewer`, PySide6, OpenGL, renderer, scene, and UI
-modules first. Tests use synthetic metadata and import scene code during
-collection, so they cannot expose this failure. The package also has a manual
-`ensure_scene_objects_registered` path and advertises a COMPAS range beginning
-at 2.2 even though exact plugin parity is verified only against COMPAS 3.
+and the package initializer now exposes Viewer and related public objects
+lazily. Source and installed-wheel tests prove that entry-point discovery is
+graphics-free. Final initiative evidence still needs the coordinated
+model/viewer collect-all registry and lifecycle test.
 
 Both packages' real scene/render consumers still use stored resolutions,
 cached tessellations, strategy objects, or the old `polygonize`/`tessellate`
@@ -208,11 +204,12 @@ Common gaps are:
 
 ## Documentation state
 
-Core's plugin author guide is a sound canonical baseline. Viewer documents its
-entry point and warns against import side effects. CGAL contributor guidance
-still recommends `__all_plugins__` in active Markdown and obsolete RST files.
-OCC explains using plugins but not the registration architecture. Model,
-notebook, Rhino, Blender, and GH Python lack equivalent current author guidance.
+Core's plugin author guide is the canonical baseline. Viewer documents its
+entry point and warns against import side effects. CGAL and OCC agent guidance
+requires explicit entry points and forbids restoring `__all_plugins__`.
+Package-level contributor guidance and final migration notes remain uneven;
+model, notebook, Rhino, Blender, and GH Python lack equivalent current author
+guidance, though only model is in the approved Waves 0–1 scope.
 
 ## Risks
 

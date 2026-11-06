@@ -93,12 +93,23 @@ Use the `compas3` environment. Before completion, affected packages must pass:
 
 ## Current status
 
-Implementation is in progress. ADRs 001–017 and Geometry ADRs 022–023 are
-Accepted. Their remaining source slices are authorized in dependency order but
-remain incomplete and unverified. Approved work preserves duck typing through
-Python code and localizes normalization to explicit native, serialization,
-ownership, and retained-representation boundaries. `compas_libigl` joined the
-initiative on 2026-11-05 to align its native mesh plugins and replace
-incomplete native typing with the shared contract. CGAL skeletonisation output
-remains a known correctness limitation: typing, stub, or packaging checks must not be treated
-as functional validation of that module.
+Implementation is in final integration. ADRs 001–017 and Geometry ADRs
+022–023 are Accepted. The approved source slices are implemented at the current
+core, OCC, CGAL, and libigl candidate heads while preserving duck typing and
+localizing normalization to explicit native, serialization, ownership, and
+retained-representation boundaries.
+
+WP7.4–WP7.7 and WP8.1 are source-complete. Native-stub/public-wrapper work is
+complete for CGAL WP8.2 and libigl WP8.3; libigl is hosted green, while CGAL's
+superseding hosted matrix remains in progress after correcting its installed
+wheel consumer environment. Accepted ADR 021 is implemented in
+`compas_framework` for WP8.4, but the exact live manifest awaits that CGAL run
+and the trusted hosted positive awaits separately authorized GitHub App
+environment configuration. WP8.4 and final WP6 integration therefore remain
+open.
+
+`compas_libigl` joined the initiative on 2026-11-05 to align its native mesh
+plugins and replace incomplete native typing with the shared contract. CGAL
+skeletonisation output remains a known correctness limitation: typing, stub,
+or packaging checks must not be treated as functional validation of that
+module.
