@@ -8,24 +8,24 @@ We accept code contributions through pull requests.
 In short, this is how that works.
 
 1. Fork [the repository](https://github.com/compas-dev/compas_framework) and clone the fork.
-2. Create a virtual environment using your tool of choice (e.g. `virtualenv`, `conda`, etc).
-3. Install development dependencies:
+2. Install [uv](https://docs.astral.sh/uv/).
+3. Synchronize the locked, tooling-only development environment:
 
    ```bash
-   python -m pip install -e ".[dev,docs]"
+   uv sync --frozen --only-group dev --no-install-project
    ```
 
 4. Make sure all tests pass:
 
    ```bash
-   invoke test
+   uv run invoke test
    ```
 
 5. Start making your changes on a feature branch based on **main**.
 6. Make sure all tests still pass:
 
    ```bash
-   invoke test
+   uv run invoke test
    ```
 
 7. Commit your changes and push your branch to GitHub.
@@ -34,12 +34,12 @@ In short, this is how that works.
 During development, use [pyinvoke](http://docs.pyinvoke.org/) tasks on the
 command line to ease recurring operations:
 
-* `invoke clean`: Clean all generated artifacts.
-* `invoke check`: Run various code and documentation style checks.
-* `invoke test`: Run all tests and checks in one swift command.
-* `invoke typecheck`: Run Pyright over integration code and tests.
-* `invoke docs`: Build the MkDocs documentation.
-* `invoke`: Show available tasks.
+* `uv run invoke check`: Run Ruff lint and format checks.
+* `uv run invoke test`: Run the pure package tests.
+* `uv run invoke typecheck`: Run Pyright over the coordination package and pure tests.
+* `uv run invoke docs`: Build the MkDocs documentation strictly into temporary storage.
+* `uv run invoke build`: Build wheel and source distributions into temporary storage.
+* `uv run invoke --list`: Show available aliases.
 
 ## Bug reports
 

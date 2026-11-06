@@ -77,4 +77,6 @@ nav:
   - Examples: examples.md
   - API Reference: api.md
   - Project:
+      - Release Process: release.md
+      - Changelog: changelog.md
       - License: license.md

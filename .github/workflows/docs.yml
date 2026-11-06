@@ -1,19 +1,45 @@
 name: docs
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*'
   pull_request:
-    branches:
-      - main
+    branches: [main, initiative/geometry-tessellation, initiative/repository-modernisation]
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "README.md"
+      - "CHANGELOG.md"
+      - "LICENSE"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/docs.yml"
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
 
 jobs:
   docs:
     runs-on: ubuntu-latest
+    env:
+      UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+      UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/venv
     steps:
-      - uses: compas-dev/compas-actions.docs@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          version: "0.12.7"
+      - run: uv sync --frozen --only-group docs --no-install-project
+      - run: uv run --no-sync mkdocs build --strict --site-dir "${RUNNER_TEMP}/site"

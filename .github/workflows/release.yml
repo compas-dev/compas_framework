@@ -1,30 +1,135 @@
-name: release
+name: release-candidate
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
 
 jobs:
-  build:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      is-release: ${{ steps.release.outputs.is-release }}
+      tag: ${{ steps.release.outputs.tag }}
+      version: ${{ steps.release.outputs.version }}
+    steps:
+      - id: release
+        uses: compas-dev/compas-actions/release-check@5c64e6e2b576a1232d28fed47d9478ca8eb63b2d # v2 candidate
+
+  quality:
+    needs: detect
+    if: needs.detect.outputs.is-release == 'true'
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python: ['3.9', '3.10', '3.11']
-
+        python: ["3.12", "3.13", "3.14"]
+    env:
+      UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+      UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/venv
     steps:
-      - uses: compas-dev/compas-actions.build@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          python: ${{ matrix.python }}
-          invoke_lint: true
-          invoke_test: true
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          version: "0.12.7"
+      - run: uv sync --frozen --only-group dev --no-install-project
+      - name: Verify runtime packages are excluded
+        run: >-
+          uv run --no-sync python -c
+          "from importlib.metadata import distributions;
+          installed={distribution.metadata['Name'].lower().replace('_', '-') for distribution in distributions()};
+          forbidden={'compas-framework', 'compas', 'compas-occ', 'compas-cgal', 'compas-libigl', 'compas-gmsh', 'compas-model', 'compas-session', 'compas-shapeop', 'compas-viewer'};
+          unexpected=sorted(installed & forbidden);
+          assert not unexpected, unexpected"
+      - name: Lint and format
+        run: |
+          uv run --no-sync ruff check .
+          uv run --no-sync ruff format --check .
+      - name: Type check
+        shell: bash
+        run: uv run --no-sync pyright --pythonpath "$(uv run --no-sync python -c 'import sys; print(sys.executable)')"
+      - name: Run pure package tests
+        run: >-
+          uv run --no-sync pytest
+          --basetemp "${{ runner.temp }}/pytest"
+          -o cache_dir="${{ runner.temp }}/pytest-cache"
+          tests/test_package.py
 
-  Publish:
-    needs: build
+  documentation:
+    needs: detect
+    if: needs.detect.outputs.is-release == 'true'
     runs-on: ubuntu-latest
+    env:
+      UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+      UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/venv
     steps:
-      - uses: compas-dev/compas-actions.publish@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          pypi_token: ${{ secrets.PYPI }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          version: "0.12.7"
+      - run: uv sync --frozen --only-group docs --no-install-project
+      - run: uv run --no-sync mkdocs build --strict --site-dir "${RUNNER_TEMP}/site"
+
+  package:
+    needs: [detect, quality, documentation]
+    if: needs.detect.outputs.is-release == 'true'
+    runs-on: ubuntu-latest
+    env:
+      UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+      UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/venv
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          version: "0.12.7"
+      - run: uv sync --frozen --only-group build --no-install-project
+      - name: Build distributions once
+        run: |
+          mkdir -p "${RUNNER_TEMP}/source"
+          git archive --format=tar HEAD | tar -xf - -C "${RUNNER_TEMP}/source"
+          uv build "${RUNNER_TEMP}/source" --out-dir "${RUNNER_TEMP}/dist"
+      - name: Test built artifacts
+        env:
+          COMPAS_FRAMEWORK_DIST_DIR: ${{ runner.temp }}/dist
+        run: >-
+          uv run --no-sync pytest
+          --basetemp "${RUNNER_TEMP}/artifact-pytest"
+          -o cache_dir="${RUNNER_TEMP}/artifact-pytest-cache"
+          tests/test_distribution_artifacts.py
+      - name: Check distribution metadata
+        run: uv run --no-sync twine check "${RUNNER_TEMP}"/dist/*
+      - name: Smoke-test wheel without framework dependencies
+        run: |
+          uv venv "${RUNNER_TEMP}/wheel-smoke"
+          uv pip install --python "${RUNNER_TEMP}/wheel-smoke/bin/python" --no-deps "${RUNNER_TEMP}"/dist/*.whl
+          PYTHONPATH= "${RUNNER_TEMP}/wheel-smoke/bin/python" -c "import compas_framework; assert compas_framework.__version__"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: candidate-python-package-distributions
+          path: ${{ runner.temp }}/dist/*
+          if-no-files-found: error

@@ -2,7 +2,5 @@ name: compas-framework
 channels:
   - conda-forge
 dependencies:
-  - python >=3.12
-  - pip
-  - pip:
-      - -e .[dev,docs]
+  - python >=3.12,<3.15
+  - uv =0.12.7

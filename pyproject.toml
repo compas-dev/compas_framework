@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=66.0"]
+requires = ["setuptools>=77.0"]
 build-backend = "setuptools.build_meta"
 
 # ============================================================================
@@ -11,9 +11,10 @@ name = "compas_framework"
 description = "The COMPAS framework packages"
 keywords = []
 authors = [{ name = "tom van mele", email = "tom.v.mele@gmail.com" }]
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.15"
 dynamic = ["version"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -36,13 +37,6 @@ dependencies = [
     "compas_viewer",
 ]
 
-[project.optional-dependencies]
-dev = ["build", "bump-my-version", "compas_invocations2", "invoke >=0.14", "pyright", "pytest", "pytest-cov", "ruff", "twine", "wheel"]
-docs = ["mkdocs >=1.6", "mkdocs-material >=9.5", "mkdocstrings[python]"]
-rhino = ["compas_ghpython", "compas_rhino"]
-blender = ["compas_blender"]
-hosts = ["compas_blender", "compas_ghpython", "compas_rhino"]
-
 [project.urls]
 Homepage = "https://compas-dev.github.io/compas_framework"
 Documentation = "https://compas-dev.github.io/compas_framework"
@@ -50,6 +44,45 @@ Repository = "https://github.com/compas-dev/compas_framework"
 Changelog = "https://github.com/compas-dev/compas_framework/blob/main/CHANGELOG.md"
 Issues = "https://github.com/compas-dev/compas_framework/issues"
 Forum = "https://forum.compas-framework.org/"
+
+# ============================================================================
+# PEP 735 dependency groups
+# ============================================================================
+
+[dependency-groups]
+dev = [
+    "bump-my-version>=1.2,<2",
+    "invoke>=2.2,<3",
+    "pre-commit>=4,<5",
+    "pyright==1.1.414",
+    "ruff>=0.14,<1",
+    { include-group = "tests" },
+    { include-group = "docs" },
+    { include-group = "build" },
+]
+tests = [
+    "pytest>=9,<10",
+    "pytest-cov>=7,<8",
+]
+docs = [
+    "mike>=2,<3",
+    "mkdocs>=1.6,<2",
+    "mkdocs-material>=9.5,<10",
+    "mkdocstrings[python]>=0.30,<1",
+    "pymdown-extensions>=11,<12",
+]
+build = [
+    "build==1.3.0",
+    "twine==6.2.0",
+    "wheel>=0.45,<1",
+    { include-group = "tests" },
+]
+
+[tool.uv.sources]
+compas = { git = "https://github.com/compas-dev/compas.git", rev = "9b1518f74fe7d0315626954d8b893756f8dae06d" }
+compas-occ = { git = "https://github.com/compas-dev/compas_occ.git", rev = "5a4cf9701007266e517996181c8476488c4030d9" }
+compas-cgal = { git = "https://github.com/compas-dev/compas_cgal.git", rev = "a46eecab71de5dfea6df7380d2eafb7185cc789a" }
+compas-libigl = { git = "https://github.com/compas-dev/compas_libigl.git", rev = "86e3f1e0e02d6dc7cf9ad8049ac57c4c7d801877" }
 
 # ============================================================================
 # setuptools config
@@ -120,13 +153,14 @@ replace = "[{new_version}] {now:%Y-%m-%d}"
 # replace setup.cfg
 # ============================================================================
 
-[tool.black]
-line-length = 179
-
 [tool.ruff]
 line-length = 179
 indent-width = 4
 target-version = "py312"
+extend-exclude = [
+    "tests/test_geometry_tessellation_integration.py",
+    "tests/test_native_geometry_backends.py",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
@@ -149,7 +183,13 @@ max-doc-length = 179
 [tool.ruff.format]
 docstring-code-format = true
 docstring-code-line-length = "dynamic"
+exclude = ["docs/**/*.md", "initiatives/**/*.md"]
 
 [tool.pyright]
-include = ["src/compas_framework", "tests"]
+include = [
+    "src/compas_framework",
+    "tasks.py",
+    "tests/test_package.py",
+    "tests/test_distribution_artifacts.py",
+]
 pythonVersion = "3.12"
