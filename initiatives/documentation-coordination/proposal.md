@@ -106,6 +106,15 @@ snippets may remain when they are not presented as complete programs.
 Substantial runnable snippets are extracted so the exact code users see enters
 Ruff, Pyright, and the applicable runtime category.
 
+Canonical examples are linear, top-level scripts by default. Their visible
+execution order should teach the approved public idioms step by step, with
+clear intermediate values where those values help explain the operation. Do
+not wrap an example in `main()` or helper functions merely to give it an
+application structure. Define a function only when the documented operation
+requires one, the function itself is being taught, or substantial repetition
+would otherwise obscure the example. This exception includes genuine callback
+and plugin examples.
+
 ## Documentation migration records
 
 Every coordinated migration records:

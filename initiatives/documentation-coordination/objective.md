@@ -63,6 +63,10 @@ explicitly approved admission decision.
 - Use MkDocs/mkdocstrings-compatible NumPy-style docstrings with Markdown.
 - Prefer one canonical executable example over copied variants or duplicated
   snippets.
+- Write examples as linear, top-level scripts whose execution order teaches
+  the intended public idioms step by step. Introduce functions only when the
+  example teaches that function or callback, or when avoiding substantial
+  repetition makes the example clearer.
 - Include authoritative Python examples in both Ruff and Pyright.
 - Execute a representative deterministic headless subset rather than treating
   every interactive, native, or host example as an ordinary smoke test.
