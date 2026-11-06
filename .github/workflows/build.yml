@@ -2,24 +2,105 @@ name: build
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main, initiative/geometry-tessellation, initiative/repository-modernisation]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
 
 jobs:
-  build:
-    if: "!contains(github.event.pull_request.labels.*.name, 'docs-only')"
+  quality:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'docs-only') }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python: ["3.10", "3.11", "3.12"]
-
+        python: ["3.12", "3.13", "3.14"]
+    env:
+      UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+      UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/venv
     steps:
-      - uses: compas-dev/compas-actions.build@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          python: ${{ matrix.python }}
-          invoke_lint: true
-          invoke_test: true
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          version: "0.12.7"
+      - name: Synchronize pure development tools
+        run: uv sync --frozen --only-group dev --no-install-project
+      - name: Verify runtime packages are excluded
+        run: >-
+          uv run --no-sync python -c
+          "from importlib.metadata import distributions;
+          installed={distribution.metadata['Name'].lower().replace('_', '-') for distribution in distributions()};
+          forbidden={'compas-framework', 'compas', 'compas-occ', 'compas-cgal', 'compas-libigl', 'compas-gmsh', 'compas-model', 'compas-session', 'compas-shapeop', 'compas-viewer'};
+          unexpected=sorted(installed & forbidden);
+          assert not unexpected, unexpected"
+      - name: Lint and format
+        run: |
+          uv run --no-sync ruff check .
+          uv run --no-sync ruff format --check .
+      - name: Type check
+        shell: bash
+        run: uv run --no-sync pyright --pythonpath "$(uv run --no-sync python -c 'import sys; print(sys.executable)')"
+      - name: Run pure package tests
+        run: >-
+          uv run --no-sync pytest
+          --basetemp "${{ runner.temp }}/pytest"
+          -o cache_dir="${{ runner.temp }}/pytest-cache"
+          tests/test_package.py
+
+  package:
+    needs: quality
+    runs-on: ubuntu-latest
+    env:
+      UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+      UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/venv
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          version: "0.12.7"
+      - run: uv sync --frozen --only-group build --no-install-project
+      - name: Build distributions once
+        run: |
+          mkdir -p "${RUNNER_TEMP}/source"
+          git archive --format=tar HEAD | tar -xf - -C "${RUNNER_TEMP}/source"
+          uv build "${RUNNER_TEMP}/source" --out-dir "${RUNNER_TEMP}/dist"
+      - name: Test built artifacts
+        env:
+          COMPAS_FRAMEWORK_DIST_DIR: ${{ runner.temp }}/dist
+        run: >-
+          uv run --no-sync pytest
+          --basetemp "${RUNNER_TEMP}/artifact-pytest"
+          -o cache_dir="${RUNNER_TEMP}/artifact-pytest-cache"
+          tests/test_distribution_artifacts.py
+      - name: Check distribution metadata
+        run: uv run --no-sync twine check "${RUNNER_TEMP}"/dist/*
+      - name: Smoke-test wheel without framework dependencies
+        run: |
+          uv venv "${RUNNER_TEMP}/wheel-smoke"
+          uv pip install --python "${RUNNER_TEMP}/wheel-smoke/bin/python" --no-deps "${RUNNER_TEMP}"/dist/*.whl
+          PYTHONPATH= "${RUNNER_TEMP}/wheel-smoke/bin/python" -c "import compas_framework; assert compas_framework.__version__"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: python-package-distributions
+          path: ${{ runner.temp }}/dist/*
+          if-no-files-found: error
