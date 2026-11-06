@@ -56,9 +56,17 @@ external typing consumer.
 The JUnit post-check rejects a failed, errored, skipped, or empty suite and
 requires every named integration test. A skip is therefore useful diagnostic
 information but never passing candidate evidence. The reviewed live manifest
-is recorded, but the required protected non-main integration ref and protected
-GitHub App environment are not yet configured; until both exist, no hosted
-positive result may be claimed. Main remains untouched.
+is recorded, and the protected non-main integration ref plus read-only GitHub
+App environment are configured. A hosted positive result is still required;
+failed diagnostic runs are not passing evidence. Main remains untouched.
+
+The selected `run_attempt` must be successful. GitHub reruns may retain outputs
+from successful jobs in an earlier attempt and use them in dependent jobs of
+the final attempt. Candidate admission therefore binds the artifact to its
+exact workflow-run ID, commit, repository, API digest, archive digest, and
+wheel digest; it does not incorrectly require the retained artifact's creation
+timestamp to fall after the selected attempt's start. An artifact created after
+the selected successful attempt completed is rejected.
 
 `candidate-contracts.yml` runs on ordinary pull requests without secrets. It
 checks the schema, provenance rules, archive safety, wheel metadata, offline

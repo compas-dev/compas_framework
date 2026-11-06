@@ -443,7 +443,7 @@ def test_provenance_rejects_untrusted_runs(mutate, message):
         candidate_artifacts.verify_run_provenance(candidate, payload)
 
 
-def test_artifact_provenance_rejects_expired_changed_digest_and_wrong_attempt():
+def test_artifact_provenance_rejects_expired_changed_or_later_artifacts():
     data = live_manifest_data()
     entry = data["packages"][0]
     assert isinstance(entry, dict)
@@ -452,16 +452,43 @@ def test_artifact_provenance_rejects_expired_changed_digest_and_wrong_attempt():
     expired["expired"] = True
     changed = artifact_payload(entry)
     changed["digest"] = "sha256:" + "b" * 64
-    wrong_attempt = artifact_payload(entry)
-    wrong_attempt["created_at"] = "2026-11-06T09:59:59Z"
+    later = artifact_payload(entry)
+    later["created_at"] = "2026-11-06T10:30:01Z"
+    missing_timestamp = artifact_payload(entry)
+    del missing_timestamp["created_at"]
+    invalid_timestamp = artifact_payload(entry)
+    invalid_timestamp["created_at"] = "not-a-timestamp"
     run = run_payload(entry)
-
     with pytest.raises(CandidateError, match="expired"):
         candidate_artifacts.verify_artifact_provenance(candidate, expired, run)
     with pytest.raises(CandidateError, match="digest mismatch"):
         candidate_artifacts.verify_artifact_provenance(candidate, changed, run)
-    with pytest.raises(CandidateError, match="selected workflow attempt"):
-        candidate_artifacts.verify_artifact_provenance(candidate, wrong_attempt, run)
+    with pytest.raises(CandidateError, match="after the selected workflow attempt"):
+        candidate_artifacts.verify_artifact_provenance(candidate, later, run)
+    with pytest.raises(CandidateError, match="timestamp is missing"):
+        candidate_artifacts.verify_artifact_provenance(candidate, missing_timestamp, run)
+    with pytest.raises(CandidateError, match="timestamp is invalid"):
+        candidate_artifacts.verify_artifact_provenance(candidate, invalid_timestamp, run)
+
+
+def test_artifact_provenance_accepts_output_retained_by_a_successful_rerun():
+    data = live_manifest_data()
+    packages = data["packages"]
+    assert isinstance(packages, list)
+    entry = packages[-1]
+    assert isinstance(entry, dict)
+    workflow = entry["workflow"]
+    assert isinstance(workflow, dict)
+    workflow["run_attempt"] = 2
+    candidate = candidate_artifacts.parse_manifest(data).by_name["compas-libigl"]
+    artifact = artifact_payload(entry)
+    artifact["created_at"] = "2026-11-06T09:59:59Z"
+    run = run_payload(entry)
+
+    candidate_artifacts.verify_run_provenance(candidate, run)
+    url = candidate_artifacts.verify_artifact_provenance(candidate, artifact, run)
+
+    assert url.startswith("https://api.github.com/")
 
 
 def test_retrieval_verifies_provenance_and_downloaded_archive_digest(tmp_path: Path):

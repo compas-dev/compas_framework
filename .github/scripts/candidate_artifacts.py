@@ -592,10 +592,9 @@ def verify_artifact_provenance(candidate: Candidate, artifact: dict[str, Any], r
     if isinstance(head_repository_id, bool) or not isinstance(head_repository_id, int) or head_repository_id <= 0:
         raise CandidateError("artifact workflow_run lacks an owning head repository ID")
     artifact_created = _github_timestamp(artifact.get("created_at"), "artifact created_at")
-    attempt_started = _github_timestamp(run.get("run_started_at"), "workflow attempt run_started_at")
     attempt_finished = _github_timestamp(run.get("updated_at"), "workflow attempt updated_at")
-    if not attempt_started <= artifact_created <= attempt_finished:
-        raise CandidateError("artifact was not created during the selected workflow attempt")
+    if artifact_created > attempt_finished:
+        raise CandidateError("artifact was created after the selected workflow attempt")
     digest = artifact.get("digest")
     if not isinstance(digest, str) or _digest(digest, "artifact API digest") != candidate.artifact.archive_sha256:
         raise CandidateError("artifact API digest mismatch")

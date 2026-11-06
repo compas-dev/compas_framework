@@ -117,6 +117,15 @@ resolution from PyPI.
 - Successful hosted run IDs, filenames, versions, and digests cannot be filled
   speculatively. Placeholder, expired, failed, or mismatched artifacts are hard
   failures.
+- `run_attempt` selects the successful aggregate workflow attempt. GitHub
+  [retains successful job outputs when failed or dependent jobs are
+  rerun](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs),
+  so an admitted artifact may have been created by an earlier successful job
+  in the same run. Its exact artifact ID, name, workflow-run ID, head SHA,
+  repository ownership, API digest, archive digest, and wheel digest must still
+  match; its creation timestamp is not required to fall inside the selected
+  attempt's start-to-finish interval. An artifact created after the selected
+  successful attempt remains invalid.
 - The initial integration manifest selects Python 3.12 and the Linux x86-64
   runner. Additional required platforms use explicit selected artifacts and
   hosted gates; they are not inferred from one Linux result.
