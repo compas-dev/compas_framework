@@ -90,7 +90,7 @@ redefine them.
 
 ## Current status
 
-Phase 1 reconnaissance and Phase 2 architecture are complete. The proposal and
-ADRs 001–010 are awaiting explicit approval. No skill, agent, MCP, or package
-implementation is authorized until the required independent decisions are
-accepted.
+Phase 1 reconnaissance and Phase 2 architecture are complete. ADRs 001–010 are
+Accepted and the approved rollout is implementation-ready. Public Agent Plugin
+publication, MCP server creation, external account connections, merging, and
+releasing remain separately approval-gated.

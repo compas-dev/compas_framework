@@ -154,7 +154,7 @@ allowlist, read/write classification, and permission tests.
 
 ## Rollout
 
-1. Accept the independent ADRs.
+1. Record the accepted independent ADRs.
 2. Repair current skill references and custom-agent configuration.
 3. Establish the canonical source, two installable bundles, and validation
    harness.
@@ -206,7 +206,7 @@ later, independently approved server.
 
 ## Approval boundary
 
-This proposal and ADRs 001–010 are Proposed. Approval authorizes only the
+This proposal and ADRs 001–010 are Accepted. Their approval authorizes only the
 rollout above. It does not authorize publicly publishing either Agent Plugin
 bundle, adding an MCP server, connecting external accounts, merging, or
 releasing.
