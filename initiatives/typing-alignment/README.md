@@ -34,13 +34,15 @@ Current draft-PR heads are:
   `710b2b6714839a203fc8a6c62c437c0f6735ba0e`.
 
 Core, OCC, and libigl have complete green hosted evidence at those heads. CGAL
-passes its source, native-stub, external-consumer, and installed-wheel typing
-contracts locally; the superseding hosted matrix is still running after its
-wheel consumer was corrected to use the exact wheel environment.
+passes its source and local installed-wheel typing contracts. Hosted run
+`42224203204` completed with Linux and both macOS wheel smoke passing, but
+Windows 3.12 and 3.14 failed installed `--verifytypes` with
+`No py.typed file found` and zero symbols. A corrected fresh successful run is
+required.
 
 WP7.4–WP7.7 and WP8.1 are source-complete. CGAL WP8.2 and libigl WP8.3 reach
 the approved native-stub/public-wrapper contract; libigl is hosted green and
-CGAL awaits the superseding hosted result. Framework draft
+CGAL awaits that corrected hosted result. Framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) implements the
 WP8.4 exact-artifact mechanism and passes its credential-free contracts, but
 the live four-package manifest awaits the successful CGAL artifact. The final

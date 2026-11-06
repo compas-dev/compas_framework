@@ -157,16 +157,15 @@ The current package checkpoints are carried by draft PRs and remain outside
   `c47af195bf04d0d2e874255bfe9c5f351beda672`;
 - ShapeOp [PR 7](https://github.com/compas-dev/compas_shapeop/pull/7) at
   `930619a9aecd3e37515be9ce342ac20746ccf6d3`; and
-- session [PR 1](https://github.com/compas-dev/compas_session/pull/1) at
+- session [PR 1](https://github.com/BlockResearchGroup/compas_session/pull/1) at
   `e0bdd02aa8490248c6f2f36042651d8ebfc4442b`.
 
-All cited package PR heads except the newly superseding CGAL head have complete
-green hosted evidence. CGAL's local gates pass, including the corrected
-installed-wheel Pyright environment. In its new hosted matrix, quality,
-minimum/current NumPy, sdist, Linux wheel, and macOS ARM wheel jobs pass;
-Windows and macOS Intel wheel jobs are still running and wheel smoke has not
-started. The complete run must succeed before its artifact can enter the live
-candidate manifest.
+All cited package PR heads except the current CGAL head have complete green
+hosted evidence. CGAL run `42224203204` completed with Linux and both macOS
+wheel-smoke jobs passing, but Windows 3.12 and 3.14 failed installed
+`--verifytypes` with `No py.typed file found` and zero symbols. A corrected
+fresh successful run is required before CGAL artifact provenance can enter the
+live manifest.
 
 Accepted ADR 021 is implemented on framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at

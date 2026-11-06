@@ -72,7 +72,9 @@ and framework ADR 021's local native smoke discovers installed CGAL, libigl,
 and OCC entry-point modules before exercising representative implementations.
 The lightweight source modules are inspected separately. The final
 live-candidate run is still required before that cross-package artifact
-evidence is complete.
+evidence is complete. CGAL run `42224203204` is not admissible: Linux and both
+macOS wheel-smoke jobs passed, but Windows 3.12 and 3.14 installed
+`--verifytypes` failed with `No py.typed file found` and zero symbols.
 
 ### Reference implementation state
 

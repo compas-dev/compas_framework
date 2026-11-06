@@ -101,12 +101,13 @@ retained-representation boundaries.
 
 WP7.4–WP7.7 and WP8.1 are source-complete. Native-stub/public-wrapper work is
 complete for CGAL WP8.2 and libigl WP8.3; libigl is hosted green, while CGAL's
-superseding hosted matrix remains in progress after correcting its installed
-wheel consumer environment. Accepted ADR 021 is implemented in
-`compas_framework` for WP8.4, but the exact live manifest awaits that CGAL run
-and the trusted hosted positive awaits separately authorized GitHub App
-environment configuration. WP8.4 and final WP6 integration therefore remain
-open.
+run `42224203204` passed Linux and both macOS wheel smoke but failed Windows
+3.12 and 3.14 installed `--verifytypes` (`No py.typed file found`, zero
+symbols). A corrected fresh successful run remains required. Accepted ADR 021
+is implemented in `compas_framework` for WP8.4, but the exact live manifest
+awaits that CGAL run and the trusted hosted positive awaits separately
+authorized GitHub App environment configuration. WP8.4 and final WP6
+integration therefore remain open.
 
 `compas_libigl` joined the initiative on 2026-11-05 to align its native mesh
 plugins and replace incomplete native typing with the shared contract. CGAL

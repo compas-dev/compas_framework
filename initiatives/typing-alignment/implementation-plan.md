@@ -13,9 +13,11 @@ Current draft-PR heads are core PR 1539 at
 `7537d58154f62f38c0b2d4118972d0a326f86c9b`, and libigl PR 47 at
 `710b2b6714839a203fc8a6c62c437c0f6735ba0e`. Core, OCC, and libigl are hosted
 green. CGAL passes the corrected installed-wheel consumer locally and its
-superseding hosted matrix is in progress. WP7 source work and WP8.1–WP8.3 are
-implemented; WP8.4 and WP6 remain open until the exact four-package manifest
-and protected hosted positive pass.
+hosted run `42224203204` passed Linux and both macOS wheel smoke, but Windows
+3.12 and 3.14 failed installed `--verifytypes` with `No py.typed file found`
+and zero symbols. WP7 source work and WP8.1–WP8.3 are implemented; WP8.4 and
+WP6 remain open until a corrected fresh successful CGAL run, the exact
+four-package manifest, and the protected hosted positive pass.
 
 ## Work packages
 
@@ -83,8 +85,10 @@ topology queries through independently failing contracts as approved in ADR
 
 **Status:** source and installed-wheel contracts complete at `7537d581`. Local
 Pyright reports zero errors and installed `--verifytypes` reports 100% of the
-89 public symbols with `py.typed` present. The superseding hosted draft-PR
-matrix is in progress.
+89 public symbols with `py.typed` present. Hosted run `42224203204` passed
+Linux and both macOS wheel smoke but failed Windows 3.12 and 3.14
+`--verifytypes` (`No py.typed file found`, zero symbols). A corrected fresh
+successful run is required.
 
 **Ownership:** `compas_cgal` wrapper modules, `types.py`, native stubs, native
 boundary tests, packaging.
@@ -282,9 +286,10 @@ affected core constructors, static/runtime fixtures, and public documentation.
 
 #### WP8.2 — CGAL stub and wrapper correction
 
-**Status:** complete locally at `7537d58154f62f38c0b2d4118972d0a326f86c9b`;
-the superseding hosted run is in progress. The corrected wheel smoke test now
-creates one exact consumer environment for the wheel and Pyright.
+**Status:** complete locally at `7537d58154f62f38c0b2d4118972d0a326f86c9b`.
+Hosted run `42224203204` passed Linux and both macOS wheel smoke but failed
+Windows 3.12 and 3.14 installed `--verifytypes` (`No py.typed file found`, zero
+symbols). A corrected fresh successful run is required.
 
 **Ownership:** `compas_cgal` native `.pyi`, `types.py`, wrappers, exports,
 runtime ABI tests, typed consumers, and package verification.

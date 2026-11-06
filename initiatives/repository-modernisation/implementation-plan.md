@@ -138,7 +138,7 @@ In parallel where file ownership is independent:
 - `compas_session`: modernization commit
   `e0bdd02aa8490248c6f2f36042651d8ebfc4442b` is pushed on
   `initiative/repository-modernisation` and hosted green on draft
-  [PR 1](https://github.com/compas-dev/compas_session/pull/1). Its frozen lock,
+  [PR 1](https://github.com/BlockResearchGroup/compas_session/pull/1). Its frozen lock,
   tests, Pyright, Ruff, doctest, strict MkDocs, wheel/sdist verification,
   Twine, and isolated installed-wheel import pass. Protected environments,
   trusted publishing, required checks, and Pages/Mike settings remain owner
@@ -222,10 +222,10 @@ OCC `7fdf2ffb57d1de16308020e14ec626d79e65a034`, CGAL
 `7537d58154f62f38c0b2d4118972d0a326f86c9b`, and libigl
 `710b2b6714839a203fc8a6c62c437c0f6735ba0e`. Core, OCC, and libigl have green
 hosted evidence. CGAL passes the corrected wheel-typing consumer locally; its
-superseding hosted run has passed quality, minimum/current NumPy, sdist, Linux
-wheel, and macOS ARM wheel jobs. Windows and macOS Intel wheel builds are still
-running and wheel smoke has not started; the complete run must succeed before
-fresh artifact provenance can be admitted.
+hosted run `42224203204` completed with Linux and both macOS wheel-smoke jobs
+passing, but Windows 3.12 and 3.14 failed installed `--verifytypes` with
+`No py.typed file found` and zero symbols. A corrected fresh successful run is
+required before CGAL artifact provenance can be admitted.
 
 After that run, the remaining sequence is: record the exact four-package live
 manifest, revalidate and run it locally, then run the trusted hosted positive.

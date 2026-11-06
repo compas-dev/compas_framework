@@ -60,7 +60,9 @@ three lightweight category modules and eight core plugins, but still lacks
 explicit compiled-runtime requirements. OCC retains four lightweight modules
 and 130 plugins with the accepted signature/type corrections. Exact installed
 CGAL/libigl/OCC discovery passes in the local native integration smoke; final
-live-candidate and package-owned evidence remain open.
+live-candidate and package-owned evidence remain open. CGAL run `42224203204`
+passed Linux and both macOS wheel smoke but failed Windows 3.12 and 3.14
+installed `--verifytypes`; a corrected fresh successful run is required.
 
 1. Add core tests for module-name and callable requirement selection,
    non-selection, default behavior, and `PluginNotInstalledError`.
