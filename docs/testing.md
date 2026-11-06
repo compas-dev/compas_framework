@@ -55,9 +55,10 @@ external typing consumer.
 
 The JUnit post-check rejects a failed, errored, skipped, or empty suite and
 requires every named integration test. A skip is therefore useful diagnostic
-information but never passing candidate evidence. The manifest and protected
-GitHub App environment are not yet configured; until they are, no hosted
-positive result may be claimed.
+information but never passing candidate evidence. The reviewed live manifest
+is recorded, but the required protected non-main integration ref and protected
+GitHub App environment are not yet configured; until both exist, no hosted
+positive result may be claimed. Main remains untouched.
 
 `candidate-contracts.yml` runs on ordinary pull requests without secrets. It
 checks the schema, provenance rules, archive safety, wheel metadata, offline

@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "target": {
+    "runner": "ubuntu-24.04",
+    "os": "linux",
+    "architecture": "x86_64",
+    "python": "3.12"
+  },
+  "packages": [
+    {
+      "distribution": "compas",
+      "version": "3.0.0",
+      "repository": "compas-dev/compas",
+      "commit": "99b82a6673ff7d05c1c323c8921135c274993f11",
+      "workflow": {
+        "run_id": 42220873191,
+        "run_attempt": 1,
+        "path": ".github/workflows/build.yml",
+        "event": "pull_request",
+        "pull_request": 1539,
+        "base_ref": "initiative/repository-modernisation"
+      },
+      "artifact": {
+        "id": 13503976914,
+        "name": "candidate-linux-py312",
+        "archive_sha256": "1249f2135891115f3a78f9d84e2e1b165a6a5aa53bb3b304ea863702fa006843"
+      },
+      "wheel": {
+        "filename": "compas-3.0.0-py3-none-any.whl",
+        "sha256": "a72572f36bd2a6af1b435cb7f2f59809ea7d59616f91f93522db7efa52d112d1"
+      },
+      "depends_on": []
+    },
+    {
+      "distribution": "compas-occ",
+      "version": "1.5.0",
+      "repository": "compas-dev/compas_occ",
+      "commit": "7fdf2ffb57d1de16308020e14ec626d79e65a034",
+      "workflow": {
+        "run_id": 42220872068,
+        "run_attempt": 1,
+        "path": ".github/workflows/build.yml",
+        "event": "pull_request",
+        "pull_request": 32,
+        "base_ref": "c3-upgrade"
+      },
+      "artifact": {
+        "id": 13503412127,
+        "name": "candidate-linux-py312",
+        "archive_sha256": "993623506078d611a45d0dc16e89d56746333f969d29025f57d383b0f7239689"
+      },
+      "wheel": {
+        "filename": "compas_occ-1.5.0-py3-none-any.whl",
+        "sha256": "2e1321ca45d402a8b60a5cbb43abb1ffa1efe4609be37f243c2ad1345c2c4f4a"
+      },
+      "depends_on": ["compas"]
+    },
+    {
+      "distribution": "compas-cgal",
+      "version": "0.9.5",
+      "repository": "compas-dev/compas_cgal",
+      "commit": "bb3624e714719d543c61768320d91811ba96cc6c",
+      "workflow": {
+        "run_id": 42231235319,
+        "run_attempt": 1,
+        "path": ".github/workflows/build.yml",
+        "event": "pull_request",
+        "pull_request": 81,
+        "base_ref": "c3-upgrade"
+      },
+      "artifact": {
+        "id": 13509457151,
+        "name": "wheels-manylinux",
+        "archive_sha256": "143105a79c251dcfa0ffb67f856d22ad4c96f2306ae34de8c8541f25917b0ece"
+      },
+      "wheel": {
+        "filename": "compas_cgal-0.9.5-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+        "sha256": "af5602a2ae9605823350d33bd3b88ef9588bc7aeb953c4793719c504fc7bca8d"
+      },
+      "depends_on": ["compas"]
+    },
+    {
+      "distribution": "compas-libigl",
+      "version": "0.7.6",
+      "repository": "compas-dev/compas_libigl",
+      "commit": "710b2b6714839a203fc8a6c62c437c0f6735ba0e",
+      "workflow": {
+        "run_id": 42209986136,
+        "run_attempt": 2,
+        "path": ".github/workflows/build.yml",
+        "event": "pull_request",
+        "pull_request": 47,
+        "base_ref": "c3-upgrade"
+      },
+      "artifact": {
+        "id": 13498439058,
+        "name": "wheels-manylinux",
+        "archive_sha256": "280d5cb9b996eb6926b8f404d23c505910773de802475b2f703f16cb1c300bd1"
+      },
+      "wheel": {
+        "filename": "compas_libigl-0.7.6-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+        "sha256": "c2b90448727a64f61fa037aa3bb48c77097d783f8966f4536388ff4ba5447771"
+      },
+      "depends_on": ["compas"]
+    }
+  ]
+}

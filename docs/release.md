@@ -2,8 +2,10 @@
 
 The current workflows prepare and verify release candidates. They cannot
 publish packages, create GitHub releases, or deploy documentation. Publication
-remains structurally absent while the live coordinated-candidate manifest and
-protected retrieval environment are unconfigured.
+remains structurally absent while the protected non-main integration ref and
+protected retrieval environment are unconfigured and the recorded
+coordinated-candidate manifest has not passed the hosted positive gate. Main
+remains untouched.
 
 1. Run **prepare-release** and select `patch`, `minor`, or `major`.
 2. Review the generated release pull request, including the version and
@@ -35,7 +37,8 @@ version, rebuilt filename, changed hash, or yanked file blocks promotion.
 The candidate artifact is not approved for publication merely because it was
 built. Do not create tags, GitHub releases, documentation deployments,
 trusted-publisher environments, or upload jobs until the live manifest is
-reviewed, the protected GitHub App environment is configured, and the hosted
-positive integration gate passes. See the
+reviewed, a protected non-main integration ref and the protected GitHub App
+environment are configured, and the hosted positive integration gate passes.
+See the
 [native candidate operations guide](https://github.com/compas-dev/compas_framework/blob/main/.github/candidates/README.md)
 for the exact update and failure procedure.

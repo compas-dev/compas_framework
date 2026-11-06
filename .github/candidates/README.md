@@ -6,11 +6,24 @@ OCC, CGAL, and libigl candidate set on Ubuntu 24.04, x86-64, and Python 3.12.
 the verifier additionally enforces normalized identities, graph constraints,
 wheel metadata, and the exact live package/repository set.
 
-The live manifest is intentionally absent until all four owning workflows have
-produced successful, unexpired artifacts. Run IDs, artifact IDs, filenames,
-and hashes must not be fabricated or represented by placeholders. The schema,
-unit tests, and negative security contracts use generated temporary fixtures,
-not a pretend live manifest.
+The live manifest records successful, reviewed producer artifacts for all four
+packages. Its schema, semantic contract, selected wheel hashes, and wheel
+metadata have been validated locally. The exact wheels also pass offline-bundle
+revalidation, no-index/no-dependency Linux-target staging, installed
+distribution and plugin discovery checks, the strict external typing consumer,
+and the OCC wrapper contract. The local host is Darwin ARM64, so execution of
+the selected Linux x86-64 CGAL/libigl extensions remains a hosted-gate check.
+Run IDs, artifact IDs, filenames, and hashes must never be fabricated or
+represented by placeholders. Unit and negative security tests continue to use
+generated temporary fixtures rather than modifying the live evidence.
+
+The hosted positive gate has not run because two owner-controlled safeguards
+are not yet configured: a protected non-main framework integration ref, and
+the protected GitHub App environment and secrets. The current candidate and
+initiative refs are unprotected, while the trusted workflow requires
+`github.ref_protected`. The manifest is therefore admitted local evidence, not
+a claim that the secret-isolated hosted workflow has passed. Main remains
+untouched.
 
 To create or update the manifest:
 
@@ -70,7 +83,8 @@ non-yanked PyPI file. With no `before` value it checks all four packages before
 the framework can be published. Promotion reuses the selected wheels; it does
 not rebuild them.
 
-The framework repository currently contains no publication job. Until the
-live manifest exists, the protected environment is configured, and the hosted
-positive gate passes, framework publishing remains structurally disabled.
+The framework repository currently contains no publication job. Until owners
+configure both a protected non-main integration ref and the protected App
+environment, and the hosted positive gate passes, framework publishing remains
+structurally disabled.
 

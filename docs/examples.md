@@ -54,5 +54,5 @@ proof of the accepted target contracts.
 
 They are not used as the candidate gate. The installed-artifact contracts in
 `.github/candidates` exercise the approved current boundaries without source
-checkout fallbacks. Until a reviewed live manifest and successful hosted run
-exist, do not cite either fixture set as positive candidate evidence.
+checkout fallbacks. The reviewed live manifest exists, but until its hosted run
+succeeds, do not cite either fixture set as positive candidate evidence.
