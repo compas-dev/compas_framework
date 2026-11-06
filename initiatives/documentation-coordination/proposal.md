@@ -15,9 +15,10 @@ The first wave contains only `compas`, `compas_cgal`, `compas_framework`,
 `compas_gmsh`, `compas_libigl`, `compas_model`, `compas_occ`,
 `compas_session`, `compas_shapeop`, and `compas_viewer`.
 
-Gmsh and ShapeOp documentation implementation waits for their unresolved
-modernisation ADRs. Other ecosystem and host repositories are roadmap
-candidates, not completion criteria.
+Gmsh and ShapeOp documentation follow their accepted modernisation contracts
+and the behavior actually implemented on their initiative branches. Other
+ecosystem and host repositories are roadmap candidates, not completion
+criteria.
 
 ## Authoritative example model
 
@@ -68,7 +69,8 @@ as available.
 Migration preserves semantics, not just syntax. Explicit triangulators migrate
 to equivalent named callables. Structural NumPy backend examples remain direct.
 Producer controls retain their units and approximation meaning.
-`Mesh.triangulated()` examples wait for the final decision in Geometry ADR 024.
+`Mesh.triangulated()` examples follow Accepted Geometry ADR 024 once its
+representation-preserving implementation is present in the documented branch.
 No compatibility alias is added solely to preserve an obsolete example.
 
 ## Information architecture

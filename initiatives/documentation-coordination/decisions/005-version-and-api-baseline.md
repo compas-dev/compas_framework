@@ -6,9 +6,10 @@ Proposed.
 
 ## Context
 
-The active repositories do not all have the final COMPAS 3 geometry and typing
-contracts landed. An example may match its visible checkout while describing a
-different dependency version than its published documentation.
+The active repositories do not all have the accepted COMPAS 3 geometry and
+typing contracts implemented on their documentation branches. An example may
+match its visible checkout while describing a different dependency version
+than its published documentation.
 
 ## Options
 
@@ -31,7 +32,8 @@ example update.
 ## Consequences
 
 - Version mismatch fails visibly rather than producing ambiguous guidance.
-- Geometry ADR 024 must resolve before final `Mesh.triangulated()` examples.
+- `Mesh.triangulated()` examples use Accepted Geometry ADR 024 only on branches
+  that contain its representation-preserving implementation.
 - Candidate documentation and released documentation remain distinguishable.
 
 ## Dependencies
