@@ -111,6 +111,6 @@ public contracts.
 
 ## Current status
 
-Phase 1 reconnaissance and Phase 2 architecture are complete. ADRs 001 and
-003–009 are Accepted. ADR 002 remains Proposed; work depending on its example
-classification contract is blocked until that decision is resolved.
+Phase 1 reconnaissance and Phase 2 architecture are complete. ADRs 001–009 are
+Accepted, and the active-ten implementation is authorized subject to the
+existing merge, publication, deployment, and repository-setting boundaries.

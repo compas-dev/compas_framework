@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -18,11 +18,14 @@ published example, draft, or unsupported test case.
 
 ## Recommendation
 
-Choose option 1. Every authoritative example belongs to exactly one category:
-static-and-smoke, static-only interactive, static-plus-optional-runtime,
-host-runtime, or non-authoritative draft/archive. Imported helper modules share
-their example's static gate. Draft material is removed, moved to an explicit
-non-published location, or deliberately admitted.
+Choose option 1. Every Python file in a declared authoritative example root is
+authoritative by default. Each root or subtree declares one default category:
+static-and-smoke, static-only interactive, static-plus-optional-runtime, or
+host-runtime. Record only files that are exceptions to that default. Imported
+helper modules share their example's static gate. Draft and archive material
+is not a category inside a published root: move it to an explicit
+non-authoritative location and exclude it from published navigation, or
+deliberately admit it.
 
 Use `docs/examples/` by default. Core may retain `docs/assets/examples/` as an
 approved exception. Other roots require recorded justification.
@@ -31,8 +34,8 @@ approved exception. Other roots require recorded justification.
 
 - Published scope and verification expectations are explicit.
 - `__temp` and ignore rules stop functioning as undocumented policy.
-- Each repository needs a maintained example manifest or equivalent
-  configuration.
+- Each repository maintains declared roots, subtree defaults, and only the
+  necessary per-file exceptions rather than a complete file-by-file manifest.
 
 ## Dependencies
 

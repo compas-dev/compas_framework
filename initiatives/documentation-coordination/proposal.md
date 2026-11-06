@@ -22,8 +22,9 @@ criteria.
 
 ## Authoritative example model
 
-Each repository declares every authoritative Python example root and assigns
-each example to exactly one category:
+Each repository declares every authoritative Python example root. Every Python
+file under that root is authoritative by default, and each root or subtree has
+one default category:
 
 1. **static-and-smoke** — Ruff, Pyright, and deterministic headless execution;
 2. **static-only interactive** — Ruff and Pyright plus documented manual
@@ -32,8 +33,9 @@ each example to exactly one category:
    environment plus native/optional runtime evidence where supported;
 4. **host-runtime** — meaningful static checks and mandatory host evidence once
    the package is admitted;
-5. **non-authoritative draft/archive** — excluded from published navigation and
-   blocking example gates.
+Record only exceptions to the root or subtree default. Draft and archive
+material belongs outside authoritative roots and is excluded from published
+navigation and blocking example gates.
 
 `__temp`, ignored files, or directory names do not implicitly create a
 category. Helper modules imported by authoritative examples enter the same
@@ -194,7 +196,6 @@ meaningful runtime results.
 
 ## Approval boundary
 
-ADRs 001 and 003–009 are Accepted; ADR 002 remains Proposed. Accepted work
-authorizes only the active-ten rollout described above, and dependencies on ADR
-002 remain blocked. It does not authorize later ecosystem admission, merges,
-publication, deployment, or repository-setting changes.
+ADRs 001–009 are Accepted. Their approval authorizes only the active-ten
+rollout described above. It does not authorize later ecosystem admission,
+merges, publication, deployment, or repository-setting changes.
