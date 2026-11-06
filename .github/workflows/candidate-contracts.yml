@@ -36,6 +36,10 @@ jobs:
         with:
           version: "0.12.7"
       - run: uv sync --frozen --only-group candidate --no-install-project
+      - name: Validate every workflow
+        run: >-
+          go run github.com/rhysd/actionlint/cmd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca
+          -color .github/workflows/*.yml
       - name: Lint candidate verifier and fixtures
         run: |
           uv run --no-sync ruff check .github/scripts/candidate_artifacts.py .github/candidates .github/tests/test_candidate_artifacts.py

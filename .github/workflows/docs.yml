@@ -13,7 +13,7 @@ on:
       - "uv.lock"
       - ".github/workflows/docs.yml"
   push:
-    branches: [main]
+    branches: [main, initiative/candidate-artifact-integration]
 
 permissions:
   contents: read
@@ -28,10 +28,15 @@ env:
 jobs:
   docs:
     runs-on: ubuntu-latest
-    env:
-      UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
-      UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/venv
     steps:
+      - name: Configure isolated uv paths
+        shell: bash
+        env:
+          UV_CACHE_PATH: ${{ runner.temp }}/uv-cache
+          UV_ENVIRONMENT_PATH: ${{ runner.temp }}/venv
+        run: |
+          echo "UV_CACHE_DIR=${UV_CACHE_PATH}" >> "${GITHUB_ENV}"
+          echo "UV_PROJECT_ENVIRONMENT=${UV_ENVIRONMENT_PATH}" >> "${GITHUB_ENV}"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false

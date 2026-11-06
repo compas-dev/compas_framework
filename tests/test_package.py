@@ -30,6 +30,26 @@ def test_release_workflow_cannot_publish():
     assert all(value not in workflow for value in forbidden)
 
 
+def test_candidate_contracts_validate_every_workflow():
+    workflow = (Path(__file__).parents[1] / ".github" / "workflows" / "candidate-contracts.yml").read_text()
+
+    assert "github.com/rhysd/actionlint/cmd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca" in workflow
+    assert "-color .github/workflows/*.yml" in workflow
+
+
+def test_candidate_integration_push_runs_build_and_docs_but_not_release():
+    workflows = Path(__file__).parents[1] / ".github" / "workflows"
+    build = (workflows / "build.yml").read_text()
+    docs = (workflows / "docs.yml").read_text()
+    release = (workflows / "release.yml").read_text()
+
+    trigger = "branches: [main, initiative/candidate-artifact-integration]"
+    assert trigger in build
+    assert trigger in docs
+    assert trigger not in release
+    assert "branches: [main]" in release
+
+
 def test_framework_examples_page_is_link_oriented():
     page = (Path(__file__).parents[1] / "docs" / "examples.md").read_text()
 
