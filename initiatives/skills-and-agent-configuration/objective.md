@@ -35,6 +35,8 @@ resources.
    configuration be tested?
 9. Which parts should be portable Agent Skills and which, if any, should be
    Codex-specific adapters or configuration?
+10. When should a new framework proposal arrive as an initiative PR before any
+    package implementation PRs are opened?
 
 ## Design principles
 
@@ -50,6 +52,9 @@ resources.
 - Prefer one maintained framework-wide workflow over repository copies that
   can diverge.
 - Start with a small end-to-end curriculum and validate it before expanding.
+- Review framework-wide architecture as an initiative before implementation,
+  while allowing narrow fixes and mechanical maintenance to remain direct code
+  changes.
 
 ## Deliverables
 
@@ -90,7 +95,9 @@ redefine them.
 
 ## Current status
 
-Phase 1 reconnaissance and Phase 2 architecture are complete. ADRs 001–010 are
-Accepted and the approved rollout is implementation-ready. Public Agent Plugin
-publication, MCP server creation, external account connections, merging, and
-releasing remain separately approval-gated.
+Phase 1 reconnaissance and the original Phase 2 architecture are complete.
+ADRs 001–010 are Accepted and the approved rollout is implementation-ready.
+ADR 011 proposes an initiative-first intake path for future framework-wide
+proposals and awaits approval. Public Agent Plugin publication, MCP server
+creation, external account connections, merging, and releasing remain
+separately approval-gated.

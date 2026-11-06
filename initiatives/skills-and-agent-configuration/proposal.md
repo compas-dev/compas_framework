@@ -112,6 +112,29 @@ initiative decisions, stops when a governing ADR is unresolved, and links to
 the authoritative contract instead of becoming a second registry of framework
 patterns. There is no universal "apply every COMPAS pattern" skill.
 
+## Framework proposal intake
+
+A framework-wide proposal that changes public contracts, shared engineering
+policy, cross-package behavior, or more than one repository should normally
+begin as an initiative PR in the coordination repository. That PR contains the
+objective, reconnaissance inventory, architecture proposal, independent
+Proposed ADRs, dependencies, affected repositories, verification plan, and
+approval boundary. It should not bundle the package implementation whose
+architecture is still under review.
+
+After the relevant ADRs are explicitly accepted, separate implementation PRs
+apply the approved decisions in their owning repositories and link back to the
+initiative records. Narrow bug fixes, security fixes, behavior-preserving
+maintenance, and genuinely mechanical documentation or tooling changes may
+remain direct code PRs. If such a change exposes an unresolved public or
+cross-package design choice, that choice moves into an initiative before the
+implementation expands.
+
+This is a review default, not mandatory ceremony for every edit. Existing PRs
+do not need to be rewritten solely to adopt the intake model. During the
+current COMPAS 3 cycle, initiative PRs target the approved coordination base;
+they do not imply a merge to `main`.
+
 ## Custom agent configuration
 
 Retain explorer, architect, implementer, reviewer, and documenter, but make
@@ -206,7 +229,8 @@ later, independently approved server.
 
 ## Approval boundary
 
-This proposal and ADRs 001–010 are Accepted. Their approval authorizes only the
-rollout above. It does not authorize publicly publishing either Agent Plugin
-bundle, adding an MCP server, connecting external accounts, merging, or
+This proposal and ADRs 001–010 are Accepted. ADR 011 is Proposed and is not yet
+part of the implementation authorization. Existing approval authorizes only
+the rollout above. It does not authorize publicly publishing either Agent
+Plugin bundle, adding an MCP server, connecting external accounts, merging, or
 releasing.

@@ -1,8 +1,9 @@
 # Skills and Agent Configuration Architecture Decisions
 
-ADRs 001–010 are **Accepted**. Their approved rollout may proceed subject to
-the publication, MCP, external-connection, merge, and release boundaries in the
-proposal.
+ADRs 001–010 are **Accepted**. ADR 011 is **Proposed**. The approved rollout may
+proceed subject to the publication, MCP, external-connection, merge, and
+release boundaries in the proposal; ADR 011 adds no authorization until it is
+explicitly accepted.
 
 | Order | ADR | Status | Depends on | Main tradeoff |
 |---:|---|---|---|---|
@@ -16,6 +17,7 @@ proposal.
 | 8 | [008 — MCP boundary](008-mcp-boundary.md) | Accepted | 002, 004 | No baseline server versus speculative live infrastructure. |
 | 9 | [009 — Safety and artifacts](009-safety-and-artifacts.md) | Accepted | 001, 002 | Explicit ownership and authorization versus convenience mutations. |
 | 10 | [010 — Validation and lifecycle](010-validation-and-lifecycle.md) | Accepted | 001–009 | Behavioral evidence versus Markdown-only validation. |
+| 11 | [011 — Initiative-first proposals](011-initiative-first-proposals.md) | Proposed | 002, 006, 007, 010 | Architecture-first framework intake versus code-first proposals or ceremony for every edit. |
 
 ## Dependency graph
 
@@ -27,4 +29,5 @@ proposal.
 002, 004           -> 008
 001, 002           -> 009
 001–009            -> 010
+002, 006, 007, 010 -> 011
 ```
