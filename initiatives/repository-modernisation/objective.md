@@ -125,12 +125,11 @@ CI and should pass its applicable:
 
 ## Current status
 
-Implementation is in final integration. ADRs 001–021 are Accepted. Phases 0–5
-are complete through reviewed initiative branches and hosted draft-PR
-evidence; Phase 6 remains open only because the coordinated native-candidate
-hosted positive has not run with its protected credential boundary. No
-initiative branch has been merged into a target/default branch and no package
-or documentation site has been published.
+Implementation and integration verification are complete for the approved
+scope. ADRs 001–021 are Accepted, and Phases 0–6 pass on reviewed initiative
+branches with hosted draft-PR evidence. No initiative branch has been merged
+into a target/default branch, and no package or documentation site has been
+published.
 
 The bounded `compas-actions` v2 prerequisite is independently reviewed Ready.
 Commit `5c64e6e2b576a1232d28fed47d9478ca8eb63b2d` is pushed on
@@ -168,28 +167,34 @@ artifact for provenance admission.
 
 Accepted ADR 021 is implemented on framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
-`58405b03fa8d79b0b7ceb381924b6b6bd9e822b9`. The independently reviewed live
+`f719e505c990004b60ee23fa5c2446fa4f2ae2dd`. The independently reviewed live
 manifest passes schema and semantic validation with exact hashes for all four
 wheels. Local evidence covers offline bundle revalidation, `--no-index
 --no-deps` staging, exact distribution versions, installed entry-point/plugin
 discovery, OCC BRep/tessellation behavior, strict exact-wheel typing, 44
-candidate-contract tests, Ruff, Pyright, actionlint, and strict MkDocs.
+candidate-contract tests at the manifest checkpoint and 54 focused contract
+tests at the final workflow checkpoint, plus Ruff, Pyright, actionlint, and
+strict MkDocs.
 
-The Linux x86-64 CGAL→core→libigl native runtime path was not executed
-locally on Darwin ARM64 and is reserved for the hosted positive. The
-modernization initiative remains incomplete until that gate passes.
+Protected native-integration run
+[`42246941037`](https://github.com/compas-dev/compas_framework/actions/runs/42246941037)
+passes at that exact head. Credentialed retrieval verifies the admitted
+artifacts, the framework wheel is built once, and the separate secret-free
+Linux x86-64 execution reports four required runtime tests passed with no
+skips and an external installed-wheel typing result of zero errors and zero
+warnings. This includes the CGAL→core→libigl path and OCC BRep construction.
 
-The current framework head has no unresolved hosted workflow failure. Both
-build runs (`42239563143`, `42239583235`), both docs runs (`42239563067`,
-`42239582829`), and both candidate-contract/actionlint runs (`42239563062`,
-`42239582804`) succeeded; release metadata also passes.
+The current framework implementation head has no unresolved hosted workflow
+failure. Push/PR build runs (`42246940929`, `42246953473`), docs runs
+(`42246940952`, `42246953426`), and candidate-contract/actionlint runs
+(`42246940916`, `42246953431`) all succeed at `f719e50`; PR checklist run
+`42246953437` and release metadata also pass.
 
 The protected non-main integration ref and `candidate-artifact-retrieval`
-environment are now configured. The environment secret list is empty. The only
-remaining modernization gate is organization-owner creation and installation
-of the read-only GitHub App, addition of `CANDIDATE_ARTIFACT_APP_ID` and
-`CANDIDATE_ARTIFACT_PRIVATE_KEY`, and a successful hosted positive. `main`
-remains untouched.
+environment were used only for the credentialed retrieval boundary. The
+successful run completes the modernization verification scope; revoking its
+one-time App credential is operational cleanup rather than an additional
+evidence gate. `main` remains untouched.
 
 ShapeOp ADRs 022–023 are Proposed in the separate follow-up draft PR and are
 not prerequisites for completing the accepted packaging modernization. They

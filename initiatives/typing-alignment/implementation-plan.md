@@ -5,7 +5,7 @@
 ADRs 001–017 and Geometry ADRs 022–023 are Accepted. The approved source work
 is implemented at the coordinated candidate heads, preserving duck typing
 through Python code and limiting normalization to explicit hard boundaries.
-Final hosted native integration remains open.
+Final hosted native integration passes.
 
 Current draft-PR heads are core PR 1539 at
 `99b82a6673ff7d05c1c323c8921135c274993f11`, OCC PR 32 at
@@ -14,8 +14,8 @@ Current draft-PR heads are core PR 1539 at
 `710b2b6714839a203fc8a6c62c437c0f6735ba0e`. All four are hosted green. CGAL
 run `42231235319` attempt 1 passed every quality, compatibility, distribution,
 platform-wheel, and Python 3.12/3.14 wheel-smoke job. WP7 source work and
-WP8.1–WP8.3 are implemented. WP8.4 exact local candidate integration passes;
-WP8.4 and WP6 remain open only until the protected hosted positive passes.
+WP8.1–WP8.3 are implemented. WP8.4 exact local candidate integration and the
+protected hosted positive pass; WP8.4 and WP6 are complete.
 
 ## Work packages
 
@@ -132,9 +132,9 @@ For each family:
 
 ### WP6 — Typed distribution and integration
 
-**Status:** open. The package-level typed distribution gates pass at the
-current candidate heads and exact local WP8.4 candidate integration passes.
-Completion depends only on the trusted hosted positive.
+**Status:** complete. The package-level typed distribution gates pass at the
+current candidate heads, exact local WP8.4 candidate integration passes, and
+protected run `42246941037` verifies installed runtime and typing contracts.
 
 **Ownership:** package build configuration plus `compas_framework` integration
 and independent review.
@@ -237,9 +237,8 @@ necessary.
 
 ### WP8 — Shared vocabulary and native-binding truthfulness
 
-**Status:** WP8.1–WP8.3 source and package-level verification are implemented.
-WP8.4 has its reviewed live manifest and local evidence but awaits the trusted
-hosted positive.
+**Status:** complete. WP8.1–WP8.3 source and package-level verification are
+implemented, and WP8.4 passes its reviewed local and protected hosted gates.
 
 #### WP8.1 — Core vocabulary and constructor interoperability
 
@@ -318,27 +317,27 @@ parallel with separate repository ownership.
 
 #### WP8.4 — Cross-package installed integration
 
-**Status:** mechanism implemented and independently reviewed on framework
-draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
-`58405b03fa8d79b0b7ceb381924b6b6bd9e822b9`. The live manifest passes
+**Status:** complete and independently reviewed on framework draft
+[PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
+`f719e505c990004b60ee23fa5c2446fa4f2ae2dd`. The live manifest passes
 schema/semantic validation with exact hashes for all four wheels. Offline
 bundle revalidation, `--no-index --no-deps` staging, exact versions, installed
 entry-point/plugin discovery, OCC BRep/tessellation behavior, strict
-exact-wheel typing, 44 tests, Ruff, Pyright, actionlint, and strict MkDocs pass.
+exact-wheel typing, 54 focused tests, Ruff, Pyright, actionlint, and strict
+MkDocs pass.
 
-Both framework build runs (`42239563143`, `42239583235`), docs runs
-(`42239563067`, `42239582829`), and candidate-contract/all-workflow-actionlint
-runs (`42239563062`, `42239582804`) pass. They cover Linux, macOS, and Windows
+Push/PR build runs (`42246940929`, `42246953473`), docs runs
+(`42246940952`, `42246953426`), and candidate-contract/all-workflow-actionlint
+runs (`42246940916`, `42246953431`) pass. They cover Linux, macOS, and Windows
 on Python 3.12–3.14, the package job, documentation, and release metadata. No
 hidden workflow failure remains at this head.
 
-The Linux x86-64 CGAL→core→libigl native runtime path remains unexecuted
-locally on Darwin ARM64 and is reserved for the hosted positive. That only
-remaining WP8.4 blocker has its protected non-main integration ref and GitHub
-environment configured, but the environment secret list is empty. Organization
-owners must create/install the read-only GitHub App, add
-`CANDIDATE_ARTIFACT_APP_ID` and `CANDIDATE_ARTIFACT_PRIVATE_KEY`, and run the
-hosted positive; `main` remains untouched.
+Protected run `42246941037` passes at the exact implementation head. Its
+credentialed retrieval job verifies and bundles the selected artifacts; its
+separate permission-free execution job installs them offline, reports all four
+required native contracts passed with no skips, and reports zero typing errors
+or warnings. This closes the Linux CGAL→core→libigl and OCC evidence gap.
+`main` remains untouched.
 
 **Ownership:** `compas_framework` integration fixtures and independent review.
 

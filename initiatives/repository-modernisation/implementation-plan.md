@@ -1,8 +1,8 @@
 # Repository Modernisation Implementation Plan
 
-Status: final integration in progress. Phases 0–5 are complete through
-reviewed initiative branches and hosted draft-PR evidence. Phase 6 is active;
-only the protected hosted positive remains open.
+Status: complete for the approved scope. Phases 0–6 pass through reviewed
+initiative branches, hosted draft-PR evidence, and the protected exact-candidate
+integration run.
 No initiative changes have been merged into a target/default branch or
 published.
 
@@ -150,9 +150,9 @@ In parallel where file ownership is independent:
   automation is structurally unable to publish, tag, create a GitHub release,
   or deploy documentation. The separate native integration contract authorized
   by Accepted [ADR 021](decisions/021-cross-repository-candidate-artifacts.md)
-  is implemented at `58405b03fa8d79b0b7ceb381924b6b6bd9e822b9` on framework
-  draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2); its
-  hosted positive remains a Phase 6 gate;
+  is implemented at `f719e505c990004b60ee23fa5c2446fa4f2ae2dd` on framework
+  draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2); protected
+  hosted run `42246941037` passes its exact candidate gate;
 - `compas_gmsh` implements Accepted ADRs 014–016 at
   `c47af195bf04d0d2e874255bfe9c5f351beda672` on draft
   [PR 7](https://github.com/compas-dev/compas_gmsh/pull/7). Its real Gmsh
@@ -209,22 +209,23 @@ implemented at the cited head and do not block the accepted packaging work.
 
 ## Phase 6: integration and documentation
 
-Status: active. Accepted ADR 021 is implemented and independently reviewed on
-framework draft PR 2 at `58405b03fa8d79b0b7ceb381924b6b6bd9e822b9`.
+Status: complete. Accepted ADR 021 is implemented and independently reviewed on
+framework draft PR 2 at `f719e505c990004b60ee23fa5c2446fa4f2ae2dd`.
 The live manifest passes schema and semantic validation with exact hashes for
 all four wheels. Local verification passes offline bundle revalidation,
 `--no-index --no-deps` staging, exact versions, installed entry-point/plugin
-discovery, OCC BRep/tessellation behavior, strict exact-wheel typing, 44
-candidate-contract tests, Ruff, Pyright, actionlint, and strict MkDocs.
+discovery, OCC BRep/tessellation behavior, strict exact-wheel typing, 54
+focused candidate-contract/package tests, Ruff, Pyright, actionlint, and strict
+MkDocs.
 Ordinary PR runs also exercise schema, provenance, security, and negative
 contracts without credentials.
 
-The workflow-fix head is fully green. Build runs `42239563143` and
-`42239583235` pass the Linux, macOS, and Windows Python 3.12–3.14 matrix plus
-the package job. Docs runs `42239563067` and `42239582829` pass.
-Candidate-contract/all-workflow-actionlint runs `42239563062` and
-`42239582804` pass, as does release metadata. No hidden framework workflow
-failure remains at this head.
+The exact implementation head is fully green. Push/PR build runs `42246940929`
+and `42246953473` pass the Linux, macOS, and Windows Python 3.12–3.14 matrix
+plus the package job. Docs runs `42246940952` and `42246953426` pass.
+Candidate-contract/all-workflow-actionlint runs `42246940916` and
+`42246953431` pass, as do the PR checklist and release metadata. No hidden
+framework workflow failure remains at this head.
 
 Current exact producer heads are core
 `99b82a6673ff7d05c1c323c8921135c274993f11`, OCC
@@ -236,14 +237,12 @@ minimum/current NumPy, sdist, Linux, Windows, macOS Intel, and macOS ARM wheel
 builds plus all Python 3.12/3.14 wheel-smoke jobs. Candidate artifact
 `13509457151` supplies its selected Linux wheel evidence.
 
-The Linux x86-64 CGAL→core→libigl native runtime path was not executable
-locally on Darwin ARM64 and is reserved for the hosted positive. That only
-remaining Phase 6 gate now has its protected non-main integration ref and
-`candidate-artifact-retrieval` environment configured, but the environment
-secret list is empty. Organization owners must create and install the read-only
-GitHub App, add `CANDIDATE_ARTIFACT_APP_ID` and
-`CANDIDATE_ARTIFACT_PRIVATE_KEY`, and run the hosted positive. `main` remains
-untouched.
+Protected run `42246941037` passes the exact-candidate gate. Its credentialed
+job verifies and bundles the four selected artifacts; its separate
+permission-free execution job installs them and the framework wheel offline,
+runs all four required Linux native contracts with no skips, and reports zero
+typing errors or warnings. This closes the CGAL→core→libigl and OCC hosted
+evidence gap. `main` remains untouched.
 
 1. Run clean-environment verification for all ten core repositories and every
    profile.
@@ -255,9 +254,8 @@ untouched.
    repository commits as their configuration.
 6. Record deviations from the standard with rationale.
 
-The reviewed local and package-hosted evidence satisfies these steps except
-for the explicitly reserved Linux native runtime execution in the protected
-hosted positive described above.
+The reviewed local, package-hosted, and protected framework integration
+evidence satisfies these steps.
 
 ## Later wave: host integrations
 

@@ -57,16 +57,19 @@ The JUnit post-check rejects a failed, errored, skipped, or empty suite and
 requires every named integration test. A skip is therefore useful diagnostic
 information but never passing candidate evidence. The reviewed live manifest
 is recorded, and the protected non-main integration ref plus read-only GitHub
-App environment are configured. A hosted positive result is still required;
-failed diagnostic runs are not passing evidence. Main remains untouched.
+App environment are configured. Protected run `42246941037` provides the
+required hosted-positive evidence at `f719e50`. Credentialed
+retrieval, framework-wheel construction, and secret-free execution all pass;
+the four required runtime tests report no skips, and installed-wheel Pyright
+reports zero errors and warnings. Main remains untouched.
 
 The selected `run_attempt` must be successful. GitHub reruns may retain outputs
 from successful jobs in an earlier attempt and use them in dependent jobs of
-the final attempt. Candidate admission therefore binds the artifact to its
-exact workflow-run ID, commit, repository, API digest, archive digest, and
-wheel digest; it does not incorrectly require the retained artifact's creation
-timestamp to fall after the selected attempt's start. An artifact created after
-the selected successful attempt completed is rejected.
+the selected successful attempt. Candidate admission therefore binds the
+artifact to its exact workflow-run ID, commit, repository, API digest, archive
+digest, and wheel digest; it does not incorrectly require the retained
+artifact's creation timestamp to fall after the selected attempt's start. An
+artifact created after the selected successful attempt completed is rejected.
 
 `candidate-contracts.yml` runs on ordinary pull requests without secrets. It
 checks the schema, provenance rules, archive safety, wheel metadata, offline

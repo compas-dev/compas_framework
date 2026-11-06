@@ -93,29 +93,26 @@ Use the `compas3` environment. Before completion, affected packages must pass:
 
 ## Current status
 
-Implementation is in final integration. ADRs 001–017 and Geometry ADRs
-022–023 are Accepted. The approved source slices are implemented at the current
-core, OCC, CGAL, and libigl candidate heads while preserving duck typing and
-localizing normalization to explicit native, serialization, ownership, and
-retained-representation boundaries.
+Implementation and verification are complete for the approved scope. ADRs
+001–017 and Geometry ADRs 022–023 are Accepted. The approved source slices are
+implemented at the current core, OCC, CGAL, and libigl candidate heads while
+preserving duck typing and localizing normalization to explicit native,
+serialization, ownership, and retained-representation boundaries.
 
 WP7.4–WP7.7 and WP8.1 are source-complete. Native-stub/public-wrapper work is
 complete and hosted green for CGAL WP8.2 and libigl WP8.3. CGAL run
 `42231235319` attempt 1 passed every quality, compatibility, distribution,
 platform-wheel, and Python 3.12/3.14 wheel-smoke job. Accepted ADR 021 is
 implemented and independently reviewed in `compas_framework` for WP8.4 at
-`58405b03fa8d79b0b7ceb381924b6b6bd9e822b9`. The exact live manifest and local
+`f719e505c990004b60ee23fa5c2446fa4f2ae2dd`. The exact live manifest and local
 schema/semantic, hash, offline staging, version, discovery, OCC behavior,
-strict typing, and tooling contracts pass. The Linux x86-64
-CGAL→core→libigl runtime path remains unexecuted locally on Darwin ARM64
-and is reserved for the hosted positive.
+strict typing, and tooling contracts pass.
 
-The framework workflow matrix is fully green at this head. The protected
-non-main integration ref and GitHub environment are configured, but the
-environment secret list is empty. Organization owners must create and install
-the read-only GitHub App, add its App ID and private key secrets, and run the
-hosted positive. This is the only remaining WP8.4/final WP6 gate; both
-initiatives remain incomplete until it passes. `main` remains untouched.
+The framework workflow matrix is fully green at this head. Protected run
+`42246941037` verifies the exact four candidate artifacts and executes the
+secret-free Linux x86-64 CGAL→core→libigl and OCC runtime contracts: four tests
+pass with no skips, and the installed typing consumer reports zero errors and
+warnings. WP8.4 and final WP6 are complete. `main` remains untouched.
 
 `compas_libigl` joined the initiative on 2026-11-05 to align its native mesh
 plugins and replace incomplete native typing with the shared contract. CGAL

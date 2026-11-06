@@ -11,19 +11,20 @@ packages. Its schema, semantic contract, selected wheel hashes, and wheel
 metadata have been validated locally. The exact wheels also pass offline-bundle
 revalidation, no-index/no-dependency Linux-target staging, installed
 distribution and plugin discovery checks, the strict external typing consumer,
-and the OCC wrapper contract. The local host is Darwin ARM64, so execution of
-the selected Linux x86-64 CGAL/libigl extensions remains a hosted-gate check.
+and the OCC wrapper contract. Protected hosted run `42246941037` executes the
+selected Linux x86-64 CGAL/libigl extensions and OCC wrapper outside all
+checkouts: all four required tests pass with no skips, and the external typing
+consumer reports zero errors and warnings.
 Run IDs, artifact IDs, filenames, and hashes must never be fabricated or
 represented by placeholders. Unit and negative security tests continue to use
 generated temporary fixtures rather than modifying the live evidence.
 
-The hosted positive gate has not run because two owner-controlled safeguards
-are not yet configured: a protected non-main framework integration ref, and
-the protected GitHub App environment and secrets. The current candidate and
-initiative refs are unprotected, while the trusted workflow requires
-`github.ref_protected`. The manifest is therefore admitted local evidence, not
-a claim that the secret-isolated hosted workflow has passed. Main remains
-untouched.
+The protected non-main framework integration ref and read-only GitHub App
+environment admit the manifest through a credentialed retrieval job. Candidate
+execution happens in a separate job with no secrets or repository permission.
+The successful hosted result is integration evidence only: it does not merge
+an initiative branch, publish a package, create a release, or deploy
+documentation. Main remains untouched.
 
 To create or update the manifest:
 
@@ -34,8 +35,10 @@ To create or update the manifest:
 4. run `python .github/scripts/candidate_artifacts.py validate-manifest
    .github/candidates/native-linux-py312.json --live`;
 5. request review of the manifest and producer runs; and
-6. dispatch the trusted native candidate workflow only after the
-   `candidate-artifact-retrieval` environment is configured.
+6. after the `candidate-artifact-retrieval` environment is configured, push
+   the reviewed manifest to the protected candidate-integration branch; its
+   branch-scoped trigger runs the trusted workflow. Manual dispatch becomes
+   available only when GitHub can resolve the workflow from the default branch.
 
 The manifest must contain only candidate packages. Third-party runtime pins
 live in `runtime-linux-py312.txt` and
@@ -83,8 +86,7 @@ non-yanked PyPI file. With no `before` value it checks all four packages before
 the framework can be published. Promotion reuses the selected wheels; it does
 not rebuild them.
 
-The framework repository currently contains no publication job. Until owners
-configure both a protected non-main integration ref and the protected App
-environment, and the hosted positive gate passes, framework publishing remains
-structurally disabled.
+The framework repository currently contains no publication job. The protected
+candidate gate now passes, but framework publishing remains structurally
+disabled and still requires separate explicit approval and implementation.
 

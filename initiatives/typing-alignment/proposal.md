@@ -2,9 +2,9 @@
 
 ## Status
 
-Typing ADRs 001–017 and Geometry ADRs 022–023 are Accepted. Their remaining
-source slices are authorized in dependency order but are not yet implemented
-or verified.
+Typing ADRs 001–017 and Geometry ADRs 022–023 are Accepted. Their approved
+source slices and verification gates are implemented on the recorded
+initiative heads.
 
 ## Summary
 

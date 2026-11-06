@@ -1,11 +1,11 @@
 # Release Candidate Process
 
 The current workflows prepare and verify release candidates. They cannot
-publish packages, create GitHub releases, or deploy documentation. Publication
-remains structurally absent while the protected non-main integration ref and
-protected retrieval environment are unconfigured and the recorded
-coordinated-candidate manifest has not passed the hosted positive gate. Main
-remains untouched.
+publish packages, create GitHub releases, or deploy documentation. The
+protected non-main integration ref, protected retrieval environment, and
+recorded coordinated-candidate manifest now pass hosted run `42246941037`, but
+publication remains structurally absent and requires separate explicit
+approval and implementation. Main remains untouched.
 
 1. Run **prepare-release** and select `patch`, `minor`, or `major`.
 2. Review the generated release pull request, including the version and
@@ -35,10 +35,10 @@ files. Before framework publication it checks the complete manifest. A missing
 version, rebuilt filename, changed hash, or yanked file blocks promotion.
 
 The candidate artifact is not approved for publication merely because it was
-built. Do not create tags, GitHub releases, documentation deployments,
-trusted-publisher environments, or upload jobs until the live manifest is
-reviewed, a protected non-main integration ref and the protected GitHub App
-environment are configured, and the hosted positive integration gate passes.
+built or because the protected integration gate passes. The manifest is
+reviewed and hosted run `42246941037` is green, but do not create tags, GitHub
+releases, documentation deployments, trusted-publisher environments, or upload
+jobs without separate explicit release approval.
 See the
-[native candidate operations guide](https://github.com/compas-dev/compas_framework/blob/main/.github/candidates/README.md)
+[native candidate operations guide](https://github.com/compas-dev/compas_framework/blob/f719e505c990004b60ee23fa5c2446fa4f2ae2dd/.github/candidates/README.md)
 for the exact update and failure procedure.

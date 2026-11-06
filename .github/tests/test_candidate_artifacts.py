@@ -724,41 +724,41 @@ def test_live_manifest_records_reviewed_producer_evidence():
         "compas": (
             "99b82a6673ff7d05c1c323c8921135c274993f11",
             42220873191,
-            1,
+            2,
             1539,
             "initiative/repository-modernisation",
-            13503976914,
-            "1249f2135891115f3a78f9d84e2e1b165a6a5aa53bb3b304ea863702fa006843",
+            13522038906,
+            "43656e3da434149e6f628fb178d0751633fdb5cdbd60c92a8d8022a3cc88887d",
             "a72572f36bd2a6af1b435cb7f2f59809ea7d59616f91f93522db7efa52d112d1",
         ),
         "compas-occ": (
             "7fdf2ffb57d1de16308020e14ec626d79e65a034",
             42220872068,
-            1,
+            2,
             32,
             "c3-upgrade",
-            13503412127,
-            "993623506078d611a45d0dc16e89d56746333f969d29025f57d383b0f7239689",
+            13522347968,
+            "2976ab5f671f690b6c27e48dc30f4dabda2441b69ec1e70e28699518efefe328",
             "2e1321ca45d402a8b60a5cbb43abb1ffa1efe4609be37f243c2ad1345c2c4f4a",
         ),
         "compas-cgal": (
             "bb3624e714719d543c61768320d91811ba96cc6c",
             42231235319,
-            1,
+            2,
             81,
             "c3-upgrade",
-            13509457151,
-            "143105a79c251dcfa0ffb67f856d22ad4c96f2306ae34de8c8541f25917b0ece",
+            13522578476,
+            "7d97384c4d976678658ae8d25bb19caad840fc39f39683da73f45a9335647254",
             "af5602a2ae9605823350d33bd3b88ef9588bc7aeb953c4793719c504fc7bca8d",
         ),
         "compas-libigl": (
             "710b2b6714839a203fc8a6c62c437c0f6735ba0e",
             42209986136,
-            2,
+            3,
             47,
             "c3-upgrade",
-            13498439058,
-            "280d5cb9b996eb6926b8f404d23c505910773de802475b2f703f16cb1c300bd1",
+            13523406749,
+            "3c4c88f264a48cb0cc2201a6b5d2541418bb80415e23d143348ed567c92fa31a",
             "c2b90448727a64f61fa037aa3bb48c77097d783f8966f4536388ff4ba5447771",
         ),
     }
@@ -779,7 +779,9 @@ def test_live_manifest_records_reviewed_producer_evidence():
 
     readme = (ROOT / ".github" / "candidates" / "README.md").read_text(encoding="utf-8")
     assert "must never be fabricated" in readme
-    assert "hosted positive gate has not run" in readme
+    assert "Protected hosted run `42246941037`" in readme
+    assert "framework publishing remains structurally" in readme
+    assert "disabled and still requires separate explicit approval" in readme
 
 
 def test_trusted_workflow_isolated_from_pull_requests_and_secrets():

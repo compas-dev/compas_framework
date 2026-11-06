@@ -4,8 +4,8 @@ This initiative aligns Python typing across `compas`, `compas_occ`,
 `compas_cgal`, and `compas_libigl`, with particular attention to NumPy and
 native-library boundaries.
 
-Current phase: **Source and exact local candidate integration complete; the
-protected hosted positive remains open**.
+Current phase: **Complete for the approved source, distribution, and installed
+integration scope**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -17,9 +17,8 @@ ADRs 001–017 and Geometry ADRs 022–023 are approved. Together they define th
 exact geometry signatures, layered semantic
 `PointLike`/`VectorLike` and neutral `VerticesFaces` vocabulary,
 NumPy-compatible core constructors, and complete CGAL/libigl native stub policy
-required for WP7–WP8. The source slices are implemented without adding
-typing-only runtime conversions; final completion still depends on exact
-installed-candidate evidence.
+required for WP7–WP8. The source slices and exact installed-candidate evidence
+are complete without adding typing-only runtime conversions.
 
 Current draft-PR heads are:
 
@@ -41,18 +40,19 @@ the approved native-stub/public-wrapper contract and are hosted green.
 Framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) implements the
 WP8.4 exact-artifact mechanism and live manifest at
-`58405b03fa8d79b0b7ceb381924b6b6bd9e822b9`. Schema/semantic validation,
+`f719e505c990004b60ee23fa5c2446fa4f2ae2dd`. Schema/semantic validation,
 exact hashes, offline revalidation and staging, versions, installed plugin/OCC
-behavior, strict exact-wheel typing, and all 44 contract/tooling checks pass
-locally. The Linux x86-64 CGAL→core→libigl runtime path remains unexecuted
-on Darwin ARM64 and is reserved for the hosted positive.
+behavior, strict exact-wheel typing, and all 54 focused contract/tooling checks
+pass locally.
 
 The framework build, docs, candidate-contract/actionlint, package, and release
-metadata workflows are green at that head. The protected non-main integration
-ref and environment are configured, but the environment has no secrets.
-Organization owners must create/install the read-only GitHub App, add its App
-ID and private key secrets, and run the hosted positive. Until it passes, the
-typing initiative is not complete. `main` remains untouched.
+metadata workflows are green at that head. Protected run
+[`42246941037`](https://github.com/compas-dev/compas_framework/actions/runs/42246941037)
+also passes exact artifact retrieval and secret-free Linux execution: all four
+required installed runtime contracts pass without skips, including the
+CGAL→core→libigl and OCC paths, and the external typing consumer reports zero
+errors and warnings. WP8.4 and final WP6 are therefore complete. `main` remains
+untouched.
 
 Known limitation: `compas_cgal` skeletonisation currently produces incorrect
 results. Typing, stub, boundary, and packaging checks for that module do not

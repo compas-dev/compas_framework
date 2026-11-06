@@ -1,8 +1,8 @@
 # Typing Alignment Architecture Decisions
 
-Decisions 001–017 are **Accepted**. The remaining API migration and
-native-binding alignment are authorized in dependency order but remain
-incomplete until their implementation and verification gates pass.
+Decisions 001–017 are **Accepted** and implemented for the approved initiative
+scope. Their source, distribution, package-hosted, and exact installed-candidate
+verification gates pass on the recorded initiative heads.
 
 ## Decision index
 

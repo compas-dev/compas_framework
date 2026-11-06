@@ -1,11 +1,14 @@
 # `compas_gmsh` Modernisation Proposal
 
-**Status:** Approved; implementation authorized but not yet complete
+**Status:** Approved and implemented on the reviewed initiative branch
 
 This package proposal refines the accepted repository-modernisation policy for
-`compas_gmsh`. ADRs 014–016 are Accepted and authorize implementation of this
-scope. Repository settings, publishing, deployment, and merging remain
-separately approval-gated.
+`compas_gmsh`. ADRs 014–016 are Accepted and implemented at
+`c47af195bf04d0d2e874255bfe9c5f351beda672` on draft
+[PR 7](https://github.com/compas-dev/compas_gmsh/pull/7). Its real Gmsh matrix,
+macOS 15 migration, typed artifacts, strict documentation, and separate OCC
+integration are hosted green. Repository settings, publishing, deployment, and
+merging remain separately approval-gated.
 
 ## Objective
 

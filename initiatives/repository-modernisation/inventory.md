@@ -172,8 +172,10 @@ Profile: Python package with an externally supplied Gmsh runtime.
 
 The current clean baseline is `c16725f12930659e85849640d912717bd0fe9475`.
 The package-specific architecture is recorded in
-[`compas-gmsh.md`](compas-gmsh.md); implementation is authorized by Accepted
-ADRs 014–016 and remains incomplete.
+[`compas-gmsh.md`](compas-gmsh.md). Accepted ADRs 014–016 are implemented at
+`c47af195bf04d0d2e874255bfe9c5f351beda672` on hosted-green draft PR 7. The
+baseline findings below record the pre-migration state rather than remaining
+implementation debt.
 
 - PEP 621, MkDocs, and Ruff exist; uv and Pyright do not.
 - Python metadata, classifiers, Ruff target, and CI matrix disagree.
