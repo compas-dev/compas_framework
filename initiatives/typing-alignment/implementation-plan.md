@@ -12,7 +12,7 @@ Current draft-PR heads are core PR 1539 at
 `7fdf2ffb57d1de16308020e14ec626d79e65a034`, CGAL PR 81 at
 `bb3624e714719d543c61768320d91811ba96cc6c`, and libigl PR 47 at
 `710b2b6714839a203fc8a6c62c437c0f6735ba0e`. All four are hosted green. CGAL
-run `42231235319` attempt 1 passed every quality, compatibility, distribution,
+run `42231235319` attempt 2 passed every quality, compatibility, distribution,
 platform-wheel, and Python 3.12/3.14 wheel-smoke job. WP7 source work and
 WP8.1–WP8.3 are implemented. WP8.4 exact local candidate integration and the
 protected hosted positive pass; WP8.4 and WP6 are complete.
@@ -82,7 +82,7 @@ topology queries through independently failing contracts as approved in ADR
 ### WP4 — CGAL NumPy and native stubs
 
 **Status:** complete and hosted green at `bb3624e714719d543c61768320d91811ba96cc6c`.
-Run `42231235319` attempt 1 passed every Python 3.12/3.14 platform wheel-smoke
+Run `42231235319` attempt 2 passed every Python 3.12/3.14 platform wheel-smoke
 job, including installed `--verifytypes`.
 
 **Ownership:** `compas_cgal` wrapper modules, `types.py`, native stubs, native
@@ -134,7 +134,7 @@ For each family:
 
 **Status:** complete. The package-level typed distribution gates pass at the
 current candidate heads, exact local WP8.4 candidate integration passes, and
-protected run `42246941037` verifies installed runtime and typing contracts.
+protected run `42299118381` verifies installed runtime and typing contracts.
 
 **Ownership:** package build configuration plus `compas_framework` integration
 and independent review.
@@ -281,7 +281,7 @@ affected core constructors, static/runtime fixtures, and public documentation.
 #### WP8.2 — CGAL stub and wrapper correction
 
 **Status:** complete and hosted green at
-`bb3624e714719d543c61768320d91811ba96cc6c`. Run `42231235319` attempt 1
+`bb3624e714719d543c61768320d91811ba96cc6c`. Run `42231235319` attempt 2
 passed quality, minimum/current NumPy, sdist, every platform wheel build, and
 all Python 3.12/3.14 wheel-smoke jobs.
 
@@ -319,20 +319,20 @@ parallel with separate repository ownership.
 
 **Status:** complete and independently reviewed on framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
-`f719e505c990004b60ee23fa5c2446fa4f2ae2dd`. The live manifest passes
+`d0c9d4ef939ebbd4da4e14446e2e11f83a8a97b0`. The live manifest passes
 schema/semantic validation with exact hashes for all four wheels. Offline
 bundle revalidation, `--no-index --no-deps` staging, exact versions, installed
 entry-point/plugin discovery, OCC BRep/tessellation behavior, strict
 exact-wheel typing, 54 focused tests, Ruff, Pyright, actionlint, and strict
 MkDocs pass.
 
-Push/PR build runs (`42246940929`, `42246953473`), docs runs
-(`42246940952`, `42246953426`), and candidate-contract/all-workflow-actionlint
-runs (`42246940916`, `42246953431`) pass. They cover Linux, macOS, and Windows
+Push/PR build runs (`42299118404`, `42299126001`), docs runs
+(`42299118452`, `42299125994`), and candidate-contract/all-workflow-actionlint
+runs (`42299118380`, `42299126013`) pass. They cover Linux, macOS, and Windows
 on Python 3.12–3.14, the package job, documentation, and release metadata. No
 hidden workflow failure remains at this head.
 
-Protected run `42246941037` passes at the exact implementation head. Its
+Protected run `42299118381` passes at the exact implementation head. Its
 credentialed retrieval job verifies and bundles the selected artifacts; its
 separate permission-free execution job installs them offline, reports all four
 required native contracts passed with no skips, and reports zero typing errors

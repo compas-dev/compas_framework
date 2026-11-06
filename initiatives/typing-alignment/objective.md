@@ -101,15 +101,15 @@ serialization, ownership, and retained-representation boundaries.
 
 WP7.4–WP7.7 and WP8.1 are source-complete. Native-stub/public-wrapper work is
 complete and hosted green for CGAL WP8.2 and libigl WP8.3. CGAL run
-`42231235319` attempt 1 passed every quality, compatibility, distribution,
+`42231235319` attempt 2 passed every quality, compatibility, distribution,
 platform-wheel, and Python 3.12/3.14 wheel-smoke job. Accepted ADR 021 is
 implemented and independently reviewed in `compas_framework` for WP8.4 at
-`f719e505c990004b60ee23fa5c2446fa4f2ae2dd`. The exact live manifest and local
+`d0c9d4ef939ebbd4da4e14446e2e11f83a8a97b0`. The exact live manifest and local
 schema/semantic, hash, offline staging, version, discovery, OCC behavior,
 strict typing, and tooling contracts pass.
 
 The framework workflow matrix is fully green at this head. Protected run
-`42246941037` verifies the exact four candidate artifacts and executes the
+`42299118381` verifies the exact four candidate artifacts and executes the
 secret-free Linux x86-64 CGAL→core→libigl and OCC runtime contracts: four tests
 pass with no skips, and the installed typing consumer reports zero errors and
 warnings. WP8.4 and final WP6 are complete. `main` remains untouched.

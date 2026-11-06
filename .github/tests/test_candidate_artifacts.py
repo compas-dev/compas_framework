@@ -779,7 +779,8 @@ def test_live_manifest_records_reviewed_producer_evidence():
 
     readme = (ROOT / ".github" / "candidates" / "README.md").read_text(encoding="utf-8")
     assert "must never be fabricated" in readme
-    assert "Protected hosted run `42246941037`" in readme
+    assert "Protected hosted run `42299118381`" in readme
+    assert "d0c9d4ef939ebbd4da4e14446e2e11f83a8a97b0" in readme
     assert "framework publishing remains structurally" in readme
     assert "disabled and still requires separate explicit approval" in readme
 

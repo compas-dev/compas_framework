@@ -160,14 +160,14 @@ The current package checkpoints are carried by draft PRs and remain outside
   `e0bdd02aa8490248c6f2f36042651d8ebfc4442b`.
 
 All cited package PR heads have complete green hosted evidence. CGAL build run
-`42231235319` attempt 1 succeeded at the cited head: quality, minimum/current
+`42231235319` attempt 2 succeeded at the cited head: quality, minimum/current
 NumPy, sdist, all four platform wheel builds, and every Python 3.12/3.14 wheel
-smoke passed. Candidate artifact `13509457151` is the selected Linux wheel
+smoke passed. Candidate artifact `13522578476` is the selected Linux wheel
 artifact for provenance admission.
 
 Accepted ADR 021 is implemented on framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
-`f719e505c990004b60ee23fa5c2446fa4f2ae2dd`. The independently reviewed live
+`d0c9d4ef939ebbd4da4e14446e2e11f83a8a97b0`. The independently reviewed live
 manifest passes schema and semantic validation with exact hashes for all four
 wheels. Local evidence covers offline bundle revalidation, `--no-index
 --no-deps` staging, exact distribution versions, installed entry-point/plugin
@@ -177,7 +177,7 @@ tests at the final workflow checkpoint, plus Ruff, Pyright, actionlint, and
 strict MkDocs.
 
 Protected native-integration run
-[`42246941037`](https://github.com/compas-dev/compas_framework/actions/runs/42246941037)
+[`42299118381`](https://github.com/compas-dev/compas_framework/actions/runs/42299118381)
 passes at that exact head. Credentialed retrieval verifies the admitted
 artifacts, the framework wheel is built once, and the separate secret-free
 Linux x86-64 execution reports four required runtime tests passed with no
@@ -185,10 +185,10 @@ skips and an external installed-wheel typing result of zero errors and zero
 warnings. This includes the CGAL→core→libigl path and OCC BRep construction.
 
 The current framework implementation head has no unresolved hosted workflow
-failure. Push/PR build runs (`42246940929`, `42246953473`), docs runs
-(`42246940952`, `42246953426`), and candidate-contract/actionlint runs
-(`42246940916`, `42246953431`) all succeed at `f719e50`; PR checklist run
-`42246953437` and release metadata also pass.
+failure. Push/PR build runs (`42299118404`, `42299126001`), docs runs
+(`42299118452`, `42299125994`), and candidate-contract/actionlint runs
+(`42299118380`, `42299126013`) all succeed at `d0c9d4e`; PR checklist run
+`42299126033` and release metadata also pass.
 
 The protected non-main integration ref and `candidate-artifact-retrieval`
 environment were used only for the credentialed retrieval boundary. The

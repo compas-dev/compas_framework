@@ -57,8 +57,8 @@ The JUnit post-check rejects a failed, errored, skipped, or empty suite and
 requires every named integration test. A skip is therefore useful diagnostic
 information but never passing candidate evidence. The reviewed live manifest
 is recorded, and the protected non-main integration ref plus read-only GitHub
-App environment are configured. Protected run `42246941037` provides the
-required hosted-positive evidence at `f719e50`. Credentialed
+App environment are configured. Protected run `42299118381` provides the
+required hosted-positive evidence at `d0c9d4e`. Credentialed
 retrieval, framework-wheel construction, and secret-free execution all pass;
 the four required runtime tests report no skips, and installed-wheel Pyright
 reports zero errors and warnings. Main remains untouched.

@@ -71,13 +71,12 @@ At the current heads, package tests verify the changed registration contracts.
 Framework ADR 021's exact live manifest passes semantic/hash validation,
 offline staging, exact-version checks, installed entry-point/plugin discovery,
 and strict exact-wheel typing. The lightweight source modules are inspected
-separately. CGAL run `42231235319` attempt 1 is green across all platform wheel
+separately. CGAL run `42231235319` attempt 2 is green across all platform wheel
 builds and Python 3.12/3.14 wheel-smoke jobs.
 
 The Linux x86-64 CGAL→core→libigl native runtime path remains unexecuted
-locally on Darwin ARM64 and is reserved for the hosted positive. This means the
-plugin initiative must not treat local exact-artifact evidence as completed
-native invocation evidence.
+locally on Darwin ARM64, but protected framework run `42299118381` supplies
+the hosted positive: all four required runtime contracts pass without skips.
 
 ### Reference implementation state
 
@@ -100,7 +99,7 @@ runtime. Its accepted curve, surface, BRep, and intersection signature/type
 corrections are present at the current head. Repository plugin tests still use
 synthetic entry points, so package-owned installed and built-wheel discovery
 proof remains open even though the framework exact-candidate validation
-supplies cross-package installed discovery evidence.
+supplies cross-package installed discovery and runtime evidence.
 
 ### Measured Wave 1 evidence
 

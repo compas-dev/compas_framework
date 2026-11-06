@@ -32,7 +32,7 @@ Current draft-PR heads are:
   `710b2b6714839a203fc8a6c62c437c0f6735ba0e`.
 
 All four packages have complete green hosted evidence at those heads. CGAL run
-`42231235319` attempt 1 passed quality, minimum/current NumPy, sdist, every
+`42231235319` attempt 2 passed quality, minimum/current NumPy, sdist, every
 platform wheel build, and all Python 3.12/3.14 wheel-smoke jobs.
 
 WP7.4–WP7.7 and WP8.1 are source-complete. CGAL WP8.2 and libigl WP8.3 reach
@@ -40,14 +40,14 @@ the approved native-stub/public-wrapper contract and are hosted green.
 Framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) implements the
 WP8.4 exact-artifact mechanism and live manifest at
-`f719e505c990004b60ee23fa5c2446fa4f2ae2dd`. Schema/semantic validation,
+`d0c9d4ef939ebbd4da4e14446e2e11f83a8a97b0`. Schema/semantic validation,
 exact hashes, offline revalidation and staging, versions, installed plugin/OCC
 behavior, strict exact-wheel typing, and all 54 focused contract/tooling checks
 pass locally.
 
 The framework build, docs, candidate-contract/actionlint, package, and release
 metadata workflows are green at that head. Protected run
-[`42246941037`](https://github.com/compas-dev/compas_framework/actions/runs/42246941037)
+[`42299118381`](https://github.com/compas-dev/compas_framework/actions/runs/42299118381)
 also passes exact artifact retrieval and secret-free Linux execution: all four
 required installed runtime contracts pass without skips, including the
 CGAL→core→libigl and OCC paths, and the external typing consumer reports zero

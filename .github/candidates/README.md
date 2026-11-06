@@ -11,7 +11,8 @@ packages. Its schema, semantic contract, selected wheel hashes, and wheel
 metadata have been validated locally. The exact wheels also pass offline-bundle
 revalidation, no-index/no-dependency Linux-target staging, installed
 distribution and plugin discovery checks, the strict external typing consumer,
-and the OCC wrapper contract. Protected hosted run `42246941037` executes the
+and the OCC wrapper contract. Protected hosted run `42299118381` at
+`d0c9d4ef939ebbd4da4e14446e2e11f83a8a97b0` executes the
 selected Linux x86-64 CGAL/libigl extensions and OCC wrapper outside all
 checkouts: all four required tests pass with no skips, and the external typing
 consumer reports zero errors and warnings.

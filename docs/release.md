@@ -3,7 +3,7 @@
 The current workflows prepare and verify release candidates. They cannot
 publish packages, create GitHub releases, or deploy documentation. The
 protected non-main integration ref, protected retrieval environment, and
-recorded coordinated-candidate manifest now pass hosted run `42246941037`, but
+recorded coordinated-candidate manifest now pass hosted run `42299118381`, but
 publication remains structurally absent and requires separate explicit
 approval and implementation. Main remains untouched.
 
@@ -36,9 +36,9 @@ version, rebuilt filename, changed hash, or yanked file blocks promotion.
 
 The candidate artifact is not approved for publication merely because it was
 built or because the protected integration gate passes. The manifest is
-reviewed and hosted run `42246941037` is green, but do not create tags, GitHub
+reviewed and hosted run `42299118381` is green, but do not create tags, GitHub
 releases, documentation deployments, trusted-publisher environments, or upload
 jobs without separate explicit release approval.
 See the
-[native candidate operations guide](https://github.com/compas-dev/compas_framework/blob/f719e505c990004b60ee23fa5c2446fa4f2ae2dd/.github/candidates/README.md)
+[native candidate operations guide](https://github.com/compas-dev/compas_framework/blob/d0c9d4ef939ebbd4da4e14446e2e11f83a8a97b0/.github/candidates/README.md)
 for the exact update and failure procedure.

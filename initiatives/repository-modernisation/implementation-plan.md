@@ -150,9 +150,9 @@ In parallel where file ownership is independent:
   automation is structurally unable to publish, tag, create a GitHub release,
   or deploy documentation. The separate native integration contract authorized
   by Accepted [ADR 021](decisions/021-cross-repository-candidate-artifacts.md)
-  is implemented at `f719e505c990004b60ee23fa5c2446fa4f2ae2dd` on framework
+  is implemented at `d0c9d4ef939ebbd4da4e14446e2e11f83a8a97b0` on framework
   draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2); protected
-  hosted run `42246941037` passes its exact candidate gate;
+  hosted run `42299118381` passes its exact candidate gate;
 - `compas_gmsh` implements Accepted ADRs 014–016 at
   `c47af195bf04d0d2e874255bfe9c5f351beda672` on draft
   [PR 7](https://github.com/compas-dev/compas_gmsh/pull/7). Its real Gmsh
@@ -210,7 +210,7 @@ implemented at the cited head and do not block the accepted packaging work.
 ## Phase 6: integration and documentation
 
 Status: complete. Accepted ADR 021 is implemented and independently reviewed on
-framework draft PR 2 at `f719e505c990004b60ee23fa5c2446fa4f2ae2dd`.
+framework draft PR 2 at `d0c9d4ef939ebbd4da4e14446e2e11f83a8a97b0`.
 The live manifest passes schema and semantic validation with exact hashes for
 all four wheels. Local verification passes offline bundle revalidation,
 `--no-index --no-deps` staging, exact versions, installed entry-point/plugin
@@ -220,11 +220,11 @@ MkDocs.
 Ordinary PR runs also exercise schema, provenance, security, and negative
 contracts without credentials.
 
-The exact implementation head is fully green. Push/PR build runs `42246940929`
-and `42246953473` pass the Linux, macOS, and Windows Python 3.12–3.14 matrix
-plus the package job. Docs runs `42246940952` and `42246953426` pass.
-Candidate-contract/all-workflow-actionlint runs `42246940916` and
-`42246953431` pass, as do the PR checklist and release metadata. No hidden
+The exact implementation head is fully green. Push/PR build runs `42299118404`
+and `42299126001` pass the Linux, macOS, and Windows Python 3.12–3.14 matrix
+plus the package job. Docs runs `42299118452` and `42299125994` pass.
+Candidate-contract/all-workflow-actionlint runs `42299118380` and
+`42299126013` pass, as do the PR checklist and release metadata. No hidden
 framework workflow failure remains at this head.
 
 Current exact producer heads are core
@@ -232,12 +232,12 @@ Current exact producer heads are core
 `7fdf2ffb57d1de16308020e14ec626d79e65a034`, CGAL
 `bb3624e714719d543c61768320d91811ba96cc6c`, and libigl
 `710b2b6714839a203fc8a6c62c437c0f6735ba0e`. All four have green hosted
-evidence. CGAL build run `42231235319` attempt 1 passed quality,
+evidence. CGAL build run `42231235319` attempt 2 passed quality,
 minimum/current NumPy, sdist, Linux, Windows, macOS Intel, and macOS ARM wheel
 builds plus all Python 3.12/3.14 wheel-smoke jobs. Candidate artifact
-`13509457151` supplies its selected Linux wheel evidence.
+`13522578476` supplies its selected Linux wheel evidence.
 
-Protected run `42246941037` passes the exact-candidate gate. Its credentialed
+Protected run `42299118381` passes the exact-candidate gate. Its credentialed
 job verifies and bundles the four selected artifacts; its separate
 permission-free execution job installs them and the framework wheel offline,
 runs all four required Linux native contracts with no skips, and reports zero
