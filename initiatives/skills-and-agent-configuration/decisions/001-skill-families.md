@@ -11,21 +11,22 @@ different goals, authority, side effects, and validation needs.
 
 ## Options
 
-1. Maintain separately named learner and maintainer skill families.
+1. Maintain separately named and installable user and developer skill
+   families.
 2. Create one universal COMPAS skill.
 3. Provide repository maintainer skills only.
 
 ## Recommendation
 
-Choose option 1. Learner skills create and validate code in user-owned or
-temporary workspaces. Maintainer skills operate under repository policy and
-framework architectural decisions. Do not route both audiences through a
-catch-all skill.
+Choose option 1. User tutorial skills create and validate code in user-owned or
+temporary workspaces. Developer skills operate under repository policy and
+framework architectural decisions. Do not route or install both audiences as
+one catch-all surface.
 
 ## Consequences
 
 - Routing descriptions can be precise.
-- Learner workflows do not inherit maintainer mutation assumptions.
+- User workflows do not inherit developer mutation assumptions.
 - Shared references may be reused, but workflow instructions remain separate.
 
 ## Dependencies

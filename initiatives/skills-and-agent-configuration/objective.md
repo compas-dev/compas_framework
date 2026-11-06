@@ -56,14 +56,16 @@ resources.
 1. A cross-repository inventory of skills, agent instructions, configuration,
    tutorials, examples, and MCP use.
 2. An approved architecture and independent ADRs.
-3. A minimal learner curriculum and at least one validated tutorial skill.
-4. A coherent set of maintainer workflow skills with one source of truth.
+3. A minimal user tutorial curriculum and at least one validated tutorial
+   skill.
+4. A coherent set of developer workflow skills with one source of truth.
 5. Compact repository instructions that route work into the appropriate
    skills.
 6. General-purpose custom agent roles whose documented constraints match the
    actual configuration system.
-7. A documented MCP boundary and secure configuration pattern; an MCP server
-   is not a required deliverable unless an approved use case needs one.
+7. A documented MCP boundary, admission checklist, and secure local
+   configuration pattern; an MCP server is not a required deliverable unless
+   an approved use case needs one.
 8. Scenario-based validation for skill selection, non-selection, behavior,
    generated artifacts, links, and configuration.
 
@@ -88,6 +90,7 @@ redefine them.
 
 ## Current status
 
-Phase 1 reconnaissance is complete. Architecture and ADRs are in preparation.
-No skill, agent, or MCP implementation is authorized until the proposal and
-its independent decisions are explicitly approved.
+Phase 1 reconnaissance and Phase 2 architecture are complete. The proposal and
+ADRs 001–010 are awaiting explicit approval. No skill, agent, MCP, or package
+implementation is authorized until the required independent decisions are
+accepted.

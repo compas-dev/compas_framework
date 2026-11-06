@@ -22,6 +22,11 @@ Choose option 1. Start with `compas-update-docstrings`, `compas-update-docs`,
 the owning repository's configured commands and reports actual evidence rather
 than hard-coding one framework-wide command list.
 
+Every developer skill consults repository instructions and accepted initiative
+decisions, stops when a governing ADR is unresolved, and links to the owning
+contract rather than copying framework patterns into the skill. Do not add a
+universal "apply every COMPAS pattern" skill.
+
 Add geometry, plugin, release, or PR-handoff skills only when an approved,
 stable contract and repeated need justify them.
 

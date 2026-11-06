@@ -18,10 +18,13 @@ identified static knowledge.
 
 ## Recommendation
 
-Choose option 1. A later server requires a named live use case, its own ADR,
-threat model, tool inventory, authorization policy, and verification. Prefer
+Choose option 1. The initiative still delivers an admission and secure local
+configuration template covering a named live use case, tool inventory,
+read/write classification, authorization points, credential ownership, and
+verification. A later server requires its own ADR and threat model. Prefer
 read-only access, least privilege, explicit allowlists, and credentials outside
-version control.
+version control. MCP belongs to the parent session; custom agent files cannot
+override it.
 
 ## Consequences
 

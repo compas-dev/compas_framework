@@ -2,20 +2,22 @@
 
 ## Summary
 
-Create two separately routed skill families: learner skills for people writing
-COMPAS code, and maintainer skills for contributors and coding agents working
-on framework repositories. Author shared skills once as a portable bundle,
-keep repository instructions compact, generalize the current custom agent
-roles, and add no COMPAS MCP server until a concrete live-data or
+Create two separately routed and installable skill families: user tutorial
+skills for people writing COMPAS code, and developer tools for contributors and
+coding agents working on framework repositories. Author both from one
+canonical source, keep repository instructions compact, generalize the current
+custom agent roles, and add no COMPAS MCP server until a concrete live-data or
 controlled-action requirement exists.
 
 ## Responsibility boundaries
 
 ### Documentation
 
-Versioned documentation, executable examples, public signatures, and package
-configuration remain authoritative for factual behavior. Skills select,
-sequence, exercise, and validate this material; they do not copy an API manual.
+Accepted ADRs own intended architecture. Source, tests, version-matching
+documentation, public signatures, and package configuration establish what is
+actually available. Skills select, sequence, exercise, and validate this
+material; they do not copy an API manual. A user tutorial must never teach an
+accepted but unimplemented API.
 
 ### `AGENTS.md`
 
@@ -42,10 +44,20 @@ MCP supplies live external information, authentication, or controlled actions.
 It is not a storage mechanism for static COMPAS conventions. No new MCP server
 is part of the baseline.
 
-## Canonical bundle
+## Canonical source and bundles
 
-Author framework-wide skills once in this coordination repository under
-namespaced names such as:
+Author framework-wide skills once in this coordination repository and expose
+two independently installable portable skill bundles that can be packaged as
+Agent Plugins:
+
+- `compas-user-skills`, initially containing `compas-get-started`;
+- `compas-developer-tools`, containing contributor workflow skills.
+
+The same canonical source additionally maintains repo-scoped `.codex/` agent
+and configuration adapters. Those adapters are installed and governed
+separately; they are not presented as portable Agent Plugin contents.
+
+Use namespaced skill names such as:
 
 - `compas-get-started`;
 - `compas-update-docstrings`;
@@ -54,31 +66,37 @@ namespaced names such as:
 - `compas-verify-change`.
 
 Package repositories keep only genuinely package-specific skills or thin
-routing instructions. The authoring layout must remain portable so the bundle
-can later be packaged as a public plugin or moved to a dedicated repository
-without rewriting its skill bodies. The first wave will define one explicit
-installation/bootstrap path; it will not copy editable forks into every
-package.
+routing instructions. Local and repository marketplace configuration supports
+development and testing without copied skill bodies or machine-specific
+symlinks. The authoring layout remains portable so either bundle can later move
+to a dedicated repository without rewriting its skills. Public publication is
+a separate approval boundary.
 
-## Initial learner curriculum
+## Initial user tutorial curriculum
 
-Pilot one `compas-get-started` skill against core COMPAS:
+Pilot one guided `compas-get-started` skill against core COMPAS:
 
 1. inspect the active Python environment and COMPAS version;
 2. create and inspect basic geometry;
 3. create and query a mesh using current high-level accessors;
 4. transform and serialize data;
-5. optionally visualize the result;
-6. optionally use one computational backend and explain direct versus
-   plugin-dispatched use.
+5. modify the program and inspect the changed result.
 
-Every stage produces a small runnable artifact, explains the expected result,
-runs focused validation, and offers one modification exercise. It writes only
-to a user-selected project or isolated temporary directory. It does not
-install or upgrade packages without authorization. A version mismatch is
-reported before work continues.
+Every stage is an interactive lesson checkpoint: it produces a small runnable
+artifact, explains the expected result, runs focused validation, and offers a
+modification exercise. It writes only to a user-selected project or isolated
+temporary directory. It does not install or upgrade packages without
+authorization. A version mismatch is reported before work continues.
 
-## Initial maintainer workflows
+The tutorial includes user-facing `agents/openai.yaml` metadata and validates
+both intended selection and non-selection. This metadata is an optional host
+adapter; the portable skill remains complete without it.
+
+Visualization and computational-backend lessons are later optional modules,
+gated on stable public APIs and matching documentation. They are not required
+for the first complete tutorial.
+
+## Initial developer workflows
 
 Normalize the three existing documentation and typing skills, then add one
 verification skill. `compas-verify-change` selects the owning repository's
@@ -89,6 +107,11 @@ Additional geometry, plugin, release, or PR-handoff skills require a stable
 approved contract and evidence of repeated use. They are not created
 speculatively.
 
+Every developer skill consults the owning repository instructions and accepted
+initiative decisions, stops when a governing ADR is unresolved, and links to
+the authoritative contract instead of becoming a second registry of framework
+patterns. There is no universal "apply every COMPAS pattern" skill.
+
 ## Custom agent configuration
 
 Retain explorer, architect, implementer, reviewer, and documenter, but make
@@ -98,16 +121,31 @@ keys with documented keys, and use supported capability controls where a role
 should not receive a tool category. Parent-session permissions, MCP servers,
 and approval policy remain authoritative.
 
-No tutor-specific agent is proposed initially. The learner skill must work
-with an ordinary agent.
+No tutor-specific agent is proposed initially. The user tutorial skill must
+work with an ordinary agent. Portable skill behavior must not depend on custom
+agents, MCP, or subagents.
+
+## MCP configuration deliverable
+
+The baseline adds no COMPAS MCP server, but it does provide an admission and
+configuration template. Every proposed connection names the live use case,
+tool inventory, read/write classification, authorization points, credential
+ownership, and verification. MCP configuration belongs to the parent session;
+custom agent files cannot override it. Examples contain no credentials or
+developer-specific paths.
 
 ## Validation
 
-Every skill requires structural validation plus realistic trigger,
-non-trigger, and forward-execution scenarios. Learner scenarios run in
-isolated projects and check generated Python with Ruff, Pyright, and runtime
-execution where applicable. The suite covers a source checkout, an installed
-release, a missing optional dependency, and a version mismatch.
+Blocking deterministic validation covers schemas and frontmatter, scripts,
+configuration parsing, references, canonical tutorial artifacts, Ruff,
+Pyright, relevant runtime execution, duplicate detection, and secret scanning.
+User scenarios run without network access by default in isolated projects and
+cover a source checkout, an installed release, and a version mismatch.
+
+Trigger, non-trigger, and independent forward-execution scenarios are release
+and acceptance evidence rather than a claim that model routing is perfectly
+deterministic CI. Each bundle declares its supported COMPAS versions and is
+versioned independently from COMPAS package releases.
 
 CI also checks referenced links and examples, parses agent configuration,
 detects duplicate or diverged framework-wide skills, and scans committed
@@ -118,9 +156,10 @@ allowlist, read/write classification, and permission tests.
 
 1. Accept the independent ADRs.
 2. Repair current skill references and custom-agent configuration.
-3. Establish the canonical portable bundle and validation harness.
-4. Migrate the three existing maintainer skills and add verification.
-5. Pilot `compas-get-started` against core COMPAS.
+3. Establish the canonical source, two installable bundles, and validation
+   harness.
+4. Migrate the three existing developer skills and add verification.
+5. Pilot the core-only `compas-get-started` tutorial.
 6. Add viewer and optional-backend lessons only after their APIs stabilize.
 7. Consider plugin distribution or an MCP connection only after demonstrated
    demand and a new approval.
@@ -158,7 +197,9 @@ later, independently approved server.
 - Namespaced skill names avoid collisions with generic user skills.
 - Existing copied skills will be migrated deliberately rather than silently
   replaced.
-- Learner behavior is explicitly version-aware.
+- User installations do not implicitly include contributor mutation
+  workflows or custom agent configuration.
+- User tutorial behavior is explicitly version-aware.
 - Portable skill bodies do not require Codex, MCP, or subagents for
   correctness; Codex configuration remains an optional adapter.
 - No credentials or developer-specific absolute paths enter the bundle.
@@ -166,5 +207,6 @@ later, independently approved server.
 ## Approval boundary
 
 This proposal and ADRs 001–010 are Proposed. Approval authorizes only the
-rollout above. It does not authorize publishing a plugin, adding an MCP server,
-connecting external accounts, merging, or releasing.
+rollout above. It does not authorize publicly publishing either Agent Plugin
+bundle, adding an MCP server, connecting external accounts, merging, or
+releasing.

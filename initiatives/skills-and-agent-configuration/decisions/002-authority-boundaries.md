@@ -17,11 +17,13 @@ and agent prompts can easily become competing sources of truth.
 
 ## Recommendation
 
-Choose option 1. Documentation owns factual public behavior. The initiative
+Choose option 1. Accepted ADRs own intended architecture; source, tests, and
+version-matching documentation establish implemented behavior. The initiative
 that approves a framework contract owns its developer guidance. This
 initiative owns packaging, discovery, routing, validation, and agent/MCP
 configuration. `AGENTS.md` holds durable invariants and skill triggers; skills
-link to maintained references rather than duplicating them.
+link to maintained references rather than duplicating them. User tutorials
+never teach an accepted but unimplemented API.
 
 ## Consequences
 

@@ -18,14 +18,18 @@ complete learner path is validated.
 
 ## Recommendation
 
-Choose option 1. Cover environment/version inspection, basic geometry, a mesh
-using high-level accessors, transformation and serialization, optional
-visualization, and one optional backend. Each stage creates and runs a small
-artifact and offers a modification exercise.
+Choose option 1. The mandatory first slice is core-only: environment/version
+inspection, basic geometry, a mesh using high-level accessors, transformation,
+serialization, and a modification exercise. Each stage is a guided checkpoint
+that creates and runs a small artifact, explains the result, and asks the user
+to change it. Visualization and computational backends are later optional
+modules gated on stable APIs and matching documentation.
 
 Use checkout-matching docs during source development and release-matching docs
-for installed packages. Report mismatches and ask before installing or
-upgrading anything.
+for installed packages. Teach only implemented matching APIs. Report
+mismatches and ask before installing or upgrading anything. Provide
+user-facing `agents/openai.yaml` metadata for hosts that support it, without
+making that adapter necessary for the portable workflow.
 
 ## Consequences
 

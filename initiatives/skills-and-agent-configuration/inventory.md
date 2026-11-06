@@ -18,16 +18,28 @@ The framework workspace currently contains:
 - `.agents/skills/update-type-hints`;
 - an untracked `.agents/skills/update-docs` addition.
 
+No audited repository contains a user tutorial skill. The current skills are
+maintenance-only.
+
 Sibling repositories contain copied or independently edited variants of some
 of these skills. Their contents and hashes differ, and `compas_libigl` has no
 equivalent repository-local skills. There is therefore no effective
 framework-wide source of truth or synchronization contract.
+
+The audited copies are not small packaging variations: every inspected
+`update-docstrings` copy has a different content hash, as does every inspected
+`update-type-hints` copy. `update-docs` currently exists only in the framework
+and model workspaces.
 
 Several current skill instructions refer to `AGENTS.md` section names that do
 not exist anymore. For example, the framework type-hint skill names `Python and
 Typing` and `Framework Integration Contracts`, while core variants refer to
 other obsolete headings. A skill can therefore appear authoritative while
 routing an agent to missing policy.
+
+The root `AGENTS.md` describes a framework-wide coordinator, but its prescribed
+reconnaissance remains geometry-specific. That mismatch should be repaired as
+part of the developer configuration, not copied into the skills.
 
 None of the inspected project skills has behavioral forward tests. Optional UI
 metadata is also absent. Those are not defects by themselves, but the current
@@ -64,8 +76,9 @@ permission boundary it cannot enforce. Current behavior is documented at:
 
 ## MCP configuration
 
-No MCP configuration or COMPAS MCP server was found in the audited
-repositories. That is a useful neutral baseline, not a missing feature.
+No MCP configuration, bundled MCP dependency, or COMPAS MCP server was found in
+the audited repositories. That is a useful neutral baseline, not a missing
+feature.
 
 MCP is appropriate when the workflow needs live information, authentication,
 or controlled actions. Static framework patterns already present in
@@ -99,14 +112,17 @@ to the matching documentation.
 
 ## Candidate learner journeys
 
-The first curriculum should be a small vertical slice rather than a catalog of
-every package:
+The first curriculum should be a core-only vertical slice rather than a catalog
+of every package:
 
 1. verify an environment and create a first COMPAS script;
 2. construct and inspect geometry and data structures;
-3. visualize geometry using the supported viewer path;
-4. use an optional computational backend through a public COMPAS operation;
-5. modify the small program and validate the result.
+3. transform and serialize the data;
+4. modify the small program and validate the result.
+
+Visualization through the supported viewer path and use of an optional
+computational backend are later user journeys, gated on stable APIs and
+matching documentation.
 
 Advanced backend authoring, plugin implementation, native builds, host
 integrations, and framework contribution belong in later learner or maintainer

@@ -18,11 +18,13 @@ explicit.
 
 ## Recommendation
 
-Choose option 1. Learner output goes only to a user-selected project or an
-isolated temporary directory. Skills never install, upgrade, publish, merge,
-push, or mutate external services without relevant authorization. They keep
-credentials, tokens, OAuth secrets, and machine-specific paths out of version
-control and report missing versions or runtimes clearly.
+Choose option 1. User tutorial output goes only to a user-selected project or
+an isolated temporary directory, runs without network access by default, and
+never overwrites an existing destination without explicit confirmation. Skills
+never install, upgrade, publish, merge, push, or mutate external services
+without relevant authorization. They keep credentials, tokens, OAuth secrets,
+and machine-specific paths out of version control and report missing versions
+or runtimes clearly.
 
 ## Consequences
 
@@ -32,4 +34,4 @@ control and report missing versions or runtimes clearly.
 
 ## Dependencies
 
-ADRs 001–008.
+ADRs 001 and 002.
