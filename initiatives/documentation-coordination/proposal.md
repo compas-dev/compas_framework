@@ -194,6 +194,7 @@ meaningful runtime results.
 
 ## Approval boundary
 
-This proposal and ADRs 001–009 are Proposed. Approval authorizes only the
-active-ten rollout described above. It does not authorize later ecosystem
-admission, merges, publication, deployment, or repository-setting changes.
+ADRs 001 and 003–009 are Accepted; ADR 002 remains Proposed. Accepted work
+authorizes only the active-ten rollout described above, and dependencies on ADR
+002 remain blocked. It does not authorize later ecosystem admission, merges,
+publication, deployment, or repository-setting changes.
