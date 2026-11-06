@@ -23,6 +23,11 @@ Accepted Geometry ADR 024 makes one such amendment:
 remain `Tessellation`. This ADR's shared aggregate return clause is superseded
 for `Mesh` only; its other aggregate contracts remain unchanged.
 
+Final implementation evidence also clarified the already accepted duck-typed
+callable intent: triangulators return structural iterables of index-supporting
+values, not necessarily concrete nested Python lists. This admits NumPy integer
+arrays without changing normalization or validation behavior.
+
 ## Polygon triangulation functions
 
 ### Default operation
@@ -110,7 +115,10 @@ the requested diagonal are nondegenerate.
 Choose option 5:
 
 ```python
-Triangulator = Callable[[PointsLike], list[list[int]]]
+Triangulator = Callable[
+    [PointsLike],
+    Iterable[Iterable[SupportsIndex]],
+]
 
 def triangulated(
     self,
@@ -118,10 +126,20 @@ def triangulated(
 ) -> Tessellation: ...
 ```
 
-`Polygon`, `PolygonalSurface`, `Polyhedron`, and `Mesh` expose this
-`triangulated` contract. `Mesh` additionally exposes:
+The structural iterable result truthfully accepts ordinary Python collections,
+generators, and NumPy integer arrays. Core materializes and normalizes each
+index exactly once with the index protocol before validating the complete
+triangulation; the callback does not have to allocate nested Python lists.
+
+`Polygon`, `PolygonalSurface`, and `Polyhedron` expose the `Tessellation`
+return contract above. Under Accepted Geometry ADR 024, `Mesh` instead exposes:
 
 ```python
+def triangulated(
+    self,
+    triangulator: Triangulator | None = None,
+) -> Self: ...
+
 def triangulate(
     self,
     triangulator: Triangulator | None = None,
