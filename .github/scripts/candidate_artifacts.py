@@ -510,11 +510,11 @@ class GitHubClient:
         self.token = token
         self.api_url = api_url.rstrip("/")
 
-    def _request(self, url: str, *, accept: str = "application/vnd.github+json") -> urllib.request.Request:
+    def _request(self, url: str) -> urllib.request.Request:
         return urllib.request.Request(
             url,
             headers={
-                "Accept": accept,
+                "Accept": "application/vnd.github+json",
                 "Authorization": f"Bearer {self.token}",
                 "User-Agent": "compas-framework-candidate-verifier",
                 "X-GitHub-Api-Version": "2022-11-28",
@@ -532,7 +532,7 @@ class GitHubClient:
     def download(self, url: str, destination: Path) -> None:
         try:
             opener = urllib.request.build_opener(_CrossHostAuthorizationRedirect())
-            with opener.open(self._request(url, accept="application/octet-stream"), timeout=60) as response:
+            with opener.open(self._request(url), timeout=60) as response:
                 with destination.open("wb") as stream:
                     shutil.copyfileobj(response, stream)
         except (OSError, urllib.error.HTTPError) as error:

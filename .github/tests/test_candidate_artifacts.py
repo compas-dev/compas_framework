@@ -1,6 +1,7 @@
 import copy
 import hashlib
 import importlib.util
+import io
 import json
 import stat
 import subprocess
@@ -345,6 +346,27 @@ def test_artifact_redirect_does_not_forward_authorization_cross_host():
 
     with pytest.raises(urllib.error.HTTPError, match="must use HTTPS"):
         handler.redirect_request(request, None, 302, "Found", {}, "http://api.github.com/artifact.zip")
+
+
+def test_artifact_download_uses_github_json_media_type(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    captured: dict[str, object] = {}
+
+    class Opener:
+        def open(self, request, timeout):
+            captured["request"] = request
+            captured["timeout"] = timeout
+            return io.BytesIO(b"artifact")
+
+    monkeypatch.setattr(candidate_artifacts.urllib.request, "build_opener", lambda *handlers: Opener())
+    destination = tmp_path / "artifact.zip"
+
+    candidate_artifacts.GitHubClient("secret").download("https://api.github.com/artifact.zip", destination)
+
+    request = captured["request"]
+    assert isinstance(request, urllib.request.Request)
+    assert request.get_header("Accept") == "application/vnd.github+json"
+    assert captured["timeout"] == 60
+    assert destination.read_bytes() == b"artifact"
 
 
 def run_payload(entry: dict[str, object]) -> dict[str, object]:
