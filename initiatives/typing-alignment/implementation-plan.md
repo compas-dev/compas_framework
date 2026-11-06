@@ -5,7 +5,7 @@
 ADRs 001–017 and Geometry ADRs 022–023 are Accepted. The approved source work
 is implemented at the coordinated candidate heads, preserving duck typing
 through Python code and limiting normalization to explicit hard boundaries.
-Final installed integration remains open.
+Final hosted native integration remains open.
 
 Current draft-PR heads are core PR 1539 at
 `99b82a6673ff7d05c1c323c8921135c274993f11`, OCC PR 32 at
@@ -14,9 +14,8 @@ Current draft-PR heads are core PR 1539 at
 `710b2b6714839a203fc8a6c62c437c0f6735ba0e`. All four are hosted green. CGAL
 run `42231235319` attempt 1 passed every quality, compatibility, distribution,
 platform-wheel, and Python 3.12/3.14 wheel-smoke job. WP7 source work and
-WP8.1–WP8.3 are implemented; WP8.4 and WP6 remain open while the live manifest
-is populated and locally validated, then until the protected hosted positive
-passes.
+WP8.1–WP8.3 are implemented. WP8.4 exact local candidate integration passes;
+WP8.4 and WP6 remain open only until the protected hosted positive passes.
 
 ## Work packages
 
@@ -134,8 +133,8 @@ For each family:
 ### WP6 — Typed distribution and integration
 
 **Status:** open. The package-level typed distribution gates pass at the
-current candidate heads, but completion depends on the live WP8.4 candidate
-manifest and trusted hosted positive.
+current candidate heads and exact local WP8.4 candidate integration passes.
+Completion depends only on the trusted hosted positive.
 
 **Ownership:** package build configuration plus `compas_framework` integration
 and independent review.
@@ -239,8 +238,8 @@ necessary.
 ### WP8 — Shared vocabulary and native-binding truthfulness
 
 **Status:** WP8.1–WP8.3 source and package-level verification are implemented.
-WP8.4 has its reviewed framework mechanism but awaits the live manifest and
-trusted hosted positive.
+WP8.4 has its reviewed live manifest and local evidence but awaits the trusted
+hosted positive.
 
 #### WP8.1 — Core vocabulary and constructor interoperability
 
@@ -321,13 +320,18 @@ parallel with separate repository ownership.
 
 **Status:** mechanism implemented and independently reviewed on framework
 draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
-`df97253f2797490bca3f027fc70d7f5154cadfe3`. Forty-four candidate-contract
-tests and the local native smoke pass. Live manifest population and local
-validation are in progress using the successful CGAL artifact
-`13509457151`. The hosted positive remains externally blocked: the required
-GitHub environment does not exist and the current non-main integration refs
-are unprotected. Owners must configure a protected non-main ref plus the
-protected GitHub App environment and secrets; `main` remains untouched.
+`7f624b6b70dae732206905909e4a9b26b088c449`. The live manifest passes
+schema/semantic validation with exact hashes for all four wheels. Offline
+bundle revalidation, `--no-index --no-deps` staging, exact versions, installed
+entry-point/plugin discovery, OCC BRep/tessellation behavior, strict
+exact-wheel typing, 44 tests, Ruff, Pyright, actionlint, and strict MkDocs pass.
+
+The Linux x86-64 CGAL→core→libigl native runtime path remains unexecuted
+locally on Darwin ARM64 and is reserved for the hosted positive. That only
+remaining WP8.4 blocker is external: the required GitHub environment does not
+exist and the current non-main integration refs are unprotected. Owners must
+configure a protected non-main ref plus the protected GitHub App environment
+and secrets; `main` remains untouched.
 
 **Ownership:** `compas_framework` integration fixtures and independent review.
 

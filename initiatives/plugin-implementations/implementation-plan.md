@@ -59,10 +59,12 @@ plugins; its three orphan direct APIs are no longer decorated. Libigl retains
 three lightweight category modules and eight core plugins, but still lacks
 explicit compiled-runtime requirements. OCC retains four lightweight modules
 and 130 plugins with the accepted signature/type corrections. Exact installed
-CGAL/libigl/OCC discovery passes in the local native integration smoke; final
-live-candidate and package-owned evidence remain open. CGAL run `42231235319`
-attempt 1 passed every platform's Python 3.12/3.14 wheel-smoke jobs; live
-manifest population and local validation are in progress.
+CGAL/libigl/OCC entry-point discovery and strict wheel typing pass in the local
+candidate integration evidence; package-owned evidence remains open. CGAL run
+`42231235319` attempt 1 passed every platform's Python 3.12/3.14 wheel-smoke
+jobs. The exact live manifest and offline staging are independently reviewed.
+The Linux x86-64 CGAL→core→libigl runtime path remains reserved for the
+hosted positive because it was not executable locally on Darwin ARM64.
 
 1. Add core tests for module-name and callable requirement selection,
    non-selection, default behavior, and `PluginNotInstalledError`.

@@ -67,14 +67,17 @@ reduced its entry-point/decorator counts from 5/11 to 4/9, and the OCC contract
 consolidation reduced its decorator count from 131 to 130. Therefore the table
 above is historical evidence, not the expected count for the current heads.
 
-At the current heads, package tests verify the changed registration contracts,
-and framework ADR 021's local native smoke discovers installed CGAL, libigl,
-and OCC entry-point modules before exercising representative implementations.
-The lightweight source modules are inspected separately. The final
-live-candidate run is still required before that cross-package artifact
-evidence is complete. CGAL run `42231235319` attempt 1 is green across all
-platform wheel builds and Python 3.12/3.14 wheel-smoke jobs; live manifest
-population and local validation are in progress.
+At the current heads, package tests verify the changed registration contracts.
+Framework ADR 021's exact live manifest passes semantic/hash validation,
+offline staging, exact-version checks, installed entry-point/plugin discovery,
+and strict exact-wheel typing. The lightweight source modules are inspected
+separately. CGAL run `42231235319` attempt 1 is green across all platform wheel
+builds and Python 3.12/3.14 wheel-smoke jobs.
+
+The Linux x86-64 CGAL→core→libigl native runtime path remains unexecuted
+locally on Darwin ARM64 and is reserved for the hosted positive. This means the
+plugin initiative must not treat local exact-artifact evidence as completed
+native invocation evidence.
 
 ### Reference implementation state
 
@@ -96,8 +99,8 @@ OCC follows the same lazy principle and correctly names `OCC` as the optional
 runtime. Its accepted curve, surface, BRep, and intersection signature/type
 corrections are present at the current head. Repository plugin tests still use
 synthetic entry points, so package-owned installed and built-wheel discovery
-proof remains open even though the framework native smoke supplies
-cross-package installed evidence.
+proof remains open even though the framework exact-candidate validation
+supplies cross-package installed discovery evidence.
 
 ### Measured Wave 1 evidence
 

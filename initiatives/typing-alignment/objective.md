@@ -103,14 +103,19 @@ WP7.4–WP7.7 and WP8.1 are source-complete. Native-stub/public-wrapper work is
 complete and hosted green for CGAL WP8.2 and libigl WP8.3. CGAL run
 `42231235319` attempt 1 passed every quality, compatibility, distribution,
 platform-wheel, and Python 3.12/3.14 wheel-smoke job. Accepted ADR 021 is
-implemented in `compas_framework` for WP8.4; live manifest population and
-local validation are in progress.
+implemented and independently reviewed in `compas_framework` for WP8.4 at
+`7f624b6b70dae732206905909e4a9b26b088c449`. The exact live manifest and local
+schema/semantic, hash, offline staging, version, discovery, OCC behavior,
+strict typing, and tooling contracts pass. The Linux x86-64
+CGAL→core→libigl runtime path remains unexecuted locally on Darwin ARM64
+and is reserved for the hosted positive.
 
 The trusted hosted positive remains externally blocked because the required
 GitHub environment does not exist and the current non-main integration refs
 are unprotected. Repository owners must configure a protected non-main ref
-plus the protected GitHub App environment and secrets. WP8.4 and final WP6
-integration therefore remain open; `main` remains untouched.
+plus the protected GitHub App environment and secrets. This hosted positive is
+the only remaining WP8.4/final WP6 gate; both initiatives remain incomplete
+until it passes. `main` remains untouched.
 
 `compas_libigl` joined the initiative on 2026-11-05 to align its native mesh
 plugins and replace incomplete native typing with the shared contract. CGAL

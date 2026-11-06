@@ -2,7 +2,7 @@
 
 Status: final integration in progress. Phases 0–5 are complete through
 reviewed initiative branches and hosted draft-PR evidence. Phase 6 is active;
-the exact native-candidate manifest and protected hosted positive remain open.
+only the protected hosted positive remains open.
 No initiative changes have been merged into a target/default branch or
 published.
 
@@ -150,7 +150,7 @@ In parallel where file ownership is independent:
   automation is structurally unable to publish, tag, create a GitHub release,
   or deploy documentation. The separate native integration contract authorized
   by Accepted [ADR 021](decisions/021-cross-repository-candidate-artifacts.md)
-  is implemented at `df97253f2797490bca3f027fc70d7f5154cadfe3` on framework
+  is implemented at `7f624b6b70dae732206905909e4a9b26b088c449` on framework
   draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2); its
   hosted positive remains a Phase 6 gate;
 - `compas_gmsh` implements Accepted ADRs 014–016 at
@@ -210,12 +210,14 @@ implemented at the cited head and do not block the accepted packaging work.
 ## Phase 6: integration and documentation
 
 Status: active. Accepted ADR 021 is implemented and independently reviewed on
-framework draft PR 2. Forty-four candidate-contract tests, the combined
-package/distribution suite, Ruff, focused and strict external-consumer Pyright,
-targeted actionlint, strict MkDocs, and local native smoke contracts pass.
-Ordinary PR runs exercise schema, provenance, security, and negative contracts
-without credentials; both push and pull-request candidate-contract runs pass,
-as does release-metadata policy.
+framework draft PR 2 at `7f624b6b70dae732206905909e4a9b26b088c449`.
+The live manifest passes schema and semantic validation with exact hashes for
+all four wheels. Local verification passes offline bundle revalidation,
+`--no-index --no-deps` staging, exact versions, installed entry-point/plugin
+discovery, OCC BRep/tessellation behavior, strict exact-wheel typing, 44
+candidate-contract tests, Ruff, Pyright, actionlint, and strict MkDocs.
+Ordinary PR runs also exercise schema, provenance, security, and negative
+contracts without credentials.
 
 Current exact producer heads are core
 `99b82a6673ff7d05c1c323c8921135c274993f11`, OCC
@@ -227,8 +229,9 @@ minimum/current NumPy, sdist, Linux, Windows, macOS Intel, and macOS ARM wheel
 builds plus all Python 3.12/3.14 wheel-smoke jobs. Candidate artifact
 `13509457151` supplies its selected Linux wheel evidence.
 
-Live manifest population and local validation are now in progress. The
-subsequent trusted hosted positive remains externally blocked: the
+The Linux x86-64 CGAL→core→libigl native runtime path was not executable
+locally on Darwin ARM64 and is reserved for the hosted positive. That only
+remaining Phase 6 gate is externally blocked: the
 `candidate-artifact-retrieval` environment does not exist (GitHub API 404),
 and both `initiative/geometry-tessellation` and
 `initiative/repository-modernisation` report `protected=false`. ADR 021
@@ -245,6 +248,10 @@ protected GitHub App environment and secrets. No settings were changed, and
 5. Publish contributor and maintainer documentation changes in the same
    repository commits as their configuration.
 6. Record deviations from the standard with rationale.
+
+The reviewed local and package-hosted evidence satisfies these steps except
+for the explicitly reserved Linux native runtime execution in the protected
+hosted positive described above.
 
 ## Later wave: host integrations
 

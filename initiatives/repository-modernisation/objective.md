@@ -127,8 +127,8 @@ CI and should pass its applicable:
 
 Implementation is in final integration. ADRs 001–021 are Accepted. Phases 0–5
 are complete through reviewed initiative branches and hosted draft-PR
-evidence; Phase 6 remains open because the coordinated native-candidate
-positive gate has not yet run with its protected credential boundary. No
+evidence; Phase 6 remains open only because the coordinated native-candidate
+hosted positive has not run with its protected credential boundary. No
 initiative branch has been merged into a target/default branch and no package
 or documentation site has been published.
 
@@ -168,12 +168,16 @@ artifact for provenance admission.
 
 Accepted ADR 021 is implemented on framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
-`df97253f2797490bca3f027fc70d7f5154cadfe3`. Its schema, provenance,
-security-negative, offline-installation, runtime/type integration, JUnit, and
-public-release-order contracts pass locally and the ordinary credential-free
-PR contracts pass on both push and pull-request events; release metadata also
-passes. Live four-package manifest population and local validation are now in
-progress.
+`7f624b6b70dae732206905909e4a9b26b088c449`. The independently reviewed live
+manifest passes schema and semantic validation with exact hashes for all four
+wheels. Local evidence covers offline bundle revalidation, `--no-index
+--no-deps` staging, exact distribution versions, installed entry-point/plugin
+discovery, OCC BRep/tessellation behavior, strict exact-wheel typing, 44
+candidate-contract tests, Ruff, Pyright, actionlint, and strict MkDocs.
+
+The Linux x86-64 CGAL→core→libigl native runtime path was not executed
+locally on Darwin ARM64 and is reserved for the hosted positive. The
+modernization initiative remains incomplete until that gate passes.
 
 The trusted hosted positive remains externally blocked. The
 `candidate-artifact-retrieval` environment does not currently exist (GitHub
