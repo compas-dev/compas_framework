@@ -58,7 +58,7 @@ jobs:
           CANDIDATE_ARTIFACT_TOKEN: ${{ steps.app-token.outputs.token }}
         run: >-
           uv run --no-sync python .github/scripts/candidate_artifacts.py retrieve
-          "${{ inputs.manifest_path }}"
+          "${{ inputs.manifest_path || '.github/candidates/native-linux-py312.json' }}"
           "${RUNNER_TEMP}/verified-native-candidates"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
