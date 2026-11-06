@@ -172,8 +172,8 @@ Profile: Python package with an externally supplied Gmsh runtime.
 
 The current clean baseline is `c16725f12930659e85849640d912717bd0fe9475`.
 The package-specific architecture is recorded in
-[`compas-gmsh.md`](compas-gmsh.md); implementation is blocked by Proposed ADRs
-014–016.
+[`compas-gmsh.md`](compas-gmsh.md); implementation is authorized by Accepted
+ADRs 014–016 and remains incomplete.
 
 - PEP 621, MkDocs, and Ruff exist; uv and Pyright do not.
 - Python metadata, classifiers, Ruff target, and CI matrix disagree.
@@ -238,7 +238,7 @@ checkout with the required `compas3` interpreter fails because the package is
 not installed there, so no local native baseline is claimed. The
 package-specific architecture is recorded in
 [`shapeop-modernisation-proposal.md`](shapeop-modernisation-proposal.md);
-implementation is blocked by Proposed ADRs 017–019.
+implementation is authorized by Accepted ADRs 017–019 but has not started.
 
 - Runtime dependency metadata is missing from built-project configuration even
   though a requirements file declares COMPAS 2.x.

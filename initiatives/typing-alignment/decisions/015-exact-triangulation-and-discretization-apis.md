@@ -18,10 +18,10 @@ It depends on accepted Geometry ADRs 022–023 and Typing ADR 016. If any of
 those decisions changes, this table must be reconciled before the affected
 implementation changes.
 
-Geometry ADR 024 now proposes one such amendment:
+Accepted Geometry ADR 024 makes one such amendment:
 `Mesh.triangulated(...) -> Self` while the other aggregate return contracts
-remain `Tessellation`. That amendment is not implementation authority until it
-is explicitly accepted; the affected Mesh slice is paused meanwhile.
+remain `Tessellation`. This ADR's shared aggregate return clause is superseded
+for `Mesh` only; its other aggregate contracts remain unchanged.
 
 ## Polygon triangulation functions
 

@@ -1,6 +1,6 @@
 # ADR 015: `compas_gmsh` and Gmsh License Boundary
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Context
 

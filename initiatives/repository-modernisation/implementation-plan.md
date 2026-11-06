@@ -129,8 +129,8 @@ publication, and merges remain explicitly outside this evidence.
 ## Phase 4: pure and hybrid core repositories
 
 Status: in progress. `compas_session` and the ordinary `compas_framework`
-modernization are reviewed, committed, and pushed; Gmsh has approval-ready
-package ADRs; model and viewer remain pending.
+modernization are reviewed, committed, and pushed; Gmsh has approved package
+ADRs and is ready for implementation; model and viewer remain pending.
 
 In parallel where file ownership is independent:
 
@@ -154,12 +154,13 @@ In parallel where file ownership is independent:
   implemented.
   The two strategy-era native integration fixtures are explicitly
   non-authoritative and deferred to Typing WP8.4/Phase 6 after the accepted ADR
-  021 mechanism is implemented and the proposed Mesh return amendment is
-  resolved;
-- after explicit approval of Proposed ADRs 014–016 in
-  [`compas-gmsh.md`](compas-gmsh.md), establish meaningful `compas_gmsh`
-  tests and its evidence-based external-runtime matrix; source implementation
-  remains blocked until then;
+  021 mechanism and accepted Geometry ADR 024 Mesh return contract are
+  implemented;
+- implement Accepted ADRs 014–016 in
+  [`compas-gmsh.md`](compas-gmsh.md): establish meaningful `compas_gmsh` tests,
+  its evidence-based external-runtime matrix, the approved license boundary,
+  typed artifacts, and exact artifact verification. Publishing, deployment,
+  repository settings, and merging remain separately approval-gated;
 - migrate `compas_model` while keeping optional Coal/OCC integration jobs
   separate and explicit;
 - correct `compas_viewer` within the uv profile while preserving explicit
@@ -168,7 +169,8 @@ In parallel where file ownership is independent:
 ## Phase 5: native core repositories
 
 Status: in progress. The libigl modernization/typing successor is hosted
-verified; ShapeOp source work remains blocked on Proposed ADRs 017–019.
+verified; ShapeOp source work is authorized by Accepted ADRs 017–019 and not
+yet implemented.
 
 - `compas_libigl` entered this phase on an independent
   `initiative/repository-modernisation` branch from `c3-upgrade` commit
@@ -187,11 +189,10 @@ verified; ShapeOp source work remains blocked on Proposed ADRs 017–019.
   the cited PR head. Preserve the current Python 3.12+ and stable-ABI intent
   unless later wheel evidence demonstrates a change requiring explicit
   approval.
-- After explicit approval of Proposed ADRs 017–019 in
+- Under Accepted ADRs 017–019 in
   [`shapeop-modernisation-proposal.md`](shapeop-modernisation-proposal.md),
   resolve ShapeOp's Python-support/native-ABI inconsistency, migrate its Sphinx
-  docs to MkDocs, then modernize and verify its wheel matrix; source
-  implementation remains blocked until then.
+  docs to MkDocs, then modernize and verify its wheel matrix.
 - Reuse the native-wheel policy proven by CGAL, but keep each repository's
   build commands and dependency versions visible.
 

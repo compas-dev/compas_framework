@@ -125,7 +125,7 @@ CI and should pass its applicable:
 
 ## Current status
 
-Implementation is in progress. ADRs 001–013 are Accepted. Phases 0–3 are
+Implementation is in progress. ADRs 001–021 are Accepted. Phases 0–3 are
 complete through reviewed initiative branches and hosted draft-PR evidence;
 the initial migration wave and final integration are not complete. The bounded
 `compas-actions` v2 prerequisite is independently reviewed Ready. Its initial
@@ -152,10 +152,11 @@ pushed as `ae3b28e`; it implements Accepted ADR 020 and keeps candidate
 publication structurally disabled. Its native integration contract is likewise
 authorized by Accepted Geometry ADRs 022–023 and Typing ADRs 015–017, while
 its cross-repository artifact provenance and credential boundary is now
-authorized by Accepted ADR 021 but not yet implemented. Gmsh ADRs 014–016 and
-ShapeOp ADRs 017–019 remain Proposed. Model and viewer migration,
-final cross-package integration, repository settings, publishing, deployment,
-and merges remain pending or explicitly approval-gated.
+authorized by Accepted ADR 021 but not yet implemented. Accepted Gmsh ADRs
+014–016 and ShapeOp ADRs 017–019 authorize their bounded package migrations.
+Model and viewer migration, final cross-package integration, repository
+settings, publishing, deployment, and merges remain pending or explicitly
+approval-gated.
 
 `compas_libigl` joined the active modernization scope on 2026-11-05 from
 `c3-upgrade` commit `70acf99`. Its successor draft PR 47 at

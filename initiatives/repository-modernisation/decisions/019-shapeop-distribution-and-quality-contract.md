@@ -1,6 +1,6 @@
 # ADR 019: ShapeOp Distribution and Quality Contract
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Context
 

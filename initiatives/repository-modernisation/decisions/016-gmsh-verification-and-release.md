@@ -1,6 +1,6 @@
 # ADR 016: Gmsh Verification, Typing, and Artifact Release
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Context
 

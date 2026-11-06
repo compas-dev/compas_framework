@@ -1,10 +1,11 @@
 # `compas_gmsh` Modernisation Proposal
 
-**Status:** Proposed
+**Status:** Approved; implementation authorized but not yet complete
 
 This package proposal refines the accepted repository-modernisation policy for
-`compas_gmsh`. It changes no package source or workflow. Implementation remains
-blocked until ADRs 014–016 are explicitly accepted.
+`compas_gmsh`. ADRs 014–016 are Accepted and authorize implementation of this
+scope. Repository settings, publishing, deployment, and merging remain
+separately approval-gated.
 
 ## Objective
 
@@ -38,13 +39,13 @@ PyPI wheels for Windows x86-64, Linux x86-64, macOS x86-64, and macOS ARM64.
 This evidence supports a uv/PyPI primary path; it does not prove arbitrary
 platform support.
 
-## Proposed decisions
+## Accepted decisions
 
 | ADR | Decision | Status | Depends on |
 |---|---|---|---|
-| [014](decisions/014-gmsh-runtime-and-support.md) | Official PyPI SDK as the canonical runtime and an evidence-based support matrix | Proposed | 001, 002, 003, 009 |
-| [015](decisions/015-gmsh-license-boundary.md) | MIT wrapper license separated from the GPL Gmsh dependency | Proposed | 002, 014 |
-| [016](decisions/016-gmsh-verification-and-release.md) | Real-runtime gates, typed artifacts, temporary-file ownership, and exact artifact promotion | Proposed | 004–011, 014, 015 |
+| [014](decisions/014-gmsh-runtime-and-support.md) | Official PyPI SDK as the canonical runtime and an evidence-based support matrix | Accepted | 001, 002, 003, 009 |
+| [015](decisions/015-gmsh-license-boundary.md) | MIT wrapper license separated from the GPL Gmsh dependency | Accepted | 002, 014 |
+| [016](decisions/016-gmsh-verification-and-release.md) | Real-runtime gates, typed artifacts, temporary-file ownership, and exact artifact promotion | Accepted | 004–011, 014, 015 |
 
 ## Recommended package contract
 
@@ -219,7 +220,7 @@ diff, and affected strict-MkDocs checks.
 
 ## Completion evidence
 
-The package is modernized only when all proposed ADRs are Accepted and:
+The package is modernized only when all accepted ADRs are implemented and:
 
 - frozen uv sync, Ruff check/format, Pyright, pytest, and strict MkDocs pass;
 - minimum and current Gmsh runtime jobs satisfy the same smoke contract;

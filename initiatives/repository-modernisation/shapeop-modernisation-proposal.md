@@ -1,6 +1,6 @@
 # `compas_shapeop` Modernisation Proposal
 
-**Status:** Proposed; source implementation is blocked by ADRs 017–019
+**Status:** Approved; source implementation is authorized by ADRs 017–019
 
 ## Purpose
 
@@ -161,10 +161,9 @@ This is fast but cannot prove wheel tags, packaged native binaries, licenses,
 typing metadata, or source-distribution completeness. Source tests remain
 useful, but installed-artifact tests are required for completion.
 
-## Implementation sequence after approval
+## Implementation sequence
 
-1. Accept ADRs 017–019 and create the ShapeOp modernization branch from the
-   recorded clean baseline.
+1. Create the ShapeOp modernization branch from the recorded clean baseline.
 2. Align Python metadata, stable-ABI settings, CMake Python discovery, and the
    cibuildwheel matrix.
 3. Replace the unverified Eigen download and non-portable CMake flags; verify
@@ -200,9 +199,9 @@ The repository is not modernized until all applicable checks pass:
   temporary output locations;
 - independent code and documentation review.
 
-## Approval requested
+## Approval record
 
-Approval of this proposal means accepting ADRs 017–019 and authorizing the
-bounded ShapeOp implementation described above. It does not authorize merging,
-publishing, repository-setting changes, or removal of a currently advertised
-platform without evidence and explicit follow-up approval.
+ADRs 017–019 are accepted and authorize the bounded ShapeOp implementation
+described above. This approval does not authorize merging, publishing,
+repository-setting changes, or removal of a currently advertised platform
+without evidence and explicit follow-up approval.

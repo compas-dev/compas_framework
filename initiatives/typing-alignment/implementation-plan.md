@@ -198,10 +198,10 @@ Retained `Tessellation` representation semantics remain in scope.
    the only customization path. Migrate `PlanarRegion` separately to its
    no-argument `triangulated`, `to_polygonal_surface`, and `to_mesh` contract;
    it does not accept the aggregate triangulator callable.
-   Geometry ADR 024 is a Proposed amendment changing only
-   `Mesh.triangulated(...)` from `Tessellation` to `Self`. Pause that Mesh
-   return-type slice until ADR 024 is explicitly accepted; the other aggregate
-   migrations remain authorized.
+   Accepted Geometry ADR 024 changes only `Mesh.triangulated(...)` from
+   `Tessellation` to `Self`. Implement that representation-preserving Mesh
+   slice and its coordinated consumers; the other aggregate return contracts
+   remain unchanged.
 6. **WP7.6 — Producer-specific controls.** **Authorized by Accepted Typing ADRs
    015–016 and Geometry ADRs 022–023.** Migrate shape/surface representation
    conversions, then core BRep and OCC together. Preserve documented

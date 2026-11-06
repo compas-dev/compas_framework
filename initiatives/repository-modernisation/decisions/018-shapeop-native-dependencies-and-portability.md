@@ -1,6 +1,6 @@
 # ADR 018: ShapeOp Native Dependencies and Build Portability
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Context
 

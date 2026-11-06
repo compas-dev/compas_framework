@@ -1,6 +1,6 @@
 # ADR 014: Gmsh Runtime Provisioning and Support Contract
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Context
 

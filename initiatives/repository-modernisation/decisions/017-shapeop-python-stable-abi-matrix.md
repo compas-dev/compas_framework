@@ -1,6 +1,6 @@
 # ADR 017: ShapeOp Python and Stable-ABI Matrix
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Context
 

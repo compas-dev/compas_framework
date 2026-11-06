@@ -9,8 +9,8 @@ This proposal defines a repository standard for the initial core scope:
 examples, and also receive focused corrective work. Host repositories
 `compas_rhino`, `compas_ghpython`, and `compas_blender` form a later wave.
 This proposal changes no package, workflow, or repository setting. Accepted
-ADRs are the implementation authority; package-specific ADRs that remain
-Proposed do not authorize source work.
+ADRs are the implementation authority; repository settings, publishing,
+deployment, and merging remain separately approval-gated.
 
 Accepted ADR 021 records the separately discovered cross-repository candidate
 artifact and credential boundary. Accepted ADR 013 requires an exact candidate
@@ -218,13 +218,14 @@ tasks that only sequence the documented direct commands.
   main branch with a reviewed immutable version before claiming reproducible
   native artifacts.
 - `compas_shapeop` must resolve its Python-support and native-ABI inconsistency
-  before its metadata and wheel matrix can be aligned. The approval-ready
-  package proposal and Proposed ADRs 017–019 are in
+  before its metadata and wheel matrix can be aligned. The approved package
+  proposal and Accepted ADRs 017–019 are in
   [`shapeop-modernisation-proposal.md`](shapeop-modernisation-proposal.md).
 - `compas_gmsh` needs a meaningful test baseline and evidence-based support
   matrix before workflow modernization can make tests authoritative. The
-  approval-ready package proposal and Proposed ADRs 014–016 are in
-  [`compas-gmsh.md`](compas-gmsh.md).
+  approved package proposal and Accepted ADRs 014–016 are in
+  [`compas-gmsh.md`](compas-gmsh.md), and implementation may proceed within
+  their boundaries.
 - `compas_model` must keep optional Coal/OCC runtime provisioning explicit;
   those integrations do not belong in its ordinary pure-Python job.
 - `compas_framework` keeps ordinary pure-Python checks separate from a
@@ -267,7 +268,7 @@ For each repository:
 ## Approval boundary
 
 Implementation may proceed only under Accepted ADRs. Gmsh ADRs 014–016 and
-ShapeOp ADRs 017–019 remain Proposed and do not authorize their source work.
+ShapeOp ADRs 017–019 authorize their scoped source work.
 Repository settings, trusted-publisher configuration, deployment, publishing,
 merging, and removal of active environment paths require explicit execution
 approval in their implementation phase.

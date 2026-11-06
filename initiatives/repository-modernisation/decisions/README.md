@@ -1,10 +1,7 @@
 # Repository Modernisation Decisions
 
-ADRs 001–013 and cross-repository ADR 021, together with package-specific ADR
-020, are **Accepted**. Package-specific ADRs 014–019 remain **Proposed**, and
-their source implementation is blocked until explicit approval. All work
-remains subject to the repository-setting, publishing, deployment, and merge
-approval boundaries.
+ADRs 001–021 are **Accepted**. All implementation remains subject to the
+repository-setting, publishing, deployment, and merge approval boundaries.
 
 | ADR | Decision | Status | Depends on |
 |---|---|---|---|
@@ -21,12 +18,12 @@ approval boundaries.
 | [011](011-quality-gate-adoption.md) | Blocking quality-gate adoption | Accepted | 005, 006, 009 |
 | [012](012-external-build-sources.md) | Immutable native build sources | Accepted | 001, 010 |
 | [013](013-framework-integration-and-release-order.md) | Framework integration and release order | Accepted | 008, 009, 011, 012 |
-| [014](014-gmsh-runtime-and-support.md) | Gmsh runtime provisioning and support contract | Proposed | 001, 002, 003, 009 |
-| [015](015-gmsh-license-boundary.md) | `compas_gmsh` and Gmsh license boundary | Proposed | 002, 014 |
-| [016](016-gmsh-verification-and-release.md) | Gmsh verification, typing, and artifact release | Proposed | 004–011, 014, 015 |
-| [017](017-shapeop-python-stable-abi-matrix.md) | ShapeOp Python and stable-ABI matrix | Proposed | 001, 002, 008, 009, 011, 013 |
-| [018](018-shapeop-native-dependencies-and-portability.md) | ShapeOp native dependencies and build portability | Proposed | 001, 002, 008, 010, 011, 012, 017 |
-| [019](019-shapeop-distribution-and-quality-contract.md) | ShapeOp distribution and quality contract | Proposed | 002–006, 008, 010, 011, 013, 017, 018 |
+| [014](014-gmsh-runtime-and-support.md) | Gmsh runtime provisioning and support contract | Accepted | 001, 002, 003, 009 |
+| [015](015-gmsh-license-boundary.md) | `compas_gmsh` and Gmsh license boundary | Accepted | 002, 014 |
+| [016](016-gmsh-verification-and-release.md) | Gmsh verification, typing, and artifact release | Accepted | 004–011, 014, 015 |
+| [017](017-shapeop-python-stable-abi-matrix.md) | ShapeOp Python and stable-ABI matrix | Accepted | 001, 002, 008, 009, 011, 013 |
+| [018](018-shapeop-native-dependencies-and-portability.md) | ShapeOp native dependencies and build portability | Accepted | 001, 002, 008, 010, 011, 012, 017 |
+| [019](019-shapeop-distribution-and-quality-contract.md) | ShapeOp distribution and quality contract | Accepted | 002–006, 008, 010, 011, 013, 017, 018 |
 | [020](020-framework-host-extras.md) | `compas_framework` host extras during the COMPAS 3 transition | Accepted | 001, 002, 003, 009, 011, 013 |
 | [021](021-cross-repository-candidate-artifacts.md) | Cross-repository candidate artifact provenance | Accepted | 008, 010, 012, 013 |
 
@@ -43,10 +40,11 @@ approval boundaries.
    can be reviewed in parallel with ADR 008).
 8. ADR 013: approve coordinated integration/release order after release and
    native-source decisions.
-9. ADRs 014–016: approve Gmsh provisioning/support, then licensing, then the
-   verification and release contract.
-10. ADRs 017–019: approve ShapeOp's Python/ABI matrix, then native dependency
-    portability, then its distribution and quality contract.
+9. ADRs 014–016: implement the accepted Gmsh provisioning/support, licensing,
+   and verification/release contracts in dependency order.
+10. ADRs 017–019: implement the accepted ShapeOp Python/ABI matrix, native
+    dependency portability, and distribution/quality contract in dependency
+    order.
 11. Implement accepted ADR 020 to resolve the framework host-extra metadata
     conflict before the ordinary framework modernization patch is committed.
 12. ADR 021: implement the accepted candidate-artifact provenance and

@@ -1,8 +1,7 @@
 # Geometry Tessellation Architecture Decisions
 
 This directory decomposes the architecture proposal into independently
-reviewable decisions. ADRs 001–023 are **Accepted**. ADR 024 is **Proposed**
-and does not authorize implementation. ADRs 022–023 reconcile the earlier
+reviewable decisions. ADRs 001–024 are **Accepted**. ADRs 022–024 reconcile the earlier
 architecture with the user-authored operation definitions. The target
 architecture prioritizes one clean, coherent API over backward compatibility;
 breaking effects are recorded rather than mitigated through permanent aliases.
@@ -34,7 +33,7 @@ breaking effects are recorded rather than mitigated through permanent aliases.
 | 21 | [021 — Default tessellation strategy](021-default-tessellation-strategy.md) | Accepted | 003, 006, 014 | Deterministic Shape/Surface defaults versus mandatory policy or backend-chosen defaults. |
 | 22 | [022 — Operation concepts and conversion boundaries](022-operation-terminology-and-producer-boundaries.md) | Accepted | 001, 002, 009; Typing 012–013 | Representation-oriented `to_*` APIs backed by structured polygonization, discrete triangulation, or BRep tessellation as appropriate. |
 | 23 | [023 — BRep conversion deflection defaults](023-brep-deflection-defaults.md) | Accepted | 022 | Deterministic core tolerance defaults versus mandatory values or backend-owned defaults. |
-| 24 | [024 — Representation-preserving Mesh triangulation](024-representation-preserving-mesh-triangulation.md) | Proposed | 002, 007, 022; Typing 015 | Preserve `Mesh` type, topology, keys, and attributes versus a universal ephemeral result. |
+| 24 | [024 — Representation-preserving Mesh triangulation](024-representation-preserving-mesh-triangulation.md) | Accepted | 002, 007, 022; Typing 015 | Preserve `Mesh` type, topology, keys, and attributes versus a universal ephemeral result. |
 
 ## Dependency graph
 
@@ -102,9 +101,9 @@ Apply and independently review the ADRs in numeric dependency order:
     decisions.
 14. **BRep defaults:** implement accepted ADR 023 after ADR 022; exact accepted
     Typing ADR 015 signatures depend on both.
-15. **Mesh result correction:** ADR 024 is a proposed amendment based on new
-    evidence. Do not implement the `Mesh.triangulated() -> Self` change until
-    it is explicitly accepted.
+15. **Mesh result correction:** implement Accepted ADR 024 after the aggregate
+    callable contract, preserving the concrete mesh representation, topology,
+    keys, attributes, identity semantics, and source immutability.
 
 ## Highest-impact accepted decisions
 
