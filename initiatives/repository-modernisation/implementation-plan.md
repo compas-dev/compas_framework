@@ -217,21 +217,24 @@ Ordinary PR runs exercise schema, provenance, security, and negative contracts
 without credentials; both push and pull-request candidate-contract runs pass,
 as does release-metadata policy.
 
-Current exact producer heads are core `99b82a6673ff7d05c1c323c8921135c274993f11`,
-OCC `7fdf2ffb57d1de16308020e14ec626d79e65a034`, CGAL
-`7537d58154f62f38c0b2d4118972d0a326f86c9b`, and libigl
-`710b2b6714839a203fc8a6c62c437c0f6735ba0e`. Core, OCC, and libigl have green
-hosted evidence. CGAL passes the corrected wheel-typing consumer locally; its
-hosted run `42224203204` completed with Linux and both macOS wheel-smoke jobs
-passing, but Windows 3.12 and 3.14 failed installed `--verifytypes` with
-`No py.typed file found` and zero symbols. A corrected fresh successful run is
-required before CGAL artifact provenance can be admitted.
+Current exact producer heads are core
+`99b82a6673ff7d05c1c323c8921135c274993f11`, OCC
+`7fdf2ffb57d1de16308020e14ec626d79e65a034`, CGAL
+`bb3624e714719d543c61768320d91811ba96cc6c`, and libigl
+`710b2b6714839a203fc8a6c62c437c0f6735ba0e`. All four have green hosted
+evidence. CGAL build run `42231235319` attempt 1 passed quality,
+minimum/current NumPy, sdist, Linux, Windows, macOS Intel, and macOS ARM wheel
+builds plus all Python 3.12/3.14 wheel-smoke jobs. Candidate artifact
+`13509457151` supplies its selected Linux wheel evidence.
 
-After that run, the remaining sequence is: record the exact four-package live
-manifest, revalidate and run it locally, then run the trusted hosted positive.
-The hosted positive requires a protected GitHub App environment with read-only
-Actions access to the four producer repositories. That owner configuration is
-not authorized by ADR 021 and remains the only external configuration blocker.
+Live manifest population and local validation are now in progress. The
+subsequent trusted hosted positive remains externally blocked: the
+`candidate-artifact-retrieval` environment does not exist (GitHub API 404),
+and both `initiative/geometry-tessellation` and
+`initiative/repository-modernisation` report `protected=false`. ADR 021
+requires owner configuration of a protected non-main integration ref plus the
+protected GitHub App environment and secrets. No settings were changed, and
+`main` remains untouched.
 
 1. Run clean-environment verification for all ten core repositories and every
    profile.

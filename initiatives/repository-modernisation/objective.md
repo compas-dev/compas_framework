@@ -146,7 +146,7 @@ The current package checkpoints are carried by draft PRs and remain outside
 - OCC [PR 32](https://github.com/compas-dev/compas_occ/pull/32) at
   `7fdf2ffb57d1de16308020e14ec626d79e65a034`;
 - CGAL [PR 81](https://github.com/compas-dev/compas_cgal/pull/81) at
-  `7537d58154f62f38c0b2d4118972d0a326f86c9b`;
+  `bb3624e714719d543c61768320d91811ba96cc6c`;
 - libigl [PR 47](https://github.com/compas-dev/compas_libigl/pull/47) at
   `710b2b6714839a203fc8a6c62c437c0f6735ba0e`;
 - model [PR 68](https://github.com/BlockResearchGroup/compas_model/pull/68) at
@@ -160,12 +160,11 @@ The current package checkpoints are carried by draft PRs and remain outside
 - session [PR 1](https://github.com/BlockResearchGroup/compas_session/pull/1) at
   `e0bdd02aa8490248c6f2f36042651d8ebfc4442b`.
 
-All cited package PR heads except the current CGAL head have complete green
-hosted evidence. CGAL run `42224203204` completed with Linux and both macOS
-wheel-smoke jobs passing, but Windows 3.12 and 3.14 failed installed
-`--verifytypes` with `No py.typed file found` and zero symbols. A corrected
-fresh successful run is required before CGAL artifact provenance can enter the
-live manifest.
+All cited package PR heads have complete green hosted evidence. CGAL build run
+`42231235319` attempt 1 succeeded at the cited head: quality, minimum/current
+NumPy, sdist, all four platform wheel builds, and every Python 3.12/3.14 wheel
+smoke passed. Candidate artifact `13509457151` is the selected Linux wheel
+artifact for provenance admission.
 
 Accepted ADR 021 is implemented on framework draft
 [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
@@ -173,11 +172,16 @@ Accepted ADR 021 is implemented on framework draft
 security-negative, offline-installation, runtime/type integration, JUnit, and
 public-release-order contracts pass locally and the ordinary credential-free
 PR contracts pass on both push and pull-request events; release metadata also
-passes. The live four-package manifest remains intentionally
-absent until the superseding CGAL run supplies successful, unexpired artifact
-evidence. The trusted hosted positive then still requires an explicitly
-configured, protected GitHub App environment; ADR 021 does not authorize that
-repository-owner configuration.
+passes. Live four-package manifest population and local validation are now in
+progress.
+
+The trusted hosted positive remains externally blocked. The
+`candidate-artifact-retrieval` environment does not currently exist (GitHub
+API returned 404), and both `initiative/geometry-tessellation` and
+`initiative/repository-modernisation` report `protected=false`. ADR 021
+requires repository-owner configuration of a protected non-main integration
+ref plus the protected GitHub App environment and secrets. No settings were
+changed, and `main` remains untouched.
 
 ShapeOp ADRs 022–023 are Proposed in the separate follow-up draft PR and are
 not prerequisites for completing the accepted packaging modernization. They

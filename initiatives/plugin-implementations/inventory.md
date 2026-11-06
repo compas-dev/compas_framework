@@ -12,7 +12,7 @@ claims are limited to the package evidence recorded by the owning initiative.
 | Package | Branch | Audited checkpoint |
 |---|---|---|
 | `compas` | `initiative/typing-alignment` | `99b82a6673ff7d05c1c323c8921135c274993f11` |
-| `compas_cgal` | `initiative/typing-alignment` | `7537d58154f62f38c0b2d4118972d0a326f86c9b` |
+| `compas_cgal` | `initiative/typing-alignment` | `bb3624e714719d543c61768320d91811ba96cc6c` |
 | `compas_libigl` | `initiative/typing-alignment` | `710b2b6714839a203fc8a6c62c437c0f6735ba0e` |
 | `compas_occ` | `initiative/typing-alignment` | `7fdf2ffb57d1de16308020e14ec626d79e65a034` |
 | `compas_model` | `initiative/repository-modernisation` | `83df4167f7ba1539ae205a837e0238afecc0a36b` |
@@ -72,9 +72,9 @@ and framework ADR 021's local native smoke discovers installed CGAL, libigl,
 and OCC entry-point modules before exercising representative implementations.
 The lightweight source modules are inspected separately. The final
 live-candidate run is still required before that cross-package artifact
-evidence is complete. CGAL run `42224203204` is not admissible: Linux and both
-macOS wheel-smoke jobs passed, but Windows 3.12 and 3.14 installed
-`--verifytypes` failed with `No py.typed file found` and zero symbols.
+evidence is complete. CGAL run `42231235319` attempt 1 is green across all
+platform wheel builds and Python 3.12/3.14 wheel-smoke jobs; live manifest
+population and local validation are in progress.
 
 ### Reference implementation state
 

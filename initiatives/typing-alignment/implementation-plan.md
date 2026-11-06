@@ -10,14 +10,13 @@ Final installed integration remains open.
 Current draft-PR heads are core PR 1539 at
 `99b82a6673ff7d05c1c323c8921135c274993f11`, OCC PR 32 at
 `7fdf2ffb57d1de16308020e14ec626d79e65a034`, CGAL PR 81 at
-`7537d58154f62f38c0b2d4118972d0a326f86c9b`, and libigl PR 47 at
-`710b2b6714839a203fc8a6c62c437c0f6735ba0e`. Core, OCC, and libigl are hosted
-green. CGAL passes the corrected installed-wheel consumer locally and its
-hosted run `42224203204` passed Linux and both macOS wheel smoke, but Windows
-3.12 and 3.14 failed installed `--verifytypes` with `No py.typed file found`
-and zero symbols. WP7 source work and WP8.1–WP8.3 are implemented; WP8.4 and
-WP6 remain open until a corrected fresh successful CGAL run, the exact
-four-package manifest, and the protected hosted positive pass.
+`bb3624e714719d543c61768320d91811ba96cc6c`, and libigl PR 47 at
+`710b2b6714839a203fc8a6c62c437c0f6735ba0e`. All four are hosted green. CGAL
+run `42231235319` attempt 1 passed every quality, compatibility, distribution,
+platform-wheel, and Python 3.12/3.14 wheel-smoke job. WP7 source work and
+WP8.1–WP8.3 are implemented; WP8.4 and WP6 remain open while the live manifest
+is populated and locally validated, then until the protected hosted positive
+passes.
 
 ## Work packages
 
@@ -83,12 +82,9 @@ topology queries through independently failing contracts as approved in ADR
 
 ### WP4 — CGAL NumPy and native stubs
 
-**Status:** source and installed-wheel contracts complete at `7537d581`. Local
-Pyright reports zero errors and installed `--verifytypes` reports 100% of the
-89 public symbols with `py.typed` present. Hosted run `42224203204` passed
-Linux and both macOS wheel smoke but failed Windows 3.12 and 3.14
-`--verifytypes` (`No py.typed file found`, zero symbols). A corrected fresh
-successful run is required.
+**Status:** complete and hosted green at `bb3624e714719d543c61768320d91811ba96cc6c`.
+Run `42231235319` attempt 1 passed every Python 3.12/3.14 platform wheel-smoke
+job, including installed `--verifytypes`.
 
 **Ownership:** `compas_cgal` wrapper modules, `types.py`, native stubs, native
 boundary tests, packaging.
@@ -286,10 +282,10 @@ affected core constructors, static/runtime fixtures, and public documentation.
 
 #### WP8.2 — CGAL stub and wrapper correction
 
-**Status:** complete locally at `7537d58154f62f38c0b2d4118972d0a326f86c9b`.
-Hosted run `42224203204` passed Linux and both macOS wheel smoke but failed
-Windows 3.12 and 3.14 installed `--verifytypes` (`No py.typed file found`, zero
-symbols). A corrected fresh successful run is required.
+**Status:** complete and hosted green at
+`bb3624e714719d543c61768320d91811ba96cc6c`. Run `42231235319` attempt 1
+passed quality, minimum/current NumPy, sdist, every platform wheel build, and
+all Python 3.12/3.14 wheel-smoke jobs.
 
 **Ownership:** `compas_cgal` native `.pyi`, `types.py`, wrappers, exports,
 runtime ABI tests, typed consumers, and package verification.
@@ -326,9 +322,12 @@ parallel with separate repository ownership.
 **Status:** mechanism implemented and independently reviewed on framework
 draft [PR 2](https://github.com/compas-dev/compas_framework/pull/2) at
 `df97253f2797490bca3f027fc70d7f5154cadfe3`. Forty-four candidate-contract
-tests and the local native smoke pass. The live manifest awaits a successful
-fresh CGAL artifact; the hosted positive additionally awaits the separately
-configured protected GitHub App environment.
+tests and the local native smoke pass. Live manifest population and local
+validation are in progress using the successful CGAL artifact
+`13509457151`. The hosted positive remains externally blocked: the required
+GitHub environment does not exist and the current non-main integration refs
+are unprotected. Owners must configure a protected non-main ref plus the
+protected GitHub App environment and secrets; `main` remains untouched.
 
 **Ownership:** `compas_framework` integration fixtures and independent review.
 
