@@ -128,9 +128,9 @@ publication, and merges remain explicitly outside this evidence.
 
 ## Phase 4: pure and hybrid core repositories
 
-Status: in progress. `compas_session` is reviewed, committed, and pushed;
-`compas_framework` has a reviewed but uncommitted ordinary modernization patch;
-Gmsh has approval-ready package ADRs; model and viewer remain pending.
+Status: in progress. `compas_session` and the ordinary `compas_framework`
+modernization are reviewed, committed, and pushed; Gmsh has approval-ready
+package ADRs; model and viewer remain pending.
 
 In parallel where file ownership is independent:
 
@@ -141,16 +141,18 @@ In parallel where file ownership is independent:
   isolated installed-wheel import passed locally and independent review found
   no remaining code findings. Protected environments, trusted publishing,
   required checks, and Pages/Mike settings remain owner configuration work;
-- migrate `compas_framework` ordinary checks to the pure profile and add a
-  separate coordinated native integration/release-order job; the ordinary
-  patch is independently reviewed and locally green. Accepted
-  [ADR 020](decisions/020-framework-host-extras.md) now authorizes removal of
-  its incompatible COMPAS 2 host extras and regeneration of the root lock; the
-  patch remains uncommitted pending that implementation. The separate native
-  integration contract is authorized by Accepted Geometry ADRs 022–023 and
-  Typing ADRs 015–017, but its cross-repository artifact provenance and
-  credential mechanism remains blocked on Proposed
-  [ADR 021](decisions/021-cross-repository-candidate-artifacts.md);
+- `compas_framework` ordinary checks now use the pure profile in reviewed
+  commit `ae3b28e` on `initiative/repository-modernisation`. Accepted
+  [ADR 020](decisions/020-framework-host-extras.md) is implemented: incompatible
+  COMPAS 2 host extras are removed, the lock is regenerated, and candidate
+  automation is structurally unable to publish, tag, create a GitHub release,
+  or deploy documentation. The separate native integration contract remains
+  authorized by Accepted Geometry ADRs 022–023 and Typing ADRs 015–017, but its
+  cross-repository artifact provenance and credential mechanism is blocked on
+  Proposed [ADR 021](decisions/021-cross-repository-candidate-artifacts.md).
+  The two strategy-era native integration fixtures are explicitly
+  non-authoritative and deferred to Typing WP8.4/Phase 6 after ADR 021 and the
+  proposed Mesh return amendment are resolved;
 - after explicit approval of Proposed ADRs 014–016 in
   [`compas-gmsh.md`](compas-gmsh.md), establish meaningful `compas_gmsh`
   tests and its evidence-based external-runtime matrix; source implementation
