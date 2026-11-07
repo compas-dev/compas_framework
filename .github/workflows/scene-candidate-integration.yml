@@ -38,9 +38,13 @@ jobs:
           uv pip install --python .venv/bin/python compas_viewer==2.0.2
           uv pip install \
             --python .venv/bin/python \
+            --reinstall \
+            --requirements .github/scene-candidates/core-requirements.txt
+          uv pip install \
+            --python .venv/bin/python \
             --no-deps \
             --reinstall \
-            --requirements .github/scene-candidates/requirements.txt
+            --requirements .github/scene-candidates/viewer-requirements.txt
       - name: Check installed scene typing boundary
         run: >-
           uv run --no-sync pyright

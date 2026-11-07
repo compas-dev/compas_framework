@@ -59,13 +59,16 @@ def test_native_candidate_integration_runs_from_the_protected_initiative_branch(
 
 def test_scene_candidate_integration_pins_exact_source_revisions():
     source = Path(__file__).parents[1]
-    requirements = (source / ".github" / "scene-candidates" / "requirements.txt").read_text()
+    core_requirements = (source / ".github" / "scene-candidates" / "core-requirements.txt").read_text()
+    viewer_requirements = (source / ".github" / "scene-candidates" / "viewer-requirements.txt").read_text()
     workflow = (source / ".github" / "workflows" / "scene-candidate-integration.yml").read_text()
 
-    assert "compas.git@f878cd102e87e7859030af96c7871a5b3345cf7d" in requirements
-    assert "compas_viewer.git@18c87acac907c6d749d95a0e8f56ae2abd021ed2" in requirements
+    assert "compas.git@f878cd102e87e7859030af96c7871a5b3345cf7d" in core_requirements
+    assert "compas_viewer.git@18c87acac907c6d749d95a0e8f56ae2abd021ed2" in viewer_requirements
     assert "branches: [c3-upgrade]" in workflow
-    assert "requirements.txt" in workflow
+    assert "core-requirements.txt" in workflow
+    assert "viewer-requirements.txt" in workflow
+    assert "--no-deps" in workflow
     assert "source-installed-candidates" in workflow
 
 
