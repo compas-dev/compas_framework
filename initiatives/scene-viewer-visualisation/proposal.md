@@ -358,6 +358,41 @@ Core geometry, typing, plugin, and repository-modernisation decisions remain
 upstream constraints. Implementation starts only after all ADRs required for a
 wave are Accepted.
 
+## Architecture correction after Phase 1
+
+Implementation evidence invalidates the detached/bound adapter mechanism used
+for the first implementation of ADRs 008–009. The separation between durable
+nodes and runtime adapters remains correct, but constructing an adapter before
+its node creates duplicate provisional state, changes GUID meaning at binding,
+and requires hidden attribute interception. Removal and context replacement
+can expose stale provisional values on old adapter references.
+
+The proposed correction keeps the public convenience of
+`scene.add(data, ...)` but changes its internal order:
+
+1. resolve the adapter class;
+2. validate base and explicitly declared extension arguments;
+3. create and attach the durable node;
+4. bind the independently owned data item; and
+5. construct a plain runtime adapter from `(scene, node)`.
+
+The adapter never exists detached, never owns durable fallbacks, never changes
+identity, and is not a `Data` object. Explicit ordinary properties access node
+state. Field declarations remain persistence/validation metadata but do not
+intercept Python attribute access. Context rebinding atomically replaces the
+adapter table; stale adapters become invalid rather than transitioning into a
+second reusable mode.
+
+This deliberately removes direct `SceneObject(item, ...)`,
+`Scene.add(sceneobject)`, reusable removed adapters, direct `Group(...)`,
+arbitrary group child defaults, and constructor-driven hierarchy. CAD-host
+one-shot drawing and registered adapter constructors require later migration,
+but the primary `Scene.add(data, ...)` path remains.
+
+Proposed ADR 011 records construction and lifetime. Proposed ADR 012 records
+explicit node-backed state. Phase 2 remains paused until both decisions are
+resolved and, if accepted, implemented and verified.
+
 ## Decision record
 
 1. [ADR 001 — Ownership and state boundaries](decisions/001-ownership-boundaries.md)
@@ -370,5 +405,7 @@ wave are Accepted.
 8. [ADR 008 — Serializable scene nodes and runtime adapters](decisions/008-scene-nodes-and-runtime-adapters.md)
 9. [ADR 009 — Explicit scene-state serialization fields](decisions/009-scene-state-fields.md)
 10. [ADR 010 — Scene description, item bindings, and aggregation boundary](decisions/010-scene-description-and-item-bundling.md)
+11. [ADR 011 — Node-first scene construction and adapter lifetime](decisions/011-node-first-scene-adapters.md)
+12. [ADR 012 — Explicit node-backed adapter state](decisions/012-explicit-node-backed-adapter-state.md)
 
-ADRs 001–010 are Accepted.
+ADRs 001–010 are Accepted. ADRs 011–012 are Proposed.

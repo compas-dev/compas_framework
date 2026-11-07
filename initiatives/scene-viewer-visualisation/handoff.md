@@ -4,12 +4,12 @@ Last updated: 2026-11-07
 
 ## Resume here
 
-Current phase: `implementation`
+Current phase: `architecture correction`
 
-Status: ADRs 001–010 are Accepted. Phase 0 core and Viewer source changes are
-implemented and independently approved. Viewer package CI and the exact-source
-framework integration gate are green; core CI is rerunning after focused patch
-coverage tests were added.
+Status: ADRs 001–010 are Accepted; ADRs 011–012 are Proposed. Phase 1 indexed
+buffers are complete and green. Phase 2 is paused because implementation
+evidence showed that the current detached/bound adapter lifecycle and dynamic
+state interception violate the clean, simple, transparent design rule.
 
 Read next:
 
@@ -22,7 +22,7 @@ Read next:
 
 - Accepted: [ADRs 001–010](decisions/README.md), including ADRs 008–010 on
   2026-11-07.
-- Proposed or unresolved: none.
+- Proposed: ADR 011 node-first adapters and ADR 012 explicit node-backed state.
 - Scope boundary: `compas_model`, notebook, and CAD hosts are later or
   compatibility consumers; `compas_session` requires an explicit inclusion
   decision. Do not modify package source outside the initial scope, merge, or
@@ -73,9 +73,9 @@ Read next:
 
 ## Next tasks
 
-1. Collect clean Viewer CI and exact-source framework CI for the Phase 1 head.
-2. Close the Phase 1 indexed-buffer exit gate.
-3. Begin Phase 2 Viewer state and selection work in dependency order.
+1. Obtain explicit decisions on Proposed ADRs 011–012.
+2. If accepted, implement and independently verify the architecture correction.
+3. Resume Phase 2 Viewer state and selection work only after that gate passes.
 
 ## Blockers and approval gates
 
