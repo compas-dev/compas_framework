@@ -6,9 +6,9 @@ Last updated: 2026-11-07
 
 Current phase: `architecture`
 
-Status: ADRs 001–007 are Accepted, but two verified scene round-trip
-regressions require Proposed amendment ADRs 008–009. Phase 1 implementation is
-paused pending explicit approval.
+Status: ADRs 001–009 are Accepted. Proposed ADR 010 must keep Scene
+reference-only while defining the boundary for a separate future Session
+aggregate before implementation begins.
 
 Read next:
 
@@ -19,11 +19,11 @@ Read next:
 
 ## Decisions and approvals
 
-- Accepted: [ADRs 001–007](decisions/README.md).
+- Accepted: [ADRs 001–009](decisions/README.md), including ADRs 008–009 on
+  2026-11-07.
 - Proposed or unresolved:
-  [ADR 008](decisions/008-scene-nodes-and-runtime-adapters.md) and
-  [ADR 009](decisions/009-scene-state-fields.md); both require approval before
-  package source changes.
+  [ADR 010](decisions/010-scene-description-and-item-bundling.md); approval is
+  required before package source changes.
 - Scope boundary: `compas_model`, notebook, and CAD hosts are later or
   compatibility consumers; `compas_session` requires an explicit inclusion
   decision. Do not modify package source outside the initial scope, merge, or
@@ -53,12 +53,14 @@ Read next:
   do not round-trip under the current constructor/settings mechanism.
 - Proposed separate serializable node state, runtime adapter binding, durable
   node GUIDs, and explicit serialization fields in ADRs 008–009.
+- Accepted ADRs 008–009 and proposed reference-only scene descriptions plus a
+  separate future Session aggregation boundary in ADR 010.
 - Recorded that the current `compas_model.ModelViewer` is a draft and only
   regression/coupling evidence, not a public contract to preserve.
 
 ## Next tasks
 
-1. Review and approve or revise ADRs 008–009.
+1. Review and approve or revise ADR 010.
 2. After approval, refresh core/Viewer branches, add the Viewer regression, and
    cover the draft ModelViewer failure mode with a minimal core adapter test.
 3. Complete Phase 0 before indexed-buffer implementation begins; defer
@@ -66,7 +68,7 @@ Read next:
 
 ## Blockers and approval gates
 
-- Package source implementation is blocked on ADRs 008–009.
+- Package source implementation is blocked on ADR 010.
 - Adding model, session, notebook, or host packages to initial implementation
   scope requires explicit approval.
 

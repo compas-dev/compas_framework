@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -60,15 +60,17 @@ closed base record contains:
 - visibility, opacity, and base appearance; and
 - explicitly declared extension state governed by ADR 009.
 
-The item store remains separate and keyed by item GUID, preserving shared item
-identity. Node GUIDs are serialized and restored so selection references,
-domain indexes, and external scene references have durable identity. Runtime
-adapter instances are not durable identities.
+Items remain separate and keyed by item GUID, preserving shared item identity.
+Whether a serialized scene description embeds those items or only references
+them is intentionally refined by Proposed ADR 010. Node GUIDs are serialized
+and restored so selection references, domain indexes, and external scene
+references have durable identity. Runtime adapter instances are not durable
+identities.
 
 Deserialize in two phases:
 
-1. validate and create the item store, nodes, state, GUIDs, and complete
-   hierarchy without context dispatch or adapter constructors;
+1. validate and create nodes, state, GUIDs, and the complete hierarchy without
+   requiring item bindings, context dispatch, or adapter constructors;
 2. bind adapters for an explicitly requested or detected runtime context only
    after the scene is structurally complete, either eagerly for drawing or
    lazily on first use.
@@ -96,16 +98,18 @@ validation; unknown adapter state is not passed blindly to constructors.
 This ADR preserves ADR 001's package boundaries but refines these clauses:
 
 - "Core owns scene items, hierarchy, scene-object GUIDs..." becomes: core
-  owns items plus durable node/state GUIDs; runtime adapter identity is not
-  serialized.
+  owns durable node/state GUIDs and stable item references; runtime adapter
+  identity is not serialized. Proposed ADR 010 decides the non-owning runtime
+  binding boundary for items.
 - "GUIDs connect durable scene objects to Viewer state" becomes: durable node
   GUIDs connect scene content to Viewer state and domain indexes.
 - Core still owns transformations, visibility, durable appearance, and
   serialization, but those values live on node state rather than being
   discovered from a runtime adapter's constructor/settings implementation.
 
-Implementation of ADR 001's durable identity and serialization boundary is
-blocked until this amendment and ADR 009 are approved.
+ADR 001's durable identity and serialization boundary is amended by this
+Accepted decision and ADR 009. Item ownership and packaging remain blocked on
+Proposed ADR 010.
 
 ## Consequences
 
@@ -160,5 +164,13 @@ scene adapters.
 - [ADR 001](001-ownership-boundaries.md), refined by this decision
 
 ADR 009 supplies the serialization field policy required to implement this
-decision. The two Proposed amendments must be approved together, but ADR 008
-defines the ownership boundary first.
+decision. ADR 010 separately decides that referenced items remain external to
+Scene and defines the boundary for later Session aggregation.
+
+## Decision
+
+Accepted on 2026-11-07. The user additionally required a separate decision
+ensuring that independently serializable `Data` objects are not forced to live
+inside a scene. That unresolved packaging refinement is Proposed ADR 010 and
+blocks implementation without changing this decision's accepted node/adapter
+separation.

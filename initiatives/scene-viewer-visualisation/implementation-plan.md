@@ -2,51 +2,54 @@
 
 ## Status
 
-Architecture amendment required. ADRs 001–007 are Accepted, but verified
-round-trip regressions block implementation. Proposed ADRs 008–009 must be
-approved before Phase 1 or package source work begins.
+Architecture follow-up required. ADRs 001–009 are Accepted, but Proposed ADR
+010 must be approved before Phase 0, Phase 1, or package source work begins.
 
 ## Dependency graph
 
 ```text
-ADR 001 --> ADR 008 --> ADR 009
+ADR 001 --> ADR 008 --> ADR 009 --> ADR 010
     |
     +--------> ADR 002
     +--------> ADR 003 --> ADR 004
 
 ADRs 001–003 ----------> ADR 005
 ADRs 001, 003–005 -----> ADR 006
-ADRs 001–009 ----------> ADR 007 rollout gate
+ADRs 001–010 ----------> ADR 007 rollout gate
 ```
 
 ## Phase 0 — Scene ownership and serialization amendment
 
-Governing ADRs: 001, 008, and 009.
+Governing ADRs: 001, 008, 009, and 010.
 
-Status: blocked on approval of ADRs 008–009.
+Status: blocked on approval of ADR 010.
 
 1. Add the verified Viewer round-trip regression and a minimal core adapter
    test covering the constructor-before-attachment failure. Keep the actual
    draft ModelViewer failure as evidence for its later redesign.
 2. Audit Scene, SceneObject, Group, Viewer adapters, the draft model adapters,
    and compatibility-only consumers against the proposed node/adapter split.
-3. Implement the closed scene node/state schema, durable node GUIDs, separate
-   item store, and two-phase deserialize/bind lifecycle.
+3. Implement the closed scene node/state schema, durable node GUIDs,
+   reference-only descriptions, runtime item bindings, and two-phase
+   deserialize/bind lifecycle.
 4. Implement explicit MRO-composed extension field declarations; preserve
    unknown namespaced extension state within the new schema.
 5. Migrate core and Viewer adapters without serializing caches, selection,
    construction commands, or runtime handles. Use the draft ModelViewer failure
    as external regression evidence, not as behavior to preserve.
+6. Document the separate future Session aggregation boundary without adding a
+   `SceneBundle`, URI resolver, asset registry, or Session implementation.
 
 Exit gate: the Viewer and minimal-adapter regressions pass; shared item
 identity and durable node identity round-trip separately; scenes load without
 a visualization backend; runtime adapters bind only after the complete
-hierarchy exists; local/package quality, typing, docs, and artifact checks
-pass.
+hierarchy exists; independently loaded items bind without copying; unresolved
+references follow ADR 010; local/package quality, typing, docs, and artifact
+checks pass.
 
 ## Phase 1 — Boundaries and indexed geometry
 
-Governing ADRs: 001, 002, 007, 008, and 009.
+Governing ADRs: 001, 002, 007, 008, 009, and 010.
 
 Status: paused until Phase 0 and its approval gate are complete.
 
@@ -138,4 +141,6 @@ required unavailable evidence remains an explicit blocker.
 - console, terminal, Python/shell execution, assistant services, credentials,
   or remote transports;
 - `compas_session` reactive-state integration; and
+- `compas_session` aggregation of data, one or more scenes, settings, and
+  history;
 - notebook, Rhino, Grasshopper, Blender, or other backend migrations.

@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -101,3 +101,9 @@ Later redesign/regression consumer: `compas_model`.
 ## Dependencies
 
 - [ADR 008](008-scene-nodes-and-runtime-adapters.md)
+
+## Decision
+
+Accepted on 2026-11-07. Persistent fields use the closed base schema and
+explicit MRO-composed declarations described above. Item ownership and
+serialization packaging are decided separately by Proposed ADR 010.

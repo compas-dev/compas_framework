@@ -33,6 +33,8 @@ home and contract.
    and independent future consumers?
 9. Which local, package, framework-integration, and artifact evidence is
    required for each approved wave?
+10. How can scene nodes reference independently serialized `Data` objects while
+    leaving optional aggregation to a separately designed Session?
 
 ## Design principles
 
@@ -41,6 +43,8 @@ home and contract.
   large edge or triangle set into one Python object per primitive.
 - Keep raw NumPy-compatible buffers valid inputs without forcing conversion
   through COMPAS geometry or data objects.
+- Keep referenced `Data` independently serializable and algorithm-ready; keep
+  optional Session aggregation separate from Scene.
 - Separate durable scene state, persistent viewer configuration, and transient
   interaction state.
 - Provide one observable selection path for viewport, scene graph, and code.
@@ -71,6 +75,9 @@ home and contract.
 6. Public integration boundaries for Viewer tools, components, and optional
    UI extensions.
 7. Package-local and framework-level tests, examples, and documentation.
+8. Reference-only scene descriptions with deterministic GUID binding and
+   unresolved-reference behavior, plus a clear boundary for a separately
+   approved Session aggregate.
 
 ## Non-goals without a later scope decision
 
@@ -100,6 +107,6 @@ home and contract.
 
 ## Current status
 
-Reconnaissance is complete. ADRs 001–007 are Accepted, but Proposed amendment
-ADRs 008–009 block implementation pending approval. The current draft
+Reconnaissance is complete. ADRs 001–009 are Accepted, but Proposed ADR 010
+blocks implementation pending approval. The current draft
 `ModelViewer` is evidence and a later redesign target, not a contract.

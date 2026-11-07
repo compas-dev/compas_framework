@@ -14,9 +14,9 @@ measurements, annotations, scale/legend overlays, and public dock/command
 composition. It should not attempt a universal renderer API, a generic reactive
 framework, sub-object editing, a shell, or host-application migration.
 
-Implementation is paused. Verified scene round-trip regressions show that the
-accepted ownership boundary requires the Proposed ADRs 008–009 before Phase 1
-can begin.
+Implementation is paused. ADRs 008–009 are Accepted, but their approval
+requires Proposed ADR 010 to clarify independent item serialization and the
+boundary for later Session aggregation before Phase 1 can begin.
 
 ## New evidence requiring amendment
 
@@ -42,12 +42,13 @@ Core `Scene` remains the backend-neutral serializable hierarchy, but its
 durable entries become scene-owned node/state value objects rather than runtime
 `SceneObject` adapters. Nodes preserve their own GUID, optional item GUID,
 local transformation, hierarchy, visibility, base appearance, and explicitly
-declared extension state. The separate item store continues to preserve shared
-item identity.
+declared extension state. Runtime item bindings preserve shared identity
+without making Scene the owner or serialization container of those items.
 
 Runtime `SceneObject` instances bind a complete node and item to a chosen
 visualization context. They are not serialized identities and may be created
-only after deserialization has rebuilt the full item store and hierarchy.
+only after deserialization has rebuilt the hierarchy and resolved the required
+item bindings.
 Their constructors do not populate hierarchy. Scene context is runtime binding
 configuration; absence of a backend cannot prevent loading durable content.
 
@@ -60,6 +61,29 @@ Base node state uses a closed core schema. Additional durable fields use
 explicit MRO-composed declarations. Introspection may validate declarations
 and support editors, but `__dict__`, public properties, annotations, and
 constructor parameters never define persistence automatically.
+
+### Scene descriptions, item bindings, and aggregation
+
+Durable scene nodes reference items by stable item GUID. Serialized `Scene`
+contains the visual node hierarchy and state but does not require referenced
+`Data` objects to live inside it. At runtime Scene binds already loaded objects
+to those GUIDs without taking exclusive ownership; the same object remains
+independently serializable and directly usable by algorithms.
+
+A separately loaded description may contain unresolved references. Its
+hierarchy and node state remain inspectable, and callers can bind items later.
+All nodes sharing one GUID resolve to the same bound instance. Item-dependent
+adapter, draw, and packaging operations fail precisely when the required GUID
+is unresolved.
+
+A redesigned `compas_session.Session` is the likely optional aggregate for
+independently serialized data, one or more scene descriptions, settings,
+history, and their shared identity. Its design and implementation require a
+separate dependent decision and scope approval; this initiative does not add a
+redundant one-scene `SceneBundle`. Scene remains usable without Session.
+
+Do not add URI resolution, filesystem search, network loading, or an asset
+registry without a concrete future requirement.
 
 ### Indexed render geometry
 
@@ -239,8 +263,9 @@ design is proven.
   A deprecated parallel constructor is not proposed.
 - Existing core scene serialization is not sufficient for the approved
   architecture. ADRs 008–009 define a new explicit node schema without a
-  compatibility loader for existing scene files; implementation is blocked
-  pending their approval.
+  compatibility loader for existing scene files. ADR 010 separates
+  reference-only descriptions from a possible future Session aggregate;
+  implementation is blocked pending its approval.
 - Current `Tag` and `ArrowOverlay` data may require a documented migration to
   the accepted annotation/overlay types. Exact compatibility should be checked
   against serialized fixtures before implementation; do not silently reinterpret
@@ -276,6 +301,9 @@ compatibility-reviewed but not implementation targets in the initial wave.
   during hierarchy deserialization; the draft controller itself is deferred.
 - Preserve durable node GUIDs separately from shared item GUIDs and round-trip
   unknown namespaced extension state without its runtime adapter.
+- Load independently serialized items, bind them to reference-only scene
+  descriptions, preserve shared identity, and verify unresolved-reference
+  behavior without Session.
 - Add regression coverage proving transient Viewer state is absent from core
   scene data and serialization.
 - Correct and test the core scene/visualisation guide against current APIs.
@@ -316,14 +344,14 @@ Examples remain direct scripts and demonstrate, in order:
 ## Dependency order
 
 ```text
-ADR 001 --> ADR 008 --> ADR 009
+ADR 001 --> ADR 008 --> ADR 009 --> ADR 010
     |
     +--------> ADR 002
     +--------> ADR 003 --> ADR 004
 
 ADRs 001–003 ----------> ADR 005
 ADRs 001, 003–005 -----> ADR 006
-ADRs 001–009 ----------> ADR 007 rollout gate
+ADRs 001–010 ----------> ADR 007 rollout gate
 ```
 
 Core geometry, typing, plugin, and repository-modernisation decisions remain
@@ -341,6 +369,7 @@ wave are Accepted.
 7. [ADR 007 — Initial scope and verification](decisions/007-scope-and-verification.md)
 8. [ADR 008 — Serializable scene nodes and runtime adapters](decisions/008-scene-nodes-and-runtime-adapters.md)
 9. [ADR 009 — Explicit scene-state serialization fields](decisions/009-scene-state-fields.md)
+10. [ADR 010 — Scene description, item bindings, and aggregation boundary](decisions/010-scene-description-and-item-bundling.md)
 
-ADRs 001–007 are Accepted. No package source changes should begin until the
-Proposed amendment ADRs 008–009 are explicitly approved.
+ADRs 001–009 are Accepted. No package source changes should begin until
+Proposed ADR 010 is explicitly approved.

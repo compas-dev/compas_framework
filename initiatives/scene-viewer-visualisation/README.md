@@ -12,9 +12,9 @@ Current phase: **architecture amendment proposed; implementation paused**.
 - [Implementation plan](implementation-plan.md)
 - [Current handoff](handoff.md)
 
-ADRs 001–007 are Accepted. Verified round-trip failures exposed an unresolved
-scene-node/runtime-adapter and serialization boundary. Proposed ADRs 008–009
-must be approved before Phase 1 begins.
+ADRs 001–009 are Accepted. Proposed ADR 010 keeps Scene reference-only and
+places optional aggregation behind a separate future Session design. It must
+be approved before implementation begins.
 
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence
