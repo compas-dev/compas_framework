@@ -142,6 +142,28 @@ After approval:
 - Verify documentation.
 - Report completion and remaining issues.
 
+### Verification Responsibilities
+
+- Local checks provide fast, focused feedback before work is pushed. Run the
+  narrowest relevant tests, Ruff, Pyright, documentation checks, and native
+  imports in the documented package environment.
+- Package CI is the authoritative clean-environment check for one repository.
+  It verifies that the committed package branch builds and passes its own
+  configured quality, test, documentation, and artifact jobs.
+- Framework integration CI verifies coordinated package revisions together.
+  Pin the exact candidate commits and exercise cross-package runtime, plugin
+  discovery, typing, serialization, and native-backend contracts that cannot
+  be established by an individual package workflow.
+- Candidate-artifact CI verifies the exact wheels and distributions intended
+  for admission or release. A source build or editable install does not count
+  as evidence that independently built or published artifacts work together.
+- Initiative handoffs record the evidence for every applicable layer. Mark a
+  layer as passed, failed, not run, or unavailable; never infer a pass from a
+  different layer.
+- Completion requires all applicable local, package, framework-integration,
+  and candidate-artifact checks. If a layer does not apply, state why. If a
+  required layer cannot run, leave the initiative explicitly unverified.
+
 ## Rules
 
 - Do not modify package source code before approval.

@@ -59,6 +59,19 @@ Last verified:
 - `<command>` — `<result or not yet run>`
 - `<workflow URL>` — `<exact head and result>`
 
+Evidence by layer:
+
+| Layer | Status | Evidence |
+|---|---|---|
+| Local focused checks | `<passed/failed/not run/unavailable/not applicable>` | `<commands and exact results>` |
+| Package CI | `<passed/failed/not run/unavailable/not applicable>` | `<workflow URL and exact head>` |
+| Framework integration CI | `<passed/failed/not run/unavailable/not applicable>` | `<workflow URL, candidate revisions, and scope>` |
+| Candidate-artifact CI | `<passed/failed/not run/unavailable/not applicable>` | `<workflow URL, artifact identities, and scope>` |
+
+Do not substitute evidence from one layer for another. Explain every
+`unavailable` or `not applicable` status, and leave required unavailable
+layers explicitly unverified.
+
 Run next:
 
 ```text
