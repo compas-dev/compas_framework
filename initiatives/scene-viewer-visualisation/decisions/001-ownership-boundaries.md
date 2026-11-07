@@ -68,3 +68,13 @@ data and requires fixture inspection and migration documentation.
 
 - Geometry-tessellation ADRs 022 and 024
 - Plugin-implementations ADR 002
+
+## Pending amendments
+
+Verified round-trip failures show that this decision did not distinguish the
+durable scene node/state from the context-specific runtime `SceneObject`
+adapter precisely enough. Implementation of the core ownership, GUID, context,
+and serialization clauses is blocked by Proposed
+[ADR 008](008-scene-nodes-and-runtime-adapters.md) and
+[ADR 009](009-scene-state-fields.md). This note does not change ADR 001's
+Accepted status or approve either amendment.

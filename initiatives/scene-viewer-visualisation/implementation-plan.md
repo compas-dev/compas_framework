@@ -2,27 +2,50 @@
 
 ## Status
 
-Architecture approved. ADRs 001–007 are Accepted; implementation may proceed
-in dependency order within the approved initial scope.
+Architecture amendment required. ADRs 001–007 are Accepted, but verified
+round-trip regressions block implementation. Proposed ADRs 008–009 must be
+approved before Phase 1 or package source work begins.
 
 ## Dependency graph
 
 ```text
-ADRs 001 and 002
-      |       \
-      v        v
-ADR 003 --> ADR 004
-   |           |
-   v           v
-ADR 005     ADR 006
-      \       /
-       v     v
-        ADR 007
+ADR 001 --> ADR 008 --> ADR 009
+    |
+    +--------> ADR 002
+    +--------> ADR 003 --> ADR 004
+
+ADRs 001–003 ----------> ADR 005
+ADRs 001, 003–005 -----> ADR 006
+ADRs 001–009 ----------> ADR 007 rollout gate
 ```
+
+## Phase 0 — Scene ownership and serialization amendment
+
+Governing ADRs: 001, 008, and 009.
+
+Status: blocked on approval of ADRs 008–009.
+
+1. Add the two verified round-trip regressions as failing tests without
+   changing package behavior.
+2. Audit Scene, SceneObject, Group, Viewer adapters, model adapters, and
+   compatibility-only consumers against the proposed node/adapter split.
+3. Implement the closed scene node/state schema, durable node GUIDs, separate
+   item store, and two-phase deserialize/bind lifecycle.
+4. Implement explicit MRO-composed extension field declarations and the legacy
+   settings loader; preserve unknown namespaced extension state.
+5. Migrate core, Viewer, and model adapters without serializing caches,
+   selection, construction commands, or runtime handles.
+
+Exit gate: both regressions pass; shared item identity and durable node identity
+round-trip separately; scenes load without a visualization backend; model
+adapters bind only after the complete hierarchy exists; local/package quality,
+typing, docs, and artifact checks pass.
 
 ## Phase 1 — Boundaries and indexed geometry
 
-Governing ADRs: 001, 002, and 007.
+Governing ADRs: 001, 002, 007, 008, and 009.
+
+Status: paused until Phase 0 and its approval gate are complete.
 
 1. Audit compatibility-only consumers for affected core scene contracts and
    stop for approval if a required core change would break them.
@@ -38,7 +61,7 @@ large-indexed-input evidence passes at exact candidate heads.
 
 ## Phase 2 — State, selection, and transforms
 
-Governing ADRs: 001, 003, 004, and 007.
+Governing ADRs: 001, 003, 004, 007, 008, and 009.
 
 1. Separate persistent Viewer configuration from transient Viewer state.
 2. Implement the object-selection model and migrate viewport, rectangle, tree,

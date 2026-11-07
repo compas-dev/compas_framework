@@ -14,19 +14,52 @@ measurements, annotations, scale/legend overlays, and public dock/command
 composition. It should not attempt a universal renderer API, a generic reactive
 framework, sub-object editing, a shell, or host-application migration.
 
+Implementation is paused. Verified scene round-trip regressions show that the
+accepted ownership boundary requires the Proposed ADRs 008–009 before Phase 1
+can begin.
+
+## New evidence requiring amendment
+
+- A Viewer Box/ShapeObject local translation `[2, 0, 0]` reloads as
+  `transformation is None` because `ViewerSceneObject.settings` replaces core
+  settings. A headless ShapeObject with `u=7`, `v=9`, and a face color reloads
+  with resolution defaults `16`, `16`, and the default face color.
+- A ModelViewer scene fails while loading. Runtime factory dispatch constructs
+  `ModelObject` with its default `add_elements=True`; it calls `self.add`
+  before attachment and raises `RuntimeError: A detached scene object cannot
+  own child objects.` The original controller deliberately used
+  `add_elements=False` and `add_children=False`. Render settings and caches are
+  absent too, but caches are transient and should stay out of scene files.
+- Shared item identity survives through the item GUID store. Scene-object GUIDs
+  do not survive, so they cannot yet serve as the durable identity assumed by
+  ADR 001.
+
 ## Recommended architecture
 
-### Durable scene content
+### Durable scene content and runtime adapters
 
-Core `Scene` remains the serializable hierarchy. Core `SceneObject` continues
-to own item references, local transformations, hierarchy, visibility, and
-durable appearance. Core does not gain Qt signals, GPU buffers, picking IDs,
-selection state, tool state, or viewer commands.
+Core `Scene` remains the backend-neutral serializable hierarchy, but its
+durable entries become scene-owned node/state value objects rather than runtime
+`SceneObject` adapters. Nodes preserve their own GUID, optional item GUID,
+local transformation, hierarchy, visibility, base appearance, and explicitly
+declared extension state. The separate item store continues to preserve shared
+item identity.
 
-Scene-object GUIDs are the stable boundary between durable content and viewer
-state. Viewer and domain controllers refer to scene objects by GUID and resolve
-them through the scene when needed. Renderer-specific pick IDs remain short-
-lived Viewer mappings and are never serialized.
+Runtime `SceneObject` instances bind a complete node and item to a chosen
+visualization context. They are not serialized identities and may be created
+only after deserialization has rebuilt the full item store and hierarchy.
+Their constructors do not populate hierarchy. Scene context is runtime binding
+configuration; absence of a backend cannot prevent loading durable content.
+
+Durable node GUIDs are the stable boundary between scene content and Viewer
+state. Renderer pick IDs remain short-lived Viewer mappings and are never
+serialized. Unknown namespaced adapter state remains inactive but round-trips
+without importing that adapter.
+
+Base node state uses a closed core schema. Additional durable fields use
+explicit MRO-composed declarations. Introspection may validate declarations
+and support editors, but `__dict__`, public properties, annotations, and
+constructor parameters never define persistence automatically.
 
 ### Indexed render geometry
 
@@ -206,8 +239,9 @@ design is proven.
 - `BufferGeometry` construction changes from expanded channel vertices to
   shared indexed vertices. Current examples and adapters migrate together.
   A deprecated parallel constructor is not proposed.
-- Existing core scene serialization remains valid because Viewer transient
-  state is removed from scene-object settings rather than added to core.
+- Existing core scene serialization is not sufficient for the approved
+  architecture. ADRs 008–009 define a legacy loader and a new explicit node
+  schema; implementation is blocked pending their approval.
 - Current `Tag` and `ArrowOverlay` data may require a documented migration to
   the accepted annotation/overlay types. Exact compatibility should be checked
   against serialized fixtures before implementation; do not silently reinterpret
@@ -235,6 +269,10 @@ compatibility-reviewed but not implementation targets in the initial wave.
 
 - Preserve scene serialization, shared-item identity, hierarchy, and local/
   world transformation tests.
+- Add the verified Viewer transformation/ShapeObject settings regression and
+  ModelViewer detached-child failure before changing implementation.
+- Preserve durable node GUIDs separately from shared item GUIDs and round-trip
+  unknown namespaced extension state without its runtime adapter.
 - Add regression coverage proving transient Viewer state is absent from core
   scene data and serialization.
 - Correct and test the core scene/visualisation guide against current APIs.
@@ -276,23 +314,21 @@ Examples remain direct scripts and demonstrate, in order:
 ## Dependency order
 
 ```text
-ADRs 001 and 002
-      |       \
-      v        v
-ADR 003 --> ADR 004
-   |           |
-   v           v
-ADR 005     ADR 006
-      \       /
-       v     v
-        ADR 007
+ADR 001 --> ADR 008 --> ADR 009
+    |
+    +--------> ADR 002
+    +--------> ADR 003 --> ADR 004
+
+ADRs 001–003 ----------> ADR 005
+ADRs 001, 003–005 -----> ADR 006
+ADRs 001–009 ----------> ADR 007 rollout gate
 ```
 
 Core geometry, typing, plugin, and repository-modernisation decisions remain
 upstream constraints. Implementation starts only after all ADRs required for a
 wave are Accepted.
 
-## Decisions requiring approval
+## Decision record
 
 1. [ADR 001 — Ownership and state boundaries](decisions/001-ownership-boundaries.md)
 2. [ADR 002 — Indexed Viewer buffer geometry](decisions/002-indexed-buffer-geometry.md)
@@ -301,6 +337,8 @@ wave are Accepted.
 5. [ADR 005 — Annotations, measurements, and overlays](decisions/005-annotations-and-overlays.md)
 6. [ADR 006 — Public Viewer integration facade](decisions/006-viewer-integration-facade.md)
 7. [ADR 007 — Initial scope and verification](decisions/007-scope-and-verification.md)
+8. [ADR 008 — Serializable scene nodes and runtime adapters](decisions/008-scene-nodes-and-runtime-adapters.md)
+9. [ADR 009 — Explicit scene-state serialization fields](decisions/009-scene-state-fields.md)
 
-No package source changes should begin before the governing decisions are
-explicitly approved.
+ADRs 001–007 are Accepted. No package source changes should begin until the
+Proposed amendment ADRs 008–009 are explicitly approved.

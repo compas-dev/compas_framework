@@ -4,11 +4,11 @@ Last updated: 2026-11-07
 
 ## Resume here
 
-Current phase: `implementation`
+Current phase: `architecture`
 
-Status: Cross-package reconnaissance and architecture are complete. The user
-accepted ADRs 001–007 on 2026-11-07; implementation may begin in dependency
-order within the approved initial scope.
+Status: ADRs 001–007 are Accepted, but two verified scene round-trip
+regressions require Proposed amendment ADRs 008–009. Phase 1 implementation is
+paused pending explicit approval.
 
 Read next:
 
@@ -20,7 +20,10 @@ Read next:
 ## Decisions and approvals
 
 - Accepted: [ADRs 001–007](decisions/README.md).
-- Proposed or unresolved: none.
+- Proposed or unresolved:
+  [ADR 008](decisions/008-scene-nodes-and-runtime-adapters.md) and
+  [ADR 009](decisions/009-scene-state-fields.md); both require approval before
+  package source changes.
 - Scope boundary: notebook and CAD hosts are compatibility consumers;
   `compas_session` requires an explicit inclusion decision. Do not modify
   package source outside the initial scope, merge, or publish without the
@@ -46,16 +49,21 @@ Read next:
 - Identified initial and compatibility-only package boundaries.
 - Produced the architecture proposal, seven independent Proposed ADRs, and a
   dependency-ordered implementation plan.
+- Verified that Viewer ShapeObject state and ModelViewer scene reconstruction
+  do not round-trip under the current constructor/settings mechanism.
+- Proposed separate serializable node state, runtime adapter binding, durable
+  node GUIDs, and explicit serialization fields in ADRs 008–009.
 
 ## Next tasks
 
-1. Review and approve or revise ADRs 001–007.
-2. After approval, create package initiative branches from the recorded bases.
-3. Begin Phase 1 compatibility review and indexed-buffer implementation.
+1. Review and approve or revise ADRs 008–009.
+2. After approval, refresh package branches and add the verified regressions as
+   tests.
+3. Complete Phase 0 before indexed-buffer implementation begins.
 
 ## Blockers and approval gates
 
-- Package source implementation is blocked on proposal and ADR approval.
+- Package source implementation is blocked on ADRs 008–009.
 - Adding session, notebook, or host packages to implementation scope requires
   explicit approval.
 

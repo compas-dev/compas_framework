@@ -129,6 +129,37 @@ Focused reconnaissance results:
 10. Scope can expand rapidly across notebook and host adapters unless initial
     and compatibility-only packages are explicit.
 
+## Scene state and serialization follow-up
+
+The current scene format is not ordinary `SceneObject` serialization. `Scene`
+stores every domain item once by GUID and writes hierarchy nodes as an optional
+item GUID, a free-form `settings` mapping, and children. Loading replays those
+settings through `Scene.add`, which selects and constructs a runtime adapter
+before the reconstructed hierarchy is complete. Multiple nodes can correctly
+share one item, but node/adapter GUIDs are not preserved.
+
+Two regressions were reproduced at the audited heads:
+
+- a Viewer Box/ShapeObject translated by `[2, 0, 0]` reloads without its
+  transformation because `ViewerSceneObject.settings` replaces the base
+  mapping; `u=7`, `v=9`, and face color also reload as defaults;
+- a `ModelViewer` scene fails to load because constructor replay uses
+  `ModelObject(add_elements=True)` before attachment, causing its child
+  creation to raise `RuntimeError: A detached scene object cannot own child
+  objects.`
+
+Unrestricted serialization introspection is unsafe. Concrete COMPAS objects
+contain cycles, scene/item backreferences, GPU and picking identifiers, native
+handles, lazy caches, derived NumPy buffers, and constructor commands. Public
+properties can be computed or side-effecting, while persistent descriptor
+values are often stored privately. Constructor signatures also lose inherited
+state behind `**kwargs`.
+
+Introspection remains useful when applied to a closed declared schema: it can
+validate readable fields, constructor compatibility, and editor metadata. It
+cannot safely determine persistence from `__dict__`, public names,
+annotations, properties, or constructor parameters alone.
+
 ## Architecture questions
 
 1. Does core own only scene hierarchy and transformations, or also neutral
