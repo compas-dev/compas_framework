@@ -1,0 +1,6 @@
+{
+  "include": ["consumer.py"],
+  "pythonVersion": "3.12",
+  "typeCheckingMode": "strict",
+  "reportMissingModuleSource": "none"
+}

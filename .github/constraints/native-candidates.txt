@@ -1,0 +1,4 @@
+compas @ git+https://github.com/compas-dev/compas.git@99b82a6673ff7d05c1c323c8921135c274993f11
+compas_occ @ git+https://github.com/compas-dev/compas_occ.git@7fdf2ffb57d1de16308020e14ec626d79e65a034
+compas_cgal @ git+https://github.com/compas-dev/compas_cgal.git@bb3624e714719d543c61768320d91811ba96cc6c
+compas_libigl @ git+https://github.com/compas-dev/compas_libigl.git@710b2b6714839a203fc8a6c62c437c0f6735ba0e

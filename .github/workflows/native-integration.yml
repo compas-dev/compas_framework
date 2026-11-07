@@ -1,0 +1,72 @@
+name: native-integration
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [initiative/plugin-implementations]
+    paths:
+      - ".github/constraints/native-candidates.txt"
+      - ".github/environments/native-integration.yml"
+      - ".github/scripts/native_typing_consumer.py"
+      - ".github/scripts/native_typing_consumer.pyright.json"
+      - ".github/workflows/native-integration.yml"
+      - "tests/test_native_geometry_backends.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-integration:
+    runs-on: ubuntu-latest
+    env:
+      PIP_NO_CACHE_DIR: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: compas-dev/compas-actions/ci@5c64e6e2b576a1232d28fed47d9478ca8eb63b2d # v2 candidate
+        with:
+          python-version: "3.12"
+          management-tool: conda
+          conda-environment: compas-framework-native-integration
+          environment-file: .github/environments/native-integration.yml
+          invoke-tasks: ""
+      - name: Install coordinated candidates
+        shell: bash -el {0}
+        run: |
+          python -m pip install pytest==9.1.1 pyright==1.1.414
+          python -m pip install --no-cache-dir -r .github/constraints/native-candidates.txt
+      - name: Verify native imports
+        shell: bash -el {0}
+        run: >-
+          python -c
+          "from OCC.Core.TopoDS import TopoDS_Shape;
+          import compas_cgal._slicer;
+          import compas_cgal._triangulation;
+          import compas_libigl._geodistance;
+          import compas_libigl._intersections;
+          import compas_libigl._isolines;
+          import compas_libigl._massmatrix;
+          import compas_libigl._meshing;
+          import compas_libigl._parametrisation"
+      - name: Run native integration tests
+        shell: bash -el {0}
+        run: >-
+          python -m pytest
+          --basetemp "${RUNNER_TEMP}/pytest"
+          -o cache_dir="${RUNNER_TEMP}/pytest-cache"
+          tests/test_native_geometry_backends.py
+      - name: Type-check installed-package consumer
+        shell: bash -el {0}
+        run: |
+          consumer_dir="${RUNNER_TEMP}/native-typing-consumer"
+          mkdir -p "${consumer_dir}"
+          cp .github/scripts/native_typing_consumer.py "${consumer_dir}/consumer.py"
+          cp .github/scripts/native_typing_consumer.pyright.json "${consumer_dir}/pyrightconfig.json"
+          env -u PYTHONPATH python -m pyright --pythonpath "$(command -v python)" --project "${consumer_dir}/pyrightconfig.json"
+          env -u PYTHONPATH python "${consumer_dir}/consumer.py"
