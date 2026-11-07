@@ -6,10 +6,10 @@ Last updated: 2026-11-07
 
 Current phase: `architecture correction`
 
-Status: ADRs 001–010 are Accepted; ADRs 011–012 are Proposed. Phase 1 indexed
-buffers are complete and green. Phase 2 is paused because implementation
-evidence showed that the current detached/bound adapter lifecycle and dynamic
-state interception violate the clean, simple, transparent design rule.
+Status: ADRs 001–010 are Accepted. ADRs 011–012 remain unresolved alternatives;
+ADRs 013–014 are the preferred Proposed correction. Phase 1 indexed buffers
+are complete and green. Phase 2 is paused because the current design duplicates
+state and lets installed backends change scene-object types.
 
 Read next:
 
@@ -22,7 +22,9 @@ Read next:
 
 - Accepted: [ADRs 001–010](decisions/README.md), including ADRs 008–010 on
   2026-11-07.
-- Proposed: ADR 011 node-first adapters and ADR 012 explicit node-backed state.
+- Proposed alternatives: ADRs 011–012.
+- Proposed and preferred: ADR 013 hierarchy-only nodes and stable scene objects;
+  ADR 014 context-keyed operation plugins.
 - Scope boundary: `compas_model`, notebook, and CAD hosts are later or
   compatibility consumers; `compas_session` requires an explicit inclusion
   decision. Do not modify package source outside the initial scope, merge, or
@@ -73,7 +75,8 @@ Read next:
 
 ## Next tasks
 
-1. Obtain explicit decisions on Proposed ADRs 011–012.
+1. Obtain explicit decisions on preferred Proposed ADRs 013–014 and their
+   disposition of ADRs 008–009 and 011–012.
 2. If accepted, implement and independently verify the architecture correction.
 3. Resume Phase 2 Viewer state and selection work only after that gate passes.
 

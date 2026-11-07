@@ -361,37 +361,38 @@ wave are Accepted.
 ## Architecture correction after Phase 1
 
 Implementation evidence invalidates the detached/bound adapter mechanism used
-for the first implementation of ADRs 008–009. The separation between durable
-nodes and runtime adapters remains correct, but constructing an adapter before
-its node creates duplicate provisional state, changes GUID meaning at binding,
-and requires hidden attribute interception. Removal and context replacement
-can expose stale provisional values on old adapter references.
+for the first implementation of ADRs 008–009. It duplicates provisional and
+node state, changes GUID meaning at binding, and requires hidden attribute
+interception. Removal and context replacement can expose stale values on old
+adapter references. Backend class substitution adds another ambiguity: the
+type returned for one scene entry depends on which visualization plugins are
+installed and selected.
 
-The proposed correction keeps the public convenience of
-`scene.add(data, ...)` but changes its internal order:
+The preferred correction assigns one purpose to each concept:
 
-1. resolve the adapter class;
-2. validate base and explicitly declared extension arguments;
-3. create and attach the durable node;
-4. bind the independently owned data item; and
-5. construct a plain runtime adapter from `(scene, node)`.
+- `SceneNode` stores only ordered hierarchy through a scene-object GUID;
+- stable backend-neutral `SceneObject` values own item references, identity,
+  transformation, appearance, visibility, and semantic type-specific state;
+- independently serialized `Data` items remain external and bind by GUID; and
+- visualization backends register context-keyed `draw` and `clear` functions
+  rather than replacement scene-object classes.
 
-The adapter never exists detached, never owns durable fallbacks, never changes
-identity, and is not a `Data` object. Explicit ordinary properties access node
-state. Field declarations remain persistence/validation metadata but do not
-intercept Python attribute access. Context rebinding atomically replaces the
-adapter table; stale adapters become invalid rather than transitioning into a
-second reusable mode.
+`scene.add(data, ...)` remains the primary convenience path and returns the
+stable scene object. One node is allowed per scene object; repeated appearances
+of one item use multiple scene objects. The scene-object GUID is the hierarchy
+key, so there is no second durable node identity. A scene serializes stable
+object records plus a hierarchy of GUID references and loads without any
+backend installed.
 
-This deliberately removes direct `SceneObject(item, ...)`,
-`Scene.add(sceneobject)`, reusable removed adapters, direct `Group(...)`,
-arbitrary group child defaults, and constructor-driven hierarchy. CAD-host
-one-shot drawing and registered adapter constructors require later migration,
-but the primary `Scene.add(data, ...)` path remains.
+The general COMPAS plugin dispatcher cannot select a `draw` implementation
+from an invocation's explicit visualization context. The preferred design does
+not complicate it. Lightweight discovery plugins populate a small scene
+operation registry keyed by `(context, scene-object type, operation)`. Runtime
+buffers, host handles, picking state, and caches live outside durable objects.
 
-Proposed ADR 011 records construction and lifetime. Proposed ADR 012 records
-explicit node-backed state. Phase 2 remains paused until both decisions are
-resolved and, if accepted, implemented and verified.
+Proposed ADRs 011–012 record the first node-first alternative. Proposed ADRs
+013–014 record this newer preferred design. Phase 2 remains paused until the
+preferred decisions are resolved and, if accepted, implemented and verified.
 
 ## Decision record
 
@@ -407,5 +408,8 @@ resolved and, if accepted, implemented and verified.
 10. [ADR 010 — Scene description, item bindings, and aggregation boundary](decisions/010-scene-description-and-item-bundling.md)
 11. [ADR 011 — Node-first scene construction and adapter lifetime](decisions/011-node-first-scene-adapters.md)
 12. [ADR 012 — Explicit node-backed adapter state](decisions/012-explicit-node-backed-adapter-state.md)
+13. [ADR 013 — Hierarchy-only nodes and stable scene objects](decisions/013-hierarchy-nodes-and-stable-sceneobjects.md)
+14. [ADR 014 — Context-keyed scene operation plugins](decisions/014-context-keyed-scene-operations.md)
 
-ADRs 001–010 are Accepted. ADRs 011–012 are Proposed.
+ADRs 001–010 are Accepted. ADRs 011–014 are Proposed; ADRs 013–014 are the
+preferred alternative.

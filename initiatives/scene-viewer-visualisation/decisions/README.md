@@ -1,8 +1,9 @@
 # Scene, Viewer, and Visualisation Decisions
 
 ADRs 001–010 are Accepted. ADRs 011–012 are Proposed architecture corrections
-after the Phase 0 implementation exposed a dual adapter lifecycle and hidden
-state routing that conflict with the initiative's simplicity rule.
+to the implemented node/adapter split. ADRs 013–014 are the newer preferred
+alternative: hierarchy-only nodes, stable durable scene objects, and
+context-keyed operation plugins instead of backend replacement classes.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -18,6 +19,8 @@ state routing that conflict with the initiative's simplicity rule.
 | 010 | [Scene description, item bindings, and aggregation boundary](010-scene-description-and-item-bundling.md) | Accepted | 008, 009 |
 | 011 | [Node-first scene construction and adapter lifetime](011-node-first-scene-adapters.md) | Proposed | Supersedes parts of 008; preserves 010 |
 | 012 | [Explicit node-backed adapter state](012-explicit-node-backed-adapter-state.md) | Proposed | 011; supersedes implementation mechanism of 009 |
+| 013 | [Hierarchy-only nodes and stable scene objects](013-hierarchy-nodes-and-stable-sceneobjects.md) | Proposed, preferred | Intended to supersede 008/009 placement; preserves 010 |
+| 014 | [Context-keyed scene operation plugins](014-context-keyed-scene-operations.md) | Proposed, preferred | 013; replaces backend class registration |
 
 ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A

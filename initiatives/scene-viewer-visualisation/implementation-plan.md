@@ -2,9 +2,10 @@
 
 ## Status
 
-Architecture correction pending. ADRs 001–010 are Accepted; ADRs 011–012 are
-Proposed after implementation evidence exposed a dual adapter lifecycle and
-hidden state routing. Phase 2 is paused pending explicit approval.
+Architecture correction pending. ADRs 001–010 are Accepted. ADRs 011–012 are
+unresolved alternatives; ADRs 013–014 are the preferred Proposed correction
+after implementation evidence exposed duplicate ownership, hidden state
+routing, and backend-dependent object types. Phase 2 is paused.
 
 ## Dependency graph
 
@@ -23,7 +24,7 @@ ADRs 001–010 ----------> ADR 007 rollout gate
 
 Governing ADRs: 001, 008, 009, and 010.
 
-Status: implemented, but subject to the Proposed ADR 011–012 correction before
+Status: implemented, but subject to the Proposed ADR 013–014 correction before
 Phase 2 proceeds.
 
 1. Add the verified Viewer round-trip regression and a minimal core adapter
@@ -69,7 +70,7 @@ large-indexed-input evidence passes at exact candidate heads.
 
 Governing ADRs: 001, 003, 004, 007, 008, and 009.
 
-Status: paused until ADRs 011–012 are resolved and the approved scene
+Status: paused until ADRs 013–014 are resolved and the approved scene
 architecture correction is implemented and verified.
 
 1. Separate persistent Viewer configuration from transient Viewer state.
