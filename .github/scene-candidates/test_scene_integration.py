@@ -6,15 +6,18 @@ from importlib.metadata import distribution
 
 import pytest
 from compas.colors import Color
+from compas.data import json_dumps
+from compas.data import json_loads
 from compas.geometry import Box
 from compas.geometry import Translation
 from compas.scene import Scene
 from compas.scene import SceneItemNotBoundError
 from compas_viewer import Viewer
+from compas_viewer.scene import BufferGeometry
 from compas_viewer.scene import ViewerScene
 
 CORE_COMMIT = "38d2457861ba7122f91d2107ce11e85053105165"
-VIEWER_COMMIT = "a0d46d4810aad1143c1af936ee98933b93f7a1b7"
+VIEWER_COMMIT = "0fd73e9d17481bfcd2d69cf08c4db757a3ab16a5"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -48,6 +51,21 @@ assert not any(name == "OpenGL" or name.startswith("OpenGL.") for name in module
     if os.environ.get("COMPAS_SCENE_SOURCE_CHECKOUTS") != "1":
         environment.pop("PYTHONPATH", None)
     subprocess.run([sys.executable, "-c", code], check=True, env=environment)
+
+
+def test_indexed_buffer_geometry_stays_indexed_and_roundtrips():
+    geometry = BufferGeometry.from_vertices_and_triangles(
+        [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0]],
+        [[0, 1, 2], [1, 3, 2]],
+    )
+
+    restored = json_loads(json_dumps(geometry))
+
+    assert isinstance(restored, BufferGeometry)
+    assert restored.vertices.shape == (4, 3)
+    assert restored.triangles is not None
+    assert restored.triangles.shape == (2, 3)
+    assert restored.triangles.tolist() == [[0, 1, 2], [1, 3, 2]]
 
 
 def test_reference_scene_roundtrip_and_explicit_binding(tmp_path):

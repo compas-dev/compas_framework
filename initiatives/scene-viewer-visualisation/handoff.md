@@ -34,7 +34,7 @@ Read next:
 |---|---|---|---|---|
 | `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | this handoff checkpoint | [7](https://github.com/compas-dev/compas_framework/pull/7) | Exact-source gate green before latest candidate-pin refresh |
 | `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `38d2457861ba7122f91d2107ce11e85053105165` | [1540](https://github.com/compas-dev/compas/pull/1540) | Full matrix green; patch coverage rerunning |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `a0d46d4810aad1143c1af936ee98933b93f7a1b7` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | All hosted checks green |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `0fd73e9d17481bfcd2d69cf08c4db757a3ab16a5` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Phase 1 indexed-buffer candidate pushed; CI running |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Clean; inspected only |
 
 ## Completed at this checkpoint
@@ -65,12 +65,17 @@ Read next:
 - Added and passed an installed exact-source framework gate covering plugin
   discovery, reference-only round trips, explicit rebinding, and transient
   Viewer state exclusion.
+- Implemented and independently approved indexed `BufferGeometry`, convenience
+  constructors, closed JSON persistence, preserved buffer indices, and
+  complete-triangle transparency partitioning.
+- Reverified 36 `compas_model` Viewer/controller/plugin compatibility tests
+  against the Phase 1 Viewer source without modifying model code.
 
 ## Next tasks
 
-1. Confirm core patch coverage and the refreshed exact-source gate are green.
-2. Close the Phase 0 exit gate.
-3. Begin the Phase 1 compatibility audit and indexed-buffer implementation.
+1. Collect clean Viewer CI and exact-source framework CI for the Phase 1 head.
+2. Close the Phase 1 indexed-buffer exit gate.
+3. Begin Phase 2 Viewer state and selection work in dependency order.
 
 ## Blockers and approval gates
 
