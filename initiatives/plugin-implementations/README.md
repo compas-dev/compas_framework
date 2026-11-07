@@ -12,6 +12,7 @@ coordinated artifact and remaining selection/parity gates incomplete**.
 - [Proposal](proposal.md)
 - [Architecture decisions](decisions/README.md)
 - [Implementation plan](implementation-plan.md)
+- [Current handoff](handoff.md)
 
 ADRs 001–006 are **Accepted**. Implementation is authorized only for the six
 packages in Waves 0–1. Subsequent modernization and typing work completed the

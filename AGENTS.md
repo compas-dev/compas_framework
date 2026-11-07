@@ -51,3 +51,21 @@ These instructions apply to the entire repository.
 - Mark integration, roundtrip, performance, GUI, and native-backend tests so they can be selected independently.
 - Test public behavior rather than implementation metadata. Prefer capability checks over platform-name checks.
 - Build relevant MkDocs pages when changes affect examples, API documentation, signatures, or navigation.
+
+## Session Handoffs
+
+- Treat `initiatives/<name>/handoff.md` as the entry point for an active
+  initiative. Read it first, then read only the authoritative files it links
+  for the next task.
+- Keep the handoff short. It is an index and checkpoint, not a copy of the
+  objective, inventory, proposal, ADRs, or implementation plan.
+- Update the handoff at a meaningful checkpoint and before ending or moving an
+  initiative to a new conversation. Record exact branches, commit SHAs, pull
+  requests, workflow runs, verification results, and remaining approval gates.
+- List at most three ordered next tasks. Move longer task lists and design
+  details to the implementation plan.
+- Start a new conversation for each initiative, or for a new architecture,
+  implementation, integration, or audit phase of a large initiative. Resume
+  with: `Continue <initiative> from initiatives/<name>/handoff.md`.
+- A handoff never overrides an accepted ADR or the implementation plan. Resolve
+  inconsistencies in the authoritative source, then refresh the handoff.
