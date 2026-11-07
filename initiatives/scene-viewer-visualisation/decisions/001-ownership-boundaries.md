@@ -76,9 +76,9 @@ Later redesign/regression consumer: `compas_model`.
 Verified round-trip failures showed that this decision did not distinguish the
 durable scene node/state from the context-specific runtime `SceneObject`
 adapter precisely enough. Accepted [ADR 008](008-scene-nodes-and-runtime-adapters.md)
-and [ADR 009](009-scene-state-fields.md) amend that boundary. Proposed
-[ADR 010](010-scene-description-and-item-bundling.md) still blocks
-implementation until item ownership and packaging are explicit.
+and [ADR 009](009-scene-state-fields.md) amend that boundary. Accepted
+[ADR 010](010-scene-description-and-item-bundling.md) defines item ownership
+and the later Session aggregation boundary.
 
 The generic principle that domain packages retain their own data authority
 does not preserve the current draft `ModelViewer` controller, projections,

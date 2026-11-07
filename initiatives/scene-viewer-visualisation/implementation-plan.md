@@ -2,8 +2,8 @@
 
 ## Status
 
-Architecture follow-up required. ADRs 001–009 are Accepted, but Proposed ADR
-010 must be approved before Phase 0, Phase 1, or package source work begins.
+Architecture approved. ADRs 001–010 are Accepted; implementation may proceed
+in dependency order within the approved initial scope.
 
 ## Dependency graph
 
@@ -22,7 +22,7 @@ ADRs 001–010 ----------> ADR 007 rollout gate
 
 Governing ADRs: 001, 008, 009, and 010.
 
-Status: blocked on approval of ADR 010.
+Status: authorized.
 
 1. Add the verified Viewer round-trip regression and a minimal core adapter
    test covering the constructor-before-attachment failure. Keep the actual
@@ -142,5 +142,5 @@ required unavailable evidence remains an explicit blocker.
   or remote transports;
 - `compas_session` reactive-state integration; and
 - `compas_session` aggregation of data, one or more scenes, settings, and
-  history;
+  history, including optional Viewer new/open/save conveniences;
 - notebook, Rhino, Grasshopper, Blender, or other backend migrations.

@@ -61,8 +61,8 @@ closed base record contains:
 - explicitly declared extension state governed by ADR 009.
 
 Items remain separate and keyed by item GUID, preserving shared item identity.
-Whether a serialized scene description embeds those items or only references
-them is intentionally refined by Proposed ADR 010. Node GUIDs are serialized
+Accepted ADR 010 requires a serialized scene description to reference those
+items without embedding them. Node GUIDs are serialized
 and restored so selection references, domain indexes, and external scene
 references have durable identity. Runtime adapter instances are not durable
 identities.
@@ -99,7 +99,7 @@ This ADR preserves ADR 001's package boundaries but refines these clauses:
 
 - "Core owns scene items, hierarchy, scene-object GUIDs..." becomes: core
   owns durable node/state GUIDs and stable item references; runtime adapter
-  identity is not serialized. Proposed ADR 010 decides the non-owning runtime
+  identity is not serialized. Accepted ADR 010 defines the non-owning runtime
   binding boundary for items.
 - "GUIDs connect durable scene objects to Viewer state" becomes: durable node
   GUIDs connect scene content to Viewer state and domain indexes.
@@ -108,8 +108,8 @@ This ADR preserves ADR 001's package boundaries but refines these clauses:
   discovered from a runtime adapter's constructor/settings implementation.
 
 ADR 001's durable identity and serialization boundary is amended by this
-Accepted decision and ADR 009. Item ownership and packaging remain blocked on
-Proposed ADR 010.
+Accepted decision and ADR 009. Accepted ADR 010 defines item ownership and
+packaging.
 
 ## Consequences
 
@@ -171,6 +171,5 @@ Scene and defines the boundary for later Session aggregation.
 
 Accepted on 2026-11-07. The user additionally required a separate decision
 ensuring that independently serializable `Data` objects are not forced to live
-inside a scene. That unresolved packaging refinement is Proposed ADR 010 and
-blocks implementation without changing this decision's accepted node/adapter
-separation.
+inside a scene. Accepted ADR 010 records that packaging refinement without
+changing this decision's accepted node/adapter separation.

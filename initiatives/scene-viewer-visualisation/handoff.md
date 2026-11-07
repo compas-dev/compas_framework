@@ -6,9 +6,9 @@ Last updated: 2026-11-07
 
 Current phase: `architecture`
 
-Status: ADRs 001–009 are Accepted. Proposed ADR 010 must keep Scene
-reference-only while defining the boundary for a separate future Session
-aggregate before implementation begins.
+Status: ADRs 001–010 are Accepted. Scene is reference-only and a separate
+future Session redesign may aggregate data, scenes, settings, and history.
+Implementation may proceed within the approved initial scope.
 
 Read next:
 
@@ -19,11 +19,9 @@ Read next:
 
 ## Decisions and approvals
 
-- Accepted: [ADRs 001–009](decisions/README.md), including ADRs 008–009 on
+- Accepted: [ADRs 001–010](decisions/README.md), including ADRs 008–010 on
   2026-11-07.
-- Proposed or unresolved:
-  [ADR 010](decisions/010-scene-description-and-item-bundling.md); approval is
-  required before package source changes.
+- Proposed or unresolved: none.
 - Scope boundary: `compas_model`, notebook, and CAD hosts are later or
   compatibility consumers; `compas_session` requires an explicit inclusion
   decision. Do not modify package source outside the initial scope, merge, or
@@ -60,15 +58,16 @@ Read next:
 
 ## Next tasks
 
-1. Review and approve or revise ADR 010.
-2. After approval, refresh core/Viewer branches, add the Viewer regression, and
-   cover the draft ModelViewer failure mode with a minimal core adapter test.
-3. Complete Phase 0 before indexed-buffer implementation begins; defer
+1. Refresh core/Viewer branches, add the Viewer regression, and cover the draft
+   ModelViewer failure mode with a minimal core adapter test.
+2. Complete Phase 0 before indexed-buffer implementation begins; defer
    `compas_model` controller redesign to a later approved phase.
+3. Run the Phase 0 package and framework verification gates.
 
 ## Blockers and approval gates
 
-- Package source implementation is blocked on ADR 010.
+- Package source implementation is authorized within the accepted initial
+  scope.
 - Adding model, session, notebook, or host packages to initial implementation
   scope requires explicit approval.
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -44,6 +44,11 @@ Define one Scene role, its runtime bindings, and one later aggregation boundary:
   history, and their shared identity. Its exact schema, ownership, and loading
   behavior require a separate dependent decision and explicit scope approval.
   Do not add Session implementation to the current wave.
+
+A later Viewer/Session integration may provide convenient new, open, and save
+operations. Viewer remains a client of Session persistence: it does not own the
+aggregate format, and session support remains optional and lazily loaded. The
+exact convenience API follows the separately approved Session redesign.
 
 The intended runtime operations are conceptually:
 

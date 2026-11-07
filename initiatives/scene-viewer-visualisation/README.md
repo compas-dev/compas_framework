@@ -12,9 +12,8 @@ Current phase: **architecture amendment proposed; implementation paused**.
 - [Implementation plan](implementation-plan.md)
 - [Current handoff](handoff.md)
 
-ADRs 001–009 are Accepted. Proposed ADR 010 keeps Scene reference-only and
-places optional aggregation behind a separate future Session design. It must
-be approved before implementation begins.
+ADRs 001–010 are Accepted. Scene is reference-only and optional aggregation is
+reserved for a separate future Session design.
 
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence

@@ -1,8 +1,7 @@
 # Scene, Viewer, and Visualisation Decisions
 
-ADRs 001–009 are Accepted. ADR 010 is a Proposed follow-up required by the
-approval of ADRs 008–009 and blocks implementation until item ownership and
-serialization packaging are explicit.
+ADRs 001–010 are Accepted. ADR 010 records the scene/data serialization and
+future Session aggregation boundary approved on 2026-11-07.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -15,9 +14,8 @@ serialization packaging are explicit.
 | 007 | [Initial scope and verification](007-scope-and-verification.md) | Accepted | 001–006; Plugin 005 |
 | 008 | [Serializable scene nodes and runtime adapters](008-scene-nodes-and-runtime-adapters.md) | Accepted | 001; verified round-trip regressions |
 | 009 | [Explicit scene-state serialization fields](009-scene-state-fields.md) | Accepted | 008 |
-| 010 | [Scene description, item bindings, and aggregation boundary](010-scene-description-and-item-bundling.md) | Proposed | 008, 009 |
+| 010 | [Scene description, item bindings, and aggregation boundary](010-scene-description-and-item-bundling.md) | Accepted | 008, 009 |
 
-ADRs 008–009 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
+ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A
-redesigned Session is the likely aggregate under separate future approval. No
-package source implementation begins until ADR 010 is explicitly approved.
+redesigned Session is the likely aggregate under separate future approval.

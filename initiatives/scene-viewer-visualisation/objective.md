@@ -107,6 +107,6 @@ home and contract.
 
 ## Current status
 
-Reconnaissance is complete. ADRs 001–009 are Accepted, but Proposed ADR 010
-blocks implementation pending approval. The current draft
-`ModelViewer` is evidence and a later redesign target, not a contract.
+Reconnaissance and architecture are complete. ADRs 001–010 are Accepted and
+implementation may proceed within the approved initial scope. The current
+draft `ModelViewer` is evidence and a later redesign target, not a contract.

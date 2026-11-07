@@ -14,9 +14,9 @@ measurements, annotations, scale/legend overlays, and public dock/command
 composition. It should not attempt a universal renderer API, a generic reactive
 framework, sub-object editing, a shell, or host-application migration.
 
-Implementation is paused. ADRs 008–009 are Accepted, but their approval
-requires Proposed ADR 010 to clarify independent item serialization and the
-boundary for later Session aggregation before Phase 1 can begin.
+ADRs 001–010 are Accepted. Implementation may proceed in dependency order
+within the approved initial scope; Session redesign and Viewer/Session
+convenience operations remain later work.
 
 ## New evidence requiring amendment
 
@@ -371,5 +371,4 @@ wave are Accepted.
 9. [ADR 009 — Explicit scene-state serialization fields](decisions/009-scene-state-fields.md)
 10. [ADR 010 — Scene description, item bindings, and aggregation boundary](decisions/010-scene-description-and-item-bundling.md)
 
-ADRs 001–009 are Accepted. No package source changes should begin until
-Proposed ADR 010 is explicitly approved.
+ADRs 001–010 are Accepted.
