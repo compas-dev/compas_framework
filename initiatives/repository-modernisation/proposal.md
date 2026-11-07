@@ -221,6 +221,8 @@ tasks that only sequence the documented direct commands.
   before its metadata and wheel matrix can be aligned. The approved package
   proposal and Accepted ADRs 017–019 are in
   [`shapeop-modernisation-proposal.md`](shapeop-modernisation-proposal.md).
+  Newly exposed public correspondence-flag and point-buffer lifecycle changes
+  remain blocked on Proposed ADRs 022–023.
 - `compas_gmsh` needs a meaningful test baseline and evidence-based support
   matrix before workflow modernization can make tests authoritative. The
   approved package proposal and Accepted ADRs 014–016 are in
@@ -268,7 +270,8 @@ For each repository:
 ## Approval boundary
 
 Implementation may proceed only under Accepted ADRs. Gmsh ADRs 014–016 and
-ShapeOp ADRs 017–019 authorize their scoped source work.
+ShapeOp ADRs 017–019 authorize their scoped source work. Proposed ShapeOp ADRs
+022–023 do not authorize the corresponding public-contract changes.
 Repository settings, trusted-publisher configuration, deployment, publishing,
 merging, and removal of active environment paths require explicit execution
 approval in their implementation phase.

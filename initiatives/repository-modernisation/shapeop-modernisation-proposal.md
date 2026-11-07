@@ -1,14 +1,23 @@
 # `compas_shapeop` Modernisation Proposal
 
-**Status:** Approved; source implementation is authorized by ADRs 017–019
+**Status:** Approved for ADRs 017–019; two follow-up contracts await ADRs
+022–023
 
 ## Purpose
 
-Apply the approved native-wheel repository profile to `compas_shapeop` without
-changing its solver API. The migration must first resolve the repository's
+Apply the approved native-wheel repository profile to `compas_shapeop`. The
+migration must first resolve the repository's
 Python/stable-ABI contradiction, make the native build reproducible and
 portable, and establish installed-artifact evidence strong enough to make its
 quality gates authoritative.
+
+Implementation exposed two pre-existing public-contract defects that the
+approved packaging work could not resolve without changing or constraining the
+solver API: the `allow_translation` flag actually controls reversed
+correspondence, and post-initialization point-buffer replacement has no bounded
+safe ownership contract. Proposed ADRs 022–023 isolate those decisions; their
+source changes remain blocked while all independent ADR 017–019 work may
+continue.
 
 This package proposal refines the accepted framework-wide decisions. It does
 not reopen the common uv, Ruff, MkDocs, workflow-security, or release-artifact
@@ -128,6 +137,18 @@ ADR 018 records this decision.
 
 ADR 019 records this decision.
 
+### Follow-up public contracts
+
+- Proposed ADR 022 recommends replacing the misleading
+  `allow_rotation` and `allow_translation` keywords with the accurate
+  `allow_cyclic_permutations` and `allow_flip` correspondence flags on both
+  equivalent public constraint methods, without aliases.
+- Proposed ADR 023 recommends rejecting assignment of a different point array
+  after solver initialization while preserving writable in-place updates of
+  the live native point view.
+
+Neither change is authorized until its ADR is explicitly accepted.
+
 ## Alternatives and tradeoffs
 
 ### Build one wheel for every CPython minor
@@ -175,7 +196,10 @@ useful, but installed-artifact tests are required for completion.
    temporary artifact directories, and one tested release artifact set.
 7. Run an independent review and the full platform matrix. Record unavailable
    targets as unverified.
-8. Push an initiative branch and open a draft PR only when authorized. Do not
+8. After explicit ADR 022–023 approval, implement only the accepted flag and
+   point-buffer lifecycle contracts and their focused tests. Until then, leave
+   those source changes blocked.
+9. Push an initiative branch and open a draft PR only when authorized. Do not
    merge or publish.
 
 ## Completion evidence
@@ -202,6 +226,8 @@ The repository is not modernized until all applicable checks pass:
 ## Approval record
 
 ADRs 017–019 are accepted and authorize the bounded ShapeOp implementation
-described above. This approval does not authorize merging, publishing,
-repository-setting changes, or removal of a currently advertised platform
-without evidence and explicit follow-up approval.
+described above. ADRs 022–023 are Proposed and do not yet authorize the
+correspondence-flag rename or post-initialization point-reassignment contract.
+No approval authorizes merging, publishing, repository-setting changes, or
+removal of a currently advertised platform without evidence and explicit
+follow-up approval.

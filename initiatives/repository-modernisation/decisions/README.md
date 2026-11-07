@@ -1,7 +1,9 @@
 # Repository Modernisation Decisions
 
-ADRs 001–021 are **Accepted**. All implementation remains subject to the
-repository-setting, publishing, deployment, and merge approval boundaries.
+ADRs 001–021 are **Accepted**. ShapeOp follow-up ADRs 022–023 are
+**Proposed** and block only the corresponding public-contract changes. All
+implementation remains subject to the repository-setting, publishing,
+deployment, and merge approval boundaries.
 
 | ADR | Decision | Status | Depends on |
 |---|---|---|---|
@@ -26,6 +28,8 @@ repository-setting, publishing, deployment, and merge approval boundaries.
 | [019](019-shapeop-distribution-and-quality-contract.md) | ShapeOp distribution and quality contract | Accepted | 002–006, 008, 010, 011, 013, 017, 018 |
 | [020](020-framework-host-extras.md) | `compas_framework` host extras during the COMPAS 3 transition | Accepted | 001, 002, 003, 009, 011, 013 |
 | [021](021-cross-repository-candidate-artifacts.md) | Cross-repository candidate artifact provenance | Accepted | 008, 010, 012, 013 |
+| [022](022-shapeop-similarity-correspondence-flags.md) | ShapeOp similarity correspondence flags | Proposed | 019 |
+| [023](023-shapeop-point-buffer-lifecycle.md) | ShapeOp point-buffer reassignment lifecycle | Proposed | 019 |
 
 ## Recommended review order
 
@@ -50,3 +54,6 @@ repository-setting, publishing, deployment, and merge approval boundaries.
 12. ADR 021: implement the accepted candidate-artifact provenance and
     credential boundary before enabling the native integration and
     release-order gate.
+13. ADRs 022–023: decide the two newly exposed ShapeOp public contracts before
+    renaming the misleading correspondence flag or changing post-init point
+    reassignment.
