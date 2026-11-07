@@ -4,11 +4,11 @@ Last updated: 2026-11-07
 
 ## Resume here
 
-Current phase: `architecture`
+Current phase: `implementation`
 
-Status: ADRs 001–010 are Accepted. Scene is reference-only and a separate
-future Session redesign may aggregate data, scenes, settings, and history.
-Implementation may proceed within the approved initial scope.
+Status: ADRs 001–010 are Accepted. Phase 0 core and Viewer source changes are
+implemented and independently approved locally; clean hosted package CI remains
+to be collected before the Phase 0 exit gate is complete.
 
 Read next:
 
@@ -31,9 +31,9 @@ Read next:
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `<commit after architecture checkpoint>` | None | Local initiative documents |
-| `compas-dev/compas` | `remove-future` | `99b82a6673ff7d05c1c323c8921135c274993f11` | None | Clean; inspected only |
-| `compas-dev/compas_viewer` | `c3-upgrade` | `cf5a5195bda840a511319d6b7201978af68c15e3` | None | Clean; inspected only |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `5c95c1a` plus this handoff checkpoint | None | Clean; local |
+| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `f878cd102e87e7859030af96c7871a5b3345cf7d` | None | Clean; local, unpushed |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `18c87acac907c6d749d95a0e8f56ae2abd021ed2` | None | Clean; local, unpushed |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Clean; inspected only |
 
 ## Completed at this checkpoint
@@ -55,14 +55,17 @@ Read next:
   separate future Session aggregation boundary in ADR 010.
 - Recorded that the current `compas_model.ModelViewer` is a draft and only
   regression/coupling evidence, not a public contract to preserve.
+- Implemented durable reference-only core scene nodes, explicit item binding,
+  two-phase runtime-adapter binding, and validated MRO-composed state fields.
+- Adapted Viewer durable state, removed legacy settings persistence, fixed
+  transient picking-cache lifecycle, and documented separate data binding.
+- Resolved all independent core and Viewer review findings.
 
 ## Next tasks
 
-1. Refresh core/Viewer branches, add the Viewer regression, and cover the draft
-   ModelViewer failure mode with a minimal core adapter test.
-2. Complete Phase 0 before indexed-buffer implementation begins; defer
-   `compas_model` controller redesign to a later approved phase.
-3. Run the Phase 0 package and framework verification gates.
+1. Push core and Viewer initiative branches and collect clean package CI.
+2. Add the smallest framework installed-candidate Phase 0 gate.
+3. Close the Phase 0 exit gate, then begin indexed-buffer implementation.
 
 ## Blockers and approval gates
 
@@ -77,14 +80,14 @@ Evidence by layer:
 
 | Layer | Status | Evidence |
 |---|---|---|
-| Local focused checks | Passed | Core 53 tests and Viewer 35 tests passed during reconnaissance; inventory documents the commands and warning scope. |
-| Package CI | Not run | No package branches changed. |
-| Framework integration CI | Not run | No implementation exists yet. |
-| Candidate-artifact CI | Not applicable | Architecture documents only. |
+| Local focused checks | Passed | Core scene/glTF: 61 passed, Ruff passed, Pyright 0; Viewer focused: 50 passed, Ruff passed, Pyright 0; independent reviews approved both exact heads. |
+| Package CI | Not run | Branches are committed locally and ready to push. |
+| Framework integration CI | Not run | Installed exact-candidate gate is the next task. |
+| Candidate-artifact CI | Not run | Required only before claims about independently built artifacts. |
 
 Run next:
 
 ```text
-git diff --check
-/Users/vanmelet/miniforge3/envs/compas3/bin/python -m mkdocs build --strict
+gh pr checks <core-pr> --repo compas-dev/compas
+gh pr checks <viewer-pr> --repo compas-dev/compas_viewer
 ```
