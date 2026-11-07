@@ -1,1 +1,1 @@
-compas @ git+https://github.com/compas-dev/compas.git@f878cd102e87e7859030af96c7871a5b3345cf7d
+compas @ git+https://github.com/compas-dev/compas.git@38d2457861ba7122f91d2107ce11e85053105165

@@ -7,8 +7,9 @@ Last updated: 2026-11-07
 Current phase: `implementation`
 
 Status: ADRs 001–010 are Accepted. Phase 0 core and Viewer source changes are
-implemented and independently approved locally; clean hosted package CI remains
-to be collected before the Phase 0 exit gate is complete.
+implemented and independently approved. Viewer package CI and the exact-source
+framework integration gate are green; core CI is rerunning after focused patch
+coverage tests were added.
 
 Read next:
 
@@ -31,9 +32,9 @@ Read next:
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `ee8c4d8` plus this handoff checkpoint | [7](https://github.com/compas-dev/compas_framework/pull/7) | Clean; pushed draft |
-| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `f878cd102e87e7859030af96c7871a5b3345cf7d` | [1540](https://github.com/compas-dev/compas/pull/1540) | Clean; pushed draft |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `18c87acac907c6d749d95a0e8f56ae2abd021ed2` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Clean; pushed draft |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | this handoff checkpoint | [7](https://github.com/compas-dev/compas_framework/pull/7) | Exact-source gate green before latest candidate-pin refresh |
+| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `38d2457861ba7122f91d2107ce11e85053105165` | [1540](https://github.com/compas-dev/compas/pull/1540) | Full matrix green; patch coverage rerunning |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `a0d46d4810aad1143c1af936ee98933b93f7a1b7` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | All hosted checks green |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Clean; inspected only |
 
 ## Completed at this checkpoint
@@ -60,12 +61,16 @@ Read next:
 - Adapted Viewer durable state, removed legacy settings persistence, fixed
   transient picking-cache lifecycle, and documented separate data binding.
 - Resolved all independent core and Viewer review findings.
+- Added focused coverage for invalid closed Scene and SceneNode schemas.
+- Added and passed an installed exact-source framework gate covering plugin
+  discovery, reference-only round trips, explicit rebinding, and transient
+  Viewer state exclusion.
 
 ## Next tasks
 
-1. Collect clean package CI on core PR 1540 and Viewer PR 233.
-2. Add the smallest framework installed-candidate Phase 0 gate.
-3. Close the Phase 0 exit gate, then begin indexed-buffer implementation.
+1. Confirm core patch coverage and the refreshed exact-source gate are green.
+2. Close the Phase 0 exit gate.
+3. Begin the Phase 1 compatibility audit and indexed-buffer implementation.
 
 ## Blockers and approval gates
 
@@ -81,8 +86,8 @@ Evidence by layer:
 | Layer | Status | Evidence |
 |---|---|---|
 | Local focused checks | Passed | Core scene/glTF: 61 passed, Ruff passed, Pyright 0; Viewer focused: 50 passed, Ruff passed, Pyright 0; independent reviews approved both exact heads. |
-| Package CI | Pending | Viewer PR 233 workflows are running; core PR 1540 initially reports no checks. |
-| Framework integration CI | Pending | Framework PR 7 contract check is running; installed exact-candidate gate is the next task. |
+| Package CI | Partial | Viewer PR 233 is fully green. Core PR 1540 has a green full OS/Python matrix, coverage, changelog, metadata, and project coverage; patch coverage is rerunning after ten additional schema-validation paths were covered. |
+| Framework integration CI | Passed; refresh pending | Framework PR 7 passed contracts and the installed exact-candidate gate; the gate is rerunning against the latest test/workflow-only package heads. |
 | Candidate-artifact CI | Not run | Required only before claims about independently built artifacts. |
 
 Run next:
