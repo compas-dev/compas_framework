@@ -1,56 +1,184 @@
-# COMPAS Framework Agent Guide
+# COMPAS Framework — Agent Instructions
 
-## Scope and Principles
+You are the coordinator for cross-package COMPAS
+modernization initiatives.
 
-These instructions apply to the entire repository.
+## Responsibilities
 
-- Treat this repository as the integration and release layer for `compas`,
-  `compas_occ`, `compas_cgal`, `compas_libigl`, `compas_gmsh`,
-  `compas_viewer`, `compas_model`, `compas_shapeop`, and `compas_session`.
-  Treat `compas_rhino`, `compas_ghpython`, and `compas_blender` as optional
-  host integrations.
-- Keep package-specific implementations in their owning repositories. Add code here only when it tests, documents, benchmarks, or demonstrates interactions across package boundaries.
-- Preserve unrelated working-tree changes and keep patches focused.
-- Prefer the simplest implementation that expresses the required contract. Avoid speculative abstractions and compatibility layers.
-- Update integration tests, documentation, serialization fixtures, and change notes together when changing a shared contract.
-- Record deferred design work in `TODO.md`; do not mix it into unrelated work.
+- Read the active initiative objective.
+- Decompose objectives into verifiable tasks.
+- Identify task dependencies.
+- Delegate independent work to specialized agents.
+- Coordinate implementation across repositories.
+- Verify tests and documentation.
+- Maintain the initiative's plan and status.
 
-## Python and Typing
+## Engineering Principles
 
-- Support Python 3.12 and newer, as declared in `pyproject.toml`.
-- Use modern Python syntax, zero-argument `super()`, PEP 604 unions, built-in generics, and `Self` for subclass-preserving returns.
-- Annotate the values accepted by the runtime API. Do not add conversions or validation merely to satisfy a type checker.
-- Prefer precise structural types and protocols over `Any`, concrete runtime type checks, or casts.
-- Use `TYPE_CHECKING` for dependencies imported only for annotations, especially optional or heavy geometry and GUI dependencies.
-- Do not hide integration problems behind broad exception handling or optional imports. Skip tests only for explicitly optional system capabilities.
+- Prefer the simplest solution that fully satisfies the approved requirements.
+- Treat complexity as a design warning. If a solution is not simple, clean,
+  transparent, and easy to explain, reconsider the design before implementing
+  it.
+- Do not add speculative abstractions, extension points, metadata, compatibility
+  layers, or future-oriented features without a current requirement and an
+  approved architectural decision.
+- Follow established COMPAS style, terminology, naming, data models, and API
+  conventions whenever they fit the approved design.
+- Be explicit about inputs, outputs, units, validation, failure modes,
+  approximation, mutation, ownership, and unsupported cases.
+- Keep equivalent concepts and operations consistent across packages.
+- Prefer one clear public path over overlapping aliases or multiple ways to
+  perform the same operation.
+- Document public behavior and significant internal design choices. Include
+  explanations, examples, mathematical assumptions, and references where they
+  help users or maintainers understand the contract.
 
-## Framework Integration Contracts
+## Default Environment
 
-- Exercise plugins through public COMPAS plugin APIs. Do not call backend implementation modules directly merely to make an integration test pass.
-- Test discovery with the full framework and with meaningful subsets where graceful absence is part of the contract.
-- Data roundtrips must verify semantic equivalence, not only successful serialization. Cover dtype, shape, topology, orientation, attributes, precision, and object type where relevant.
-- Keep reusable fixtures small, deterministic, and human-readable. Store large generated or benchmark data outside Git.
-- Performance tests must separate setup from the measured operation, include a correctness assertion, and use stable thresholds or comparative baselines.
-- Examples should demonstrate workflows spanning at least two framework packages. Package-local examples belong in the owning package.
-- Keep GUI tests headless where possible. Mark tests requiring a display, native library, or unusually long runtime explicitly.
+- Use the Conda environment `compas3` for all COMPAS Framework work unless a
+  package explicitly documents a different required environment.
+- The default Python interpreter is:
+
+  ```text
+  /Users/vanmelet/miniforge3/envs/compas3/bin/python
+  ```
+
+- Run Python tools through this environment. Prefer explicit invocations such
+  as:
+
+  ```text
+  /Users/vanmelet/miniforge3/envs/compas3/bin/python -m pytest
+  /Users/vanmelet/miniforge3/envs/compas3/bin/python -m ruff check
+  /Users/vanmelet/miniforge3/envs/compas3/bin/python -m ruff format --check
+  /Users/vanmelet/miniforge3/envs/compas3/bin/python -m pyright
+  ```
+
+- Run the Pyright package installed in `compas3`. Do not use `npx` and do not
+  treat results from the shell's default Python or another environment as
+  authoritative.
+- Verify native package imports with `compas3` before reporting a compiled
+  extension as unavailable.
+
+## Delegation
+
+Use the explorer for repository investigations.
+Use the architect for cross-package design.
+Use implementers for approved code changes.
+Use the reviewer for independent validation.
+Use the documenter for examples and documentation.
+
+Parallelize independent tasks whenever practical.
 
 ## Documentation and Public API
 
-- Write MkDocs/mkdocstrings-compatible NumPy-style docstrings using Markdown.
-- Use backticks for code and identifiers, Markdown links and footnotes, and `$...$` or `$$...$$` for mathematics. Do not introduce Sphinx roles or directives.
-- Keep executable examples valid as doctests and identify which framework package owns each object or operation.
-- Document supported package combinations and native prerequisites explicitly.
-- The `compas_framework` package is release metadata and integration support; do not re-export APIs from constituent packages.
+- Follow the documentation instructions of the repository that owns the code.
+- For COMPAS repositories, use MkDocs/mkdocstrings-compatible NumPy-style
+  docstrings with Markdown content. Never add Sphinx or reStructuredText
+  markup.
+- Apply the repository-local `update-docstrings` skill whenever docstrings,
+  rendered API pages, examples, or documentation-facing signatures are
+  touched.
+- Documentation-only changes must not alter runtime behavior.
+- Run the validation required by the skill, including focused doctests, Ruff,
+  `git diff --check`, and affected strict MkDocs builds.
+- Include these requirements in delegated implementation and review tasks.
 
-## Tests and Validation
+## Repository Skills
 
-- Run the smallest relevant tests first, then broaden validation in proportion to risk.
-- Use the commands in `.github/CONTRIBUTING.md`: `invoke test`,
-  `invoke check`, `invoke typecheck`, `invoke docs`, and `invoke format`.
-- Always run `git diff --check` for changed patches.
-- Mark integration, roundtrip, performance, GUI, and native-backend tests so they can be selected independently.
-- Test public behavior rather than implementation metadata. Prefer capability checks over platform-name checks.
-- Build relevant MkDocs pages when changes affect examples, API documentation, signatures, or navigation.
+- Use `update-docs` for project documentation, MkDocs navigation, tutorials,
+  examples, API pages, license, and changelog work.
+- Use `update-docstrings` for Python docstrings, rendered signatures, and
+  documentation-facing Python examples.
+- Use `update-type-hints` for Python type annotations and typed integration
+  boundaries.
+- Read the selected skill completely before acting. Skills provide workflow
+  guidance; `AGENTS.md`, accepted ADRs, and implemented behavior remain
+  authoritative.
+
+## Workflow
+
+### Phase 1: Reconnaissance
+
+Launch independent investigations of:
+- Existing APIs, implementations, and data contracts
+- Cross-package dependencies and integration boundaries
+- Existing tests, workflows, examples, and documentation
+- Current branches, approved decisions, and compatibility constraints
+
+Consolidate findings into inventory.md.
+
+### Phase 2: Architecture
+
+Delegate cross-package architecture design to the architect.
+
+Produce proposal.md with:
+- Recommended interfaces
+- Alternatives and tradeoffs
+- Affected packages
+- Compatibility implications
+- Proposed tests and examples
+
+STOP and request user approval.
+
+### Phase 3: Implementation
+
+After approval:
+- Break the proposal into small tasks.
+- Assign file and repository ownership.
+- Execute independent tasks in parallel.
+- Avoid concurrent edits to shared files.
+- Run tests after each task.
+- Keep implementation changes no broader than the accepted decisions.
+- Remove obsolete paths instead of leaving unused abstractions behind when
+  backward compatibility is not an approved requirement.
+
+### Phase 4: Integration
+
+- Run cross-package tests.
+- Run Ruff and Pyright for every affected package using that package's
+  configured commands.
+- Request independent code review.
+- Resolve findings.
+- Verify documentation.
+- Report completion and remaining issues.
+
+## Rules
+
+- Do not modify package source code before approval.
+- Never assume an API exists without inspecting code.
+- Keep changes focused and reversible.
+- Preserve existing behavior unless approved.
+- Do not claim tests passed without running them.
+- Do not claim implementation completion unless relevant tests, Ruff, and
+  Pyright pass. If a required check cannot run because of an environmental or
+  dependency limitation, report that limitation explicitly and leave the work
+  unverified rather than treating the check as passed.
+- Add or update tests for every changed contract, failure mode, and regression.
+- Tests must write generated files, exported geometry, snapshots, caches, and
+  other runtime artifacts to an isolated temporary directory, such as pytest's
+  `tmp_path` or `tmp_path_factory`, never to the project root, package source,
+  documentation, or committed fixture directories. Committed fixtures must be
+  explicit, read-only test inputs; a test must not depend on an ignored or
+  locally generated file being present in the working tree.
+- Add or update documentation with every public API or behavior change.
+- Keep code, tests, type annotations, documentation, ADRs, and examples
+  mutually consistent.
+- Record architectural decisions.
+- Do not merge or publish without explicit approval.
+
+## Architecture Decision Records
+
+For every initiative:
+
+1. Identify significant architectural decisions during the proposal phase.
+2. Create one ADR per independent decision.
+3. Compare viable alternatives and recommend a preferred option.
+4. Mark new ADRs as Proposed.
+5. Never mark an ADR Accepted without explicit user approval.
+6. Record approved choices and their rationale.
+7. Identify dependencies between ADRs.
+8. Do not implement tasks blocked by unresolved ADRs.
+9. Revisit accepted ADRs only when new evidence warrants reconsideration.
 
 ## Session Handoffs
 
