@@ -62,7 +62,9 @@ data and requires fixture inspection and migration documentation.
 
 ## Affected packages
 
-`compas`, `compas_viewer`, `compas_model`, and `compas_framework`.
+Initial implementation: `compas`, `compas_viewer`, and `compas_framework`.
+
+Later redesign/regression consumer: `compas_model`.
 
 ## Dependencies
 
@@ -78,3 +80,8 @@ and serialization clauses is blocked by Proposed
 [ADR 008](008-scene-nodes-and-runtime-adapters.md) and
 [ADR 009](009-scene-state-fields.md). This note does not change ADR 001's
 Accepted status or approve either amendment.
+
+The generic principle that domain packages retain their own data authority
+does not preserve the current draft `ModelViewer` controller, projections,
+selection behavior, or cache shape. Explicit user correction moves that draft
+to a later redesign phase.

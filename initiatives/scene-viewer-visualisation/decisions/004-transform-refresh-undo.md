@@ -66,7 +66,9 @@ they produce a reversible transaction.
 
 ## Affected packages
 
-`compas`, `compas_viewer`, `compas_model`, and `compas_framework`.
+Initial implementation: `compas`, `compas_viewer`, and `compas_framework`.
+
+Later redesign consumer: `compas_model`.
 
 ## Dependencies
 

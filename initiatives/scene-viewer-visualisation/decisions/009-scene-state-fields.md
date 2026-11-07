@@ -94,7 +94,9 @@ constructors. Once migrated, only the explicit schema is written.
 
 ## Affected packages
 
-`compas`, `compas_viewer`, `compas_model`, and `compas_framework`.
+Initial implementation: `compas`, `compas_viewer`, and `compas_framework`.
+
+Later redesign/regression consumer: `compas_model`.
 
 ## Dependencies
 

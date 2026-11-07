@@ -7,7 +7,7 @@ Accepted.
 ## Context
 
 Selection currently lives in mutable `ViewerSceneObject.is_selected` flags.
-Viewport commands, tree widgets, shaders, and domain controllers mutate or
+Viewport commands, tree widgets, shaders, and programmatic consumers mutate or
 poll those flags and then trigger imperative refreshes. `ViewerState` observes
 persistent configuration but not selection or tool state.
 
@@ -26,7 +26,7 @@ Choose option 1.
 `Viewer.state.selection` stores ordered scene-object GUIDs and provides
 replace, add, remove, toggle, clear, membership, and ordered-resolution
 operations. It emits one batched change notification per operation. Viewport,
-rectangle selection, scene tree, commands, shaders, and domain controllers use
+rectangle selection, scene tree, commands, shaders, and programmatic consumers use
 this model exclusively.
 
 Keep `Viewer.config` for persistent preferences. Keep hover, active tool,
@@ -40,7 +40,7 @@ requires it.
 
 ## Consequences
 
-- Tree, viewport, code, renderer, and model integration observe one mutation
+- Tree, viewport, code, and renderer observe one mutation
   path.
 - Selection no longer participates in scene serialization.
 - Batch changes avoid repeated renderer/UI updates.
@@ -49,9 +49,8 @@ requires it.
 
 ## Compatibility
 
-Remove Viewer `is_selected` constructor/settings behavior. Replace public model
-selection implementations with the shared model while preserving their
-user-facing selected-element results.
+Remove Viewer `is_selected` constructor/settings behavior. Later integrations
+may consume the selection model but do not define its contract.
 
 ## Verification
 
@@ -59,12 +58,19 @@ user-facing selected-element results.
   programmatic paths.
 - Assert one notification and one render/UI synchronization per batch.
 - Verify stable ordering, removed-object cleanup, and serialization exclusion.
-- Preserve model-order selection results where `compas_model` promises them.
 
 ## Affected packages
 
-`compas_viewer`, `compas_model`, and `compas_framework`.
+`compas_viewer` and `compas_framework`. `compas_model` is a later redesign
+consumer.
 
 ## Dependencies
 
 - [ADR 001](001-ownership-boundaries.md)
+
+## Refinement after acceptance
+
+The current `compas_model.ModelViewer` is a draft and does not promise a
+model-order selection contract that this ADR must preserve. The accepted
+decision remains one Viewer-owned selection model; model-specific preservation
+language has been removed by explicit user correction.

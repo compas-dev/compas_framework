@@ -13,18 +13,18 @@ tests alone do not prove installed cross-package behavior.
 
 ## Options
 
-1. Implement an initial core/Viewer/model/framework wave and compatibility-
+1. Implement an initial core/Viewer/framework wave and compatibility-
    review adjacent consumers.
 2. Migrate every visualisation and host package in one wave.
-3. Change Viewer only and defer core/model alignment.
+3. Change Viewer only and defer core scene alignment.
 4. Accept package-local source tests as completion evidence.
 
 ## Recommendation
 
 Choose option 1.
 
-Initial implementation packages are `compas`, `compas_viewer`,
-`compas_model`, and `compas_framework`. Review `compas_session`,
+Initial implementation packages are `compas`, `compas_viewer`, and
+`compas_framework`. Review `compas_model`, `compas_session`,
 `compas_notebook`, Rhino, Grasshopper, and Blender for compatibility with core
 changes, but do not modify them without a scope amendment and approval.
 
@@ -33,7 +33,7 @@ Require:
 - focused and full applicable local tests, Ruff, Pyright, and strict docs;
 - clean package CI and built-wheel checks at exact heads;
 - framework CI installing exact candidates and exercising plugin discovery,
-  scene/model construction, indexed buffers, selection, transformations,
+  scene and Viewer construction, indexed buffers, selection, transformations,
   annotations, serialization, and graphics-free discovery; and
 - candidate-artifact CI for claims about independently built distributable
   compatibility.
@@ -67,7 +67,9 @@ scope/compatibility approval before implementation proceeds.
 
 ## Affected packages
 
-Initial: `compas`, `compas_viewer`, `compas_model`, and `compas_framework`.
+Initial: `compas`, `compas_viewer`, and `compas_framework`.
+
+Later redesign consumer and regression evidence: `compas_model`.
 
 Compatibility review only: `compas_session`, `compas_notebook`, Rhino,
 Grasshopper, and Blender scene adapters.
@@ -76,3 +78,12 @@ Grasshopper, and Blender scene adapters.
 
 - [ADRs 001–006](README.md)
 - Plugin-implementations ADR 005
+
+## Refinement after acceptance
+
+The initial package list previously included `compas_model` as though the
+current `ModelViewer` behavior constrained this initiative. Explicit user
+correction moves it to a later redesign phase. Its current serialization
+failure remains valid evidence for core scene reconstruction, but its
+hierarchy projections, selection behavior, cache, controller shape, and facade
+usage are not initial-wave completion criteria.

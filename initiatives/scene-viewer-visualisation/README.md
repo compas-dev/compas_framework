@@ -1,7 +1,7 @@
 # Scene, Viewer, and Visualisation
 
-This initiative aligns backend-neutral scene infrastructure, viewer rendering
-and interaction, and model-to-scene integration across the COMPAS framework.
+This initiative aligns backend-neutral scene infrastructure with Viewer
+rendering, interaction, state, and UI composition.
 
 Current phase: **architecture amendment proposed; implementation paused**.
 
@@ -16,7 +16,8 @@ ADRs 001–007 are Accepted. Verified round-trip failures exposed an unresolved
 scene-node/runtime-adapter and serialization boundary. Proposed ADRs 008–009
 must be approved before Phase 1 begins.
 
-The approved initial package scope is `compas`, `compas_viewer`,
-`compas_model`, and `compas_framework`. Session persistence, notebook
-visualisation, and CAD-host adapters are compatibility-review consumers until
-an approved decision admits them to implementation scope.
+The refined initial package scope is `compas`, `compas_viewer`, and
+`compas_framework`. The current `compas_model.ModelViewer` is draft evidence
+and a later redesign consumer, not a behavior contract. Session persistence,
+notebook visualisation, and CAD-host adapters are compatibility-review
+consumers until an approved decision admits them to implementation scope.

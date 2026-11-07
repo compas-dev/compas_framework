@@ -66,25 +66,26 @@ execution live elsewhere. Commands and UI definitions offer useful extension
 points, but there is no comparable public dock composition API and no console,
 terminal, assistant, or safe execution boundary.
 
-## Model integration
+## Draft model integration evidence
 
 `compas_model` owns backend-neutral model scene adapters, Viewer-specific
 adapters, a `ModelViewer` controller, NumPy-based `RenderGeometry`, quality
 settings, a revision-aware CPU cache, hierarchy projections, selection,
 inspectors, and contact layers.
 
-The authoritative `Model.tree` and rendered `Scene` hierarchy intentionally
+The draft treats `Model.tree` and rendered `Scene` hierarchy as separate.
 remain separate. `ModelViewer` constructs and indexes the scene projection,
 but reaches into concrete viewer sidebar and renderer APIs. Structural changes
 are reconciled through explicit rebuilds rather than an observed projection
 contract.
 
-Model render geometry preserves separate indexed filled triangles and visible
+Draft model render geometry preserves separate indexed filled triangles and visible
 line segments, but Viewer-specific adapters expand some arrays back to Python
 lists. This makes buffer ownership and reusable conversion responsibilities
-unclear. Package tests and documentation cover the current controller well,
+unclear. Package tests and documentation describe the current controller,
 including multi-selection, visibility, caching, contacts, and offscreen viewer
-integration.
+integration. They establish implementation evidence, not public behavior that
+this initiative must preserve.
 
 ## Adjacent packages
 
@@ -96,7 +97,8 @@ implementation migration would broaden the initial initiative materially.
 
 ## Framework evidence
 
-Package-local core, viewer, and model tests provide substantial evidence. The
+Package-local core and Viewer tests provide substantial evidence. Draft model
+tests provide additional coupling and regression evidence. The
 framework repository currently has no installed cross-package scene/viewer
 test. The plugin initiative separately requires a coordinated installed
 model/viewer registry and lifecycle test; this initiative should coordinate
@@ -107,8 +109,9 @@ Focused reconnaissance results:
 - Core scene/plugin/glTF suite: 53 passed; one non-authoritative cache-write
   warning because the checkout cache directory was not writable.
 - Viewer selection/state/tessellation/tag/overlay suite: 35 passed offscreen.
-- Model integration behavior was inspected from its existing tests and build
-  workflow; no new model tests were run during this inventory.
+- Draft model integration behavior was inspected from its existing tests and
+  build workflow; no new model tests were run and those tests are not treated
+  as preservation requirements.
 
 ## Principal gaps and risks
 
@@ -120,7 +123,8 @@ Focused reconnaissance results:
    distributed imperative paths.
 4. Raw indexed buffers lack a uniform public input and batching contract.
 5. Overlay rendering is coupled to concrete Viewer classes.
-6. Model controllers depend on private or concrete viewer structure.
+6. The draft model controller demonstrates coupling to private or concrete
+   Viewer structure, but its shape is not an architectural constraint.
 7. Core appearance serialization and glTF export do not cover all visual
    settings consistently.
 8. Per-object pickability conflicts with batching for large auxiliary data.
@@ -170,8 +174,8 @@ annotations, properties, or constructor parameters alone.
 4. What change categories allow transform-only, style-only, geometry, and
    hierarchy updates to remain efficient?
 5. Which annotation and overlay objects are durable, transient, or both?
-6. How should domain controllers depend on public viewer capabilities rather
-   than widget and renderer internals?
+6. Which Viewer capabilities should be public because Viewer-owned tools and
+   components require them, independently of a draft domain controller?
 7. What is the smallest safe extension boundary for docks, consoles, and
    optional assistant integrations?
 8. Which scene appearance semantics must serialization and glTF preserve?

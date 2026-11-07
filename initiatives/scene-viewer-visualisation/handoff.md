@@ -24,10 +24,10 @@ Read next:
   [ADR 008](decisions/008-scene-nodes-and-runtime-adapters.md) and
   [ADR 009](decisions/009-scene-state-fields.md); both require approval before
   package source changes.
-- Scope boundary: notebook and CAD hosts are compatibility consumers;
-  `compas_session` requires an explicit inclusion decision. Do not modify
-  package source outside the initial scope, merge, or publish without the
-  corresponding approval.
+- Scope boundary: `compas_model`, notebook, and CAD hosts are later or
+  compatibility consumers; `compas_session` requires an explicit inclusion
+  decision. Do not modify package source outside the initial scope, merge, or
+  publish without the corresponding approval.
 
 ## Working state
 
@@ -53,19 +53,22 @@ Read next:
   do not round-trip under the current constructor/settings mechanism.
 - Proposed separate serializable node state, runtime adapter binding, durable
   node GUIDs, and explicit serialization fields in ADRs 008–009.
+- Recorded that the current `compas_model.ModelViewer` is a draft and only
+  regression/coupling evidence, not a public contract to preserve.
 
 ## Next tasks
 
 1. Review and approve or revise ADRs 008–009.
-2. After approval, refresh package branches and add the verified regressions as
-   tests.
-3. Complete Phase 0 before indexed-buffer implementation begins.
+2. After approval, refresh core/Viewer branches, add the Viewer regression, and
+   cover the draft ModelViewer failure mode with a minimal core adapter test.
+3. Complete Phase 0 before indexed-buffer implementation begins; defer
+   `compas_model` controller redesign to a later approved phase.
 
 ## Blockers and approval gates
 
 - Package source implementation is blocked on ADRs 008–009.
-- Adding session, notebook, or host packages to implementation scope requires
-  explicit approval.
+- Adding model, session, notebook, or host packages to initial implementation
+  scope requires explicit approval.
 
 ## Verification
 

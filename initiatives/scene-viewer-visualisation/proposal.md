@@ -5,8 +5,8 @@
 Keep `compas.scene` responsible for durable, backend-neutral scene content and
 hierarchy. Put indexed render buffers, picking, selection, transient state,
 tools, overlays, GPU synchronization, and UI composition in `compas_viewer`.
-Let domain packages such as `compas_model` project their authoritative data
-through a small public Viewer facade rather than renderer or widget internals.
+Expose only the public operations required by Viewer-owned tools and UI
+components. Future integrations may consume that boundary after it is proven.
 
 The first implementation wave should establish these boundaries and deliver
 object selection, efficient indexed geometry, multi-object transforms,
@@ -91,9 +91,7 @@ primitive. Styling stays on the scene object; a separate color-buffer decision
 is required only when current uniform/per-item styling proves insufficient.
 
 Existing Viewer adapters should return indexed channels to the buffer manager
-instead of expanding geometry. `compas_model.RenderGeometry` should either use
-this contract directly or remain a domain cache whose arrays pass to it without
-list expansion. Geometry producers continue to use their approved
+instead of expanding geometry. Geometry producers continue to use their approved
 `to_tessellation` and `to_polygonal_surface` APIs; this Viewer contract does
 not become a geometry-algorithm input.
 
@@ -110,7 +108,8 @@ Separate three state classes:
 `Viewer.state.selection` is the one object-selection model. It stores ordered
 scene-object GUIDs and exposes replace, add, remove, toggle, clear, and query
 operations plus one change notification. Viewport picking, rectangle
-selection, the scene tree, commands, and `compas_model` all mutate this model.
+selection, the scene tree, commands, and programmatic consumers all mutate
+this model.
 The current mutable and serialized `ViewerSceneObject.is_selected` path is
 removed rather than retained as a second authority.
 
@@ -171,10 +170,10 @@ The measurement tool owns temporary pointer/preview state in `Viewer.state`.
 Completing a measurement creates a durable distance-dimension scene item;
 cancelling it leaves no scene mutation.
 
-### Public Viewer facade
+### Public Viewer operations
 
-Expose the small set of operations domain integrations need without giving
-them renderer or widget internals:
+Expose the small set of operations that Viewer-owned commands, tools, and UI
+components need without coupling them to renderer or widget internals:
 
 - `viewer.scene` for durable content;
 - `viewer.state.selection` for selection;
@@ -185,11 +184,10 @@ them renderer or widget internals:
 - public dock addition/removal using Viewer component/widget content; and
 - public annotation and overlay addition.
 
-`compas_model.ModelViewer` keeps `Model.tree` authoritative, retains its
-domain-specific render cache and projections, and migrates from direct
-`viewer.renderer` and `viewer.ui.sidebar` access to this facade. The initiative
-does not create a generic model-controller base class or duplicate the model
-tree in application state.
+These operations are justified and tested inside Viewer. They are not designed
+around the current draft `compas_model.ModelViewer`. That controller may be
+redesigned freely in a later consumer phase, at which point it can use the
+small proven Viewer boundary or motivate a separately approved addition.
 
 A console, terminal, or assistant can later occupy a public dock and invoke
 registered commands, but arbitrary code execution, shell access, credentials,
@@ -234,8 +232,8 @@ design is proven.
 ## Compatibility implications
 
 - Removing `ViewerSceneObject.is_selected` is a deliberate Viewer API break.
-  Commands, tree widgets, shaders, tests, and model integrations migrate in one
-  coordinated change; no writable compatibility alias remains.
+  Commands, tree widgets, shaders, and tests migrate in one coordinated change;
+  no writable compatibility alias remains.
 - `BufferGeometry` construction changes from expanded channel vertices to
   shared indexed vertices. Current examples and adapters migrate together.
   A deprecated parallel constructor is not proposed.
@@ -246,8 +244,10 @@ design is proven.
   the accepted annotation/overlay types. Exact compatibility should be checked
   against serialized fixtures before implementation; do not silently reinterpret
   ambiguous old data.
-- `compas_model` keeps its public domain behavior, hierarchy, quality policy,
-  and cache semantics while changing only its Viewer integration boundary.
+- The current draft `compas_model.ModelViewer` behavior, hierarchy projections,
+  selection behavior, controller shape, and cache arrangement are not
+  compatibility requirements. Its failure remains evidence for the scene
+  reconstruction problem, and its redesign is deferred.
 - Viewer plugin discovery remains graphics-free and function-local under the
   accepted plugin ADRs.
 
@@ -257,7 +257,7 @@ design is proven.
 |---|---|
 | `compas` | Preserve scene identity, hierarchy, transformations, durable appearance, and serialization; clarify stale documentation. |
 | `compas_viewer` | Implement indexed buffers, state/selection, transforms/history, annotations, overlays, facade, rendering, and UI. |
-| `compas_model` | Consume indexed geometry and the public Viewer facade while preserving the authoritative model tree and cache. |
+| `compas_model` | Later redesign consumer and regression evidence; no current draft controller behavior is preserved by this wave. |
 | `compas_framework` | Pin exact candidates and verify installed cross-package scene, plugin, selection, transform, and buffer behavior. |
 
 `compas_session`, `compas_notebook`, Rhino, Grasshopper, and Blender are
@@ -269,8 +269,10 @@ compatibility-reviewed but not implementation targets in the initial wave.
 
 - Preserve scene serialization, shared-item identity, hierarchy, and local/
   world transformation tests.
-- Add the verified Viewer transformation/ShapeObject settings regression and
-  ModelViewer detached-child failure before changing implementation.
+- Add the verified Viewer transformation/ShapeObject settings regression.
+  Preserve the ModelViewer detached-child failure as evidence and cover its
+  core failure mode with a minimal adapter whose constructor must not run
+  during hierarchy deserialization; the draft controller itself is deferred.
 - Preserve durable node GUIDs separately from shared item GUIDs and round-trip
   unknown namespaced extension state without its runtime adapter.
 - Add regression coverage proving transient Viewer state is absent from core
@@ -293,13 +295,12 @@ compatibility-reviewed but not implementation targets in the initial wave.
 - Test public dock/command composition without importing optional integrations
   during plugin discovery.
 
-### Model and framework
+### Framework and later consumers
 
-- Preserve model hierarchy, selection, visibility, cache invalidation, and
-  render-quality tests while forbidding private renderer/sidebar access.
-- Add an installed exact-candidate test that discovers Viewer/model plugins,
-  builds a model scene, selects multiple elements, updates one indexed geometry
-  buffer, transforms objects, and round-trips durable scene content.
+- Use the current draft ModelViewer load failure as regression evidence for
+  two-phase scene reconstruction, not as a public behavior suite.
+- Add an installed exact-candidate test for core Scene and Viewer contracts.
+- Redesign and verify model integration only in a later approved consumer phase.
 - Keep candidate-artifact evidence separate from source-build integration.
 
 Examples remain direct scripts and demonstrate, in order:

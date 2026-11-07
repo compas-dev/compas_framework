@@ -64,7 +64,10 @@ parallel deprecated constructor is proposed.
 
 ## Affected packages
 
-`compas_viewer`, `compas_model`, and `compas_framework`.
+Initial implementation: `compas_viewer` and `compas_framework`.
+
+Later redesign consumer: `compas_model`; its current render-cache shape is not
+preserved by this decision.
 
 ## Dependencies
 

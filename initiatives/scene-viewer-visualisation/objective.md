@@ -3,8 +3,7 @@
 ## Objective
 
 Establish a simple, coherent, and scalable visualisation architecture across
-COMPAS core scenes, `compas_viewer`, and domain integrations such as
-`compas_model`. Users should be able to visualise large indexed datasets,
+COMPAS core scenes and `compas_viewer`. Users should be able to visualise large indexed datasets,
 select and transform objects consistently, add measurements and annotations,
 and extend the viewer UI without coupling durable scene data to a particular
 renderer or Qt widget hierarchy.
@@ -30,8 +29,8 @@ home and contract.
    tool, and UI state?
 7. Which stable extension boundary can support docks, consoles, terminals, or
    optional assistants without embedding those concerns in core scene data?
-8. How should `compas_model` and future domain packages project authoritative
-   domain hierarchies into scenes without depending on private viewer widgets?
+8. Which public Viewer operations are required by its own tools, UI components,
+   and independent future consumers?
 9. Which local, package, framework-integration, and artifact evidence is
    required for each approved wave?
 
@@ -53,25 +52,24 @@ home and contract.
 - Make high-level convenience APIs simple while keeping ownership and
   performance costs visible.
 
-## Proposed initial scope
+## Refined initial scope
 
 - `compas`: scene hierarchy, scene-object identity and transformations, and
   any approved backend-neutral contracts.
 - `compas_viewer`: render buffers, GPU lifecycle, viewport interaction,
   selection, overlays, commands, and UI state.
-- `compas_model`: domain-tree projection and public viewer integration.
 - `compas_framework`: installed cross-package verification.
 
 ## Deliverables
 
 1. A verified cross-package inventory and approved architecture decisions.
-2. Clear ownership and state boundaries across core, viewer, and domain
-   integrations.
+2. Clear ownership and state boundaries across core scene and Viewer runtime
+   concerns.
 3. Efficient convenience APIs for indexed points, edges, and triangles.
 4. Consistent observable selection and transformation contracts.
 5. An extensible annotation, measurement, and overlay foundation.
-6. Public integration boundaries for domain controllers and optional UI
-   extensions.
+6. Public integration boundaries for Viewer tools, components, and optional
+   UI extensions.
 7. Package-local and framework-level tests, examples, and documentation.
 
 ## Non-goals without a later scope decision
@@ -84,6 +82,8 @@ home and contract.
   wave.
 - Turning `compas_session` into a general reactive application store without
   a separate persistence decision.
+- Preserving the current draft `compas_model.ModelViewer` controller shape or
+  behavior. It is a later redesign consumer, not an architectural constraint.
 - Adding modeling functionality to the viewer or duplicating domain data
   structures in the scene graph.
 
@@ -100,5 +100,6 @@ home and contract.
 
 ## Current status
 
-Reconnaissance and architecture are complete. ADRs 001–007 are Accepted and
-implementation is authorized for the approved initial scope.
+Reconnaissance is complete. ADRs 001–007 are Accepted, but Proposed amendment
+ADRs 008–009 block implementation pending approval. The current draft
+`ModelViewer` is evidence and a later redesign target, not a contract.

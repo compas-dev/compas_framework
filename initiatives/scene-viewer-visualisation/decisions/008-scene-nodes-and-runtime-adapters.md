@@ -75,8 +75,10 @@ Deserialize in two phases:
 
 `SceneObject` becomes the runtime adapter bound to a scene, node, and optional
 item. Its constructor must not populate hierarchy or own serialized state.
-Domain projection such as `ModelViewer` creates nodes explicitly through a
-controller; adapter binding never recreates children.
+Application/domain projection creates nodes explicitly through an owning
+controller; adapter binding never recreates children. The current draft
+`ModelViewer` is evidence of why constructor-driven hierarchy creation fails,
+not a controller contract to preserve.
 
 Scene context is runtime binding configuration, not authoritative serialized
 content. A scene may record a non-binding context hint for user experience,
@@ -131,11 +133,13 @@ as durable must migrate. Exact compatibility is part of the Phase 1 audit.
 
 ## Verification
 
-- Reproduce both verified regressions as tests before implementation.
+- Reproduce the Viewer regression as a focused test and retain the draft
+  ModelViewer failure as evidence.
 - Round-trip local transformations, `u=7`, `v=9`, face color, shared items,
   node GUIDs, groups, and hierarchy without a visualization backend installed.
-- Load the model scene without calling adapter hierarchy constructors, then
-  bind Viewer adapters after the hierarchy is complete.
+- Use a minimal test adapter with constructor-side-effect behavior to prove
+  hierarchy deserialization never invokes runtime construction; redesign and
+  test the actual ModelViewer later.
 - Load and re-save unknown extension state without loss or constructor use.
 - Verify missing/unknown context permits load but produces a precise binding or
   draw error.
@@ -144,7 +148,9 @@ as durable must migrate. Exact compatibility is part of the Phase 1 audit.
 
 ## Affected packages
 
-`compas`, `compas_viewer`, `compas_model`, and `compas_framework`.
+Initial implementation: `compas`, `compas_viewer`, and `compas_framework`.
+
+Later redesign/regression consumer: `compas_model`.
 
 Compatibility review only: `compas_session`, `compas_notebook`, and CAD-host
 scene adapters.
