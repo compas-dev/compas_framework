@@ -63,8 +63,8 @@ def test_scene_candidate_integration_pins_exact_source_revisions():
     viewer_requirements = (source / ".github" / "scene-candidates" / "viewer-requirements.txt").read_text()
     workflow = (source / ".github" / "workflows" / "scene-candidate-integration.yml").read_text()
 
-    assert "compas.git@38d2457861ba7122f91d2107ce11e85053105165" in core_requirements
-    assert "compas_viewer.git@0fd73e9d17481bfcd2d69cf08c4db757a3ab16a5" in viewer_requirements
+    assert "compas.git@d43db206afec36450efbe76b53306ce3bd468076" in core_requirements
+    assert "compas_viewer.git@a72b61b777bc3fd448c3d471c48ef7f65334b319" in viewer_requirements
     assert "branches: [c3-upgrade]" in workflow
     assert "core-requirements.txt" in workflow
     assert "viewer-requirements.txt" in workflow

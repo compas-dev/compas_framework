@@ -4,102 +4,51 @@ Last updated: 2026-11-07
 
 ## Resume here
 
-Current phase: `architecture correction`
+Current phase: `integration verification`
 
-Status: ADRs 013–014 are Accepted. ADRs 008–009 and the unaccepted alternatives
-011–012 are superseded as recorded in the decision index. Phase 1 indexed
-buffers are complete and green. Phase 2 is paused until stable scene objects
-and context-keyed operation plugins are implemented and verified.
+ADRs 013–014 are implemented and independently approved in core and Viewer.
+They replace the earlier adapter design with hierarchy-only nodes, stable
+backend-neutral scene objects, and context-keyed `draw`/`clear` operations.
+Phase 2 remains paused until the refreshed exact-candidate framework gate is
+green.
 
 Read next:
 
-1. `objective.md`
-2. `inventory.md`
-3. `proposal.md`
-4. `decisions/README.md`
+1. [Implementation plan](implementation-plan.md)
+2. [Decision index](decisions/README.md)
+3. [Proposal](proposal.md)
 
-## Decisions and approvals
-
-- Accepted: [ADRs 001–010](decisions/README.md), including ADRs 008–010 on
-  2026-11-07.
-- Accepted: ADR 013 hierarchy-only nodes and stable scene objects; ADR 014
-  context-keyed operation plugins.
-- Superseded: ADR 008, part of ADR 009, and unaccepted ADRs 011–012.
-- Scope boundary: `compas_model`, notebook, and CAD hosts are later or
-  compatibility consumers; `compas_session` requires an explicit inclusion
-  decision. Do not modify package source outside the initial scope, merge, or
-  publish without the corresponding approval.
-
-## Working state
+## Exact candidates
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | this handoff checkpoint | [7](https://github.com/compas-dev/compas_framework/pull/7) | Exact-source gate green before latest candidate-pin refresh |
-| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `38d2457861ba7122f91d2107ce11e85053105165` | [1540](https://github.com/compas-dev/compas/pull/1540) | Full matrix green; patch coverage rerunning |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `0fd73e9d17481bfcd2d69cf08c4db757a3ab16a5` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Phase 1 indexed-buffer candidate pushed; CI running |
-| `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Clean; inspected only |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | current working tree | [7](https://github.com/compas-dev/compas_framework/pull/7) | Gate refresh pending commit and CI |
+| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `d43db206afec36450efbe76b53306ce3bd468076` | [1540](https://github.com/compas-dev/compas/pull/1540) | Stable scene architecture pushed; local checks and independent review passed |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `a72b61b777bc3fd448c3d471c48ef7f65334b319` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Stable operation/runtime migration pushed; 161 applicable tests, Ruff, Pyright, and independent review passed |
+| `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
-## Completed at this checkpoint
-
-- Inventoried core scene ownership, transformations, serialization, context
-  dispatch, tests, and documentation gaps.
-- Inventoried Viewer rendering, indexed-buffer limitations, selection,
-  transforms, overlays, state, commands, and extension points.
-- Inventoried model projection, render geometry, caching, selection, tests,
-  documentation, and Viewer coupling.
-- Identified initial and compatibility-only package boundaries.
-- Produced the architecture proposal, seven independent Proposed ADRs, and a
-  dependency-ordered implementation plan.
-- Verified that Viewer ShapeObject state and ModelViewer scene reconstruction
-  do not round-trip under the current constructor/settings mechanism.
-- Proposed separate serializable node state, runtime adapter binding, durable
-  node GUIDs, and explicit serialization fields in ADRs 008–009.
-- Accepted ADRs 008–009 and proposed reference-only scene descriptions plus a
-  separate future Session aggregation boundary in ADR 010.
-- Recorded that the current `compas_model.ModelViewer` is a draft and only
-  regression/coupling evidence, not a public contract to preserve.
-- Implemented durable reference-only core scene nodes, explicit item binding,
-  two-phase runtime-adapter binding, and validated MRO-composed state fields.
-- Adapted Viewer durable state, removed legacy settings persistence, fixed
-  transient picking-cache lifecycle, and documented separate data binding.
-- Resolved all independent core and Viewer review findings.
-- Added focused coverage for invalid closed Scene and SceneNode schemas.
-- Added and passed an installed exact-source framework gate covering plugin
-  discovery, reference-only round trips, explicit rebinding, and transient
-  Viewer state exclusion.
-- Implemented and independently approved indexed `BufferGeometry`, convenience
-  constructors, closed JSON persistence, preserved buffer indices, and
-  complete-triangle transparency partitioning.
-- Reverified 36 `compas_model` Viewer/controller/plugin compatibility tests
-  against the Phase 1 Viewer source without modifying model code.
-
-## Next tasks
-
-1. Implement and independently verify Accepted ADRs 013–014 in core and Viewer.
-2. Update exact-candidate framework and compatibility gates.
-3. Resume Phase 2 Viewer state and selection work only after that gate passes.
-
-## Blockers and approval gates
-
-- Package source implementation is authorized within the accepted initial
-  scope.
-- Adding model, session, notebook, or host packages to initial implementation
-  scope requires explicit approval.
-
-## Verification
-
-Evidence by layer:
+## Verification evidence
 
 | Layer | Status | Evidence |
 |---|---|---|
-| Local focused checks | Passed | Core scene/glTF: 61 passed, Ruff passed, Pyright 0; Viewer focused: 50 passed, Ruff passed, Pyright 0; independent reviews approved both exact heads. |
-| Package CI | Partial | Viewer PR 233 is fully green. Core PR 1540 has a green full OS/Python matrix, coverage, changelog, metadata, and project coverage; patch coverage is rerunning after ten additional schema-validation paths were covered. |
-| Framework integration CI | Passed; refresh pending | Framework PR 7 passed contracts and the installed exact-candidate gate; the gate is rerunning against the latest test/workflow-only package heads. |
-| Candidate-artifact CI | Not run | Required only before claims about independently built artifacts. |
+| Local package checks | Passed with one local-policy exclusion | Core focused scene/glTF checks, Ruff, Pyright, strict docs, and independent review passed. Viewer passed 161 applicable tests, Ruff, Pyright, strict docs, and independent review. Viewer’s ignored local `docs/examples/__temp` directory remains the sole excluded repository-policy assertion. |
+| Framework integration | Local source gate passed; hosted gate pending | The refreshed gate covers exact revisions, graphics-free discovery, stable semantic types and GUIDs, hierarchy-only nodes, external item rebinding, context-keyed operations without class substitution, transient runtime exclusion, and indexed-buffer round trips. Local source execution passed 3 tests with the exact-install assertion skipped by design. |
+| Package CI | Pending refreshed heads | Check PRs 1540 and 233 after the framework gate is pushed. |
+| Candidate artifacts | Not run | Required before independently built artifact compatibility is claimed. |
 
-Run next:
+The broader `tests/test_package.py` run is locally unavailable because the
+active `compas3` editable-import hook resolves `compas_cgal` from
+`/private/tmp/compas-cgal-typing-adr017` instead of its checked-out sibling.
+This is an environment provenance failure, not a scene-gate failure.
 
-```text
-gh pr checks <core-pr> --repo compas-dev/compas
-gh pr checks <viewer-pr> --repo compas-dev/compas_viewer
-```
+## Next tasks
+
+1. Commit and push the refreshed framework exact-candidate gate, then verify PR 7.
+2. Verify package PR checks for the exact core and Viewer heads and record results by layer.
+3. Resume Phase 2 Viewer state and selection only after framework integration is green.
+
+## Approval gates
+
+- The accepted initial implementation scope is core, Viewer, and framework.
+- Adding model, session, notebook, or host packages requires explicit approval.
+- Do not merge or publish without explicit approval.

@@ -5,19 +5,20 @@ import sys
 from importlib.metadata import distribution
 
 import pytest
-from compas.colors import Color
 from compas.data import json_dumps
 from compas.data import json_loads
 from compas.geometry import Box
 from compas.geometry import Translation
 from compas.scene import Scene
 from compas.scene import SceneItemNotBoundError
-from compas_viewer import Viewer
+from compas.scene import SceneObject
+from compas.scene import ShapeObject
+from compas.scene import register_scene_operation
 from compas_viewer.scene import BufferGeometry
 from compas_viewer.scene import ViewerScene
 
-CORE_COMMIT = "38d2457861ba7122f91d2107ce11e85053105165"
-VIEWER_COMMIT = "0fd73e9d17481bfcd2d69cf08c4db757a3ab16a5"
+CORE_COMMIT = "d43db206afec36450efbe76b53306ce3bd468076"
+VIEWER_COMMIT = "a72b61b777bc3fd448c3d471c48ef7f65334b319"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -68,60 +69,73 @@ def test_indexed_buffer_geometry_stays_indexed_and_roundtrips():
     assert restored.triangles.tolist() == [[0, 1, 2], [1, 3, 2]]
 
 
-def test_reference_scene_roundtrip_and_explicit_binding(tmp_path):
-    viewer = Viewer()
-    viewer.running = False
-    viewer.scene.clear(clear_context=False)
-
+def test_stable_scene_roundtrip_operations_and_explicit_binding():
     box = Box(1.0)
     transformation = Translation.from_vector([2.0, 0.0, 0.0])
-    original = viewer.scene.add(
+    scene = ViewerScene()
+    original = scene.add(
         box,
         name="Box",
         is_selected=True,
-        show_faces=False,
-        facecolor=Color.red(),
+        show=False,
         transformation=transformation,
         u=7,
-        use_rgba=True,
         v=9,
     )
-    original.background = True
 
-    scene_path = tmp_path / "scene.json"
-    item_path = tmp_path / "box.json"
-    viewer.scene.to_json(scene_path)
-    box.to_json(item_path)
+    assert type(original) is ShapeObject
+    assert original.node.object_guid == original.guid
+    assert original.node.__data__ == {"object": str(original.guid), "children": []}
 
-    payload = scene_path.read_text()
+    calls = []
+    runtime = object()
+
+    def draw(scene, sceneobject, active_runtime):
+        calls.append(("draw", sceneobject, active_runtime))
+        return ["opaque-handle"]
+
+    def clear(scene, sceneobject, active_runtime, resources):
+        calls.append(("clear", sceneobject, active_runtime, resources))
+
+    register_scene_operation("FrameworkIntegration", SceneObject, "draw", draw)
+    register_scene_operation("FrameworkIntegration", SceneObject, "clear", clear)
+    original.show = True
+    assert original.draw(context="FrameworkIntegration", runtime=runtime) == ["opaque-handle"]
+    assert scene.object(original.guid) is original
+    assert type(original) is ShapeObject
+
+    payload = scene.to_jsonstring()
     assert str(box.guid) in payload
     assert "compas.geometry/Box" not in payload
+    assert "opaque-handle" not in payload
+    assert "FrameworkIntegration" not in payload
     assert "is_selected" not in payload
-    assert "instance_color" not in payload
+    assert "render_objects" not in payload
+    assert "instance_colors" not in payload
 
-    restored_scene = Scene.from_json(scene_path)
-    restored_box = Box.from_json(item_path)
+    restored_scene = Scene.from_jsonstring(payload)
+    restored_box = Box.from_jsonstring(box.to_jsonstring())
     assert isinstance(restored_scene, ViewerScene)
     assert restored_box.guid == box.guid
     assert restored_box.volume() == box.volume()
 
-    node = restored_scene.find_node_by_name("Box")
-    assert node is not None
-    assert node.guid == original.node.guid
-    assert node.item_guid == restored_box.guid
+    restored = restored_scene.find_by_name("Box")
+    assert type(restored) is ShapeObject
+    assert restored.guid == original.guid
+    assert restored.item_guid == restored_box.guid
+    assert restored.transformation == transformation
+    assert restored.show is True
+    assert (restored.u, restored.v) == (7, 9)
+    assert restored_scene.item_store == {}
+    assert not restored_scene.is_selected(restored)
     with pytest.raises(SceneItemNotBoundError, match=str(restored_box.guid)):
-        restored_scene.bind_context("Viewer")
+        _ = restored.item
 
     restored_scene.bind(restored_box)
-    restored_scene.bind_context("Viewer")
-    restored = restored_scene.objects[0]
-
-    assert restored.node.transformation == transformation
-    assert restored.show_faces is False
-    assert restored.facecolor == Color.red()
-    assert restored.u == 7
-    assert restored.use_rgba is True
-    assert restored.v == 9
-    assert restored.background is True
-    assert restored.is_selected is False
+    assert restored.item is restored_box
+    original.clear(context="FrameworkIntegration")
+    assert calls == [
+        ("draw", original, runtime),
+        ("clear", original, runtime, ("opaque-handle",)),
+    ]
     assert restored_scene.instance_colors == {}
