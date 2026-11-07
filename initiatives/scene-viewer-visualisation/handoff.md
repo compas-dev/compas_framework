@@ -31,9 +31,9 @@ Read next:
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `5c95c1a` plus this handoff checkpoint | None | Clean; local |
-| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `f878cd102e87e7859030af96c7871a5b3345cf7d` | None | Clean; local, unpushed |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `18c87acac907c6d749d95a0e8f56ae2abd021ed2` | None | Clean; local, unpushed |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `ee8c4d8` plus this handoff checkpoint | [7](https://github.com/compas-dev/compas_framework/pull/7) | Clean; pushed draft |
+| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `f878cd102e87e7859030af96c7871a5b3345cf7d` | [1540](https://github.com/compas-dev/compas/pull/1540) | Clean; pushed draft |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `18c87acac907c6d749d95a0e8f56ae2abd021ed2` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Clean; pushed draft |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Clean; inspected only |
 
 ## Completed at this checkpoint
@@ -63,7 +63,7 @@ Read next:
 
 ## Next tasks
 
-1. Push core and Viewer initiative branches and collect clean package CI.
+1. Collect clean package CI on core PR 1540 and Viewer PR 233.
 2. Add the smallest framework installed-candidate Phase 0 gate.
 3. Close the Phase 0 exit gate, then begin indexed-buffer implementation.
 
@@ -81,8 +81,8 @@ Evidence by layer:
 | Layer | Status | Evidence |
 |---|---|---|
 | Local focused checks | Passed | Core scene/glTF: 61 passed, Ruff passed, Pyright 0; Viewer focused: 50 passed, Ruff passed, Pyright 0; independent reviews approved both exact heads. |
-| Package CI | Not run | Branches are committed locally and ready to push. |
-| Framework integration CI | Not run | Installed exact-candidate gate is the next task. |
+| Package CI | Pending | Viewer PR 233 workflows are running; core PR 1540 initially reports no checks. |
+| Framework integration CI | Pending | Framework PR 7 contract check is running; installed exact-candidate gate is the next task. |
 | Candidate-artifact CI | Not run | Required only before claims about independently built artifacts. |
 
 Run next:
