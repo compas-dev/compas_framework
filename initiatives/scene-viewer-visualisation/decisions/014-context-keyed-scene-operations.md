@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -123,4 +123,6 @@ factory should retain type substitution.
 
 ## Decision
 
-Pending explicit user approval.
+Accepted on 2026-11-07. The user approved context-keyed operation functions,
+the initial `draw`/`clear` surface, backend-neutral durable state, and
+coordinated later migration of visualization hosts.

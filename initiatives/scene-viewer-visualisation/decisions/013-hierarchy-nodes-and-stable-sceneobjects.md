@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -120,4 +120,6 @@ scene-object redesign remains a later phase.
 
 ## Decision
 
-Pending explicit user approval.
+Accepted on 2026-11-07. The user approved hierarchy-only nodes, stable durable
+scene objects, one-to-one node/object cardinality without instancing, and the
+scene-object GUID as the sole durable hierarchy key.

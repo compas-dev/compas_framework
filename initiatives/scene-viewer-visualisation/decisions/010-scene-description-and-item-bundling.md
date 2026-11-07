@@ -136,3 +136,9 @@ notebook, and CAD-host integrations as applicable.
 
 - [ADR 008](008-scene-nodes-and-runtime-adapters.md)
 - [ADR 009](009-scene-state-fields.md)
+
+## Amendment
+
+Accepted ADR 013 amended this decision on 2026-11-07: item GUID references live
+on stable scene objects rather than hierarchy nodes. Items remain independently
+serializable, explicitly bound, and outside the serialized scene description.

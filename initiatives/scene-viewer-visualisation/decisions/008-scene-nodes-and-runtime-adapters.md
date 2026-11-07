@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted.
+Superseded by ADRs 013–014.
 
 ## Context
 
@@ -173,3 +173,8 @@ Accepted on 2026-11-07. The user additionally required a separate decision
 ensuring that independently serializable `Data` objects are not forced to live
 inside a scene. Accepted ADR 010 records that packaging refinement without
 changing this decision's accepted node/adapter separation.
+
+Superseded on 2026-11-07 after implementation exposed duplicate detached/bound
+state and backend-dependent object types. Accepted ADRs 013–014 retain
+backend-independent loading and reference-only data binding while assigning
+durable state to stable scene objects and backend behavior to operations.

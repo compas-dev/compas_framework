@@ -14,9 +14,9 @@ measurements, annotations, scale/legend overlays, and public dock/command
 composition. It should not attempt a universal renderer API, a generic reactive
 framework, sub-object editing, a shell, or host-application migration.
 
-ADRs 001–010 are Accepted. Implementation may proceed in dependency order
-within the approved initial scope; Session redesign and Viewer/Session
-convenience operations remain later work.
+ADRs 013–014 are Accepted and the architecture correction may proceed before
+Phase 2. Session redesign and Viewer/Session convenience operations remain
+later work.
 
 ## New evidence requiring amendment
 
@@ -390,9 +390,9 @@ not complicate it. Lightweight discovery plugins populate a small scene
 operation registry keyed by `(context, scene-object type, operation)`. Runtime
 buffers, host handles, picking state, and caches live outside durable objects.
 
-Proposed ADRs 011–012 record the first node-first alternative. Proposed ADRs
-013–014 record this newer preferred design. Phase 2 remains paused until the
-preferred decisions are resolved and, if accepted, implemented and verified.
+ADRs 011–012 record the unaccepted first node-first alternative. Accepted ADRs
+013–014 record the selected design. Phase 2 remains paused until it is
+implemented and verified.
 
 ## Decision record
 
@@ -411,5 +411,5 @@ preferred decisions are resolved and, if accepted, implemented and verified.
 13. [ADR 013 — Hierarchy-only nodes and stable scene objects](decisions/013-hierarchy-nodes-and-stable-sceneobjects.md)
 14. [ADR 014 — Context-keyed scene operation plugins](decisions/014-context-keyed-scene-operations.md)
 
-ADRs 001–010 are Accepted. ADRs 011–014 are Proposed; ADRs 013–014 are the
-preferred alternative.
+ADRs 013–014 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
+in the decision index; ADR 010 remains Accepted with amended terminology.

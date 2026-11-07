@@ -3,7 +3,7 @@
 This initiative aligns backend-neutral scene infrastructure with Viewer
 rendering, interaction, state, and UI composition.
 
-Current phase: **architecture amendment proposed; implementation paused**.
+Current phase: **architecture correction approved; implementation pending**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -12,8 +12,9 @@ Current phase: **architecture amendment proposed; implementation paused**.
 - [Implementation plan](implementation-plan.md)
 - [Current handoff](handoff.md)
 
-ADRs 001–010 are Accepted. Scene is reference-only and optional aggregation is
-reserved for a separate future Session design.
+ADRs 013–014 are Accepted and define hierarchy-only nodes, stable durable scene
+objects, and context-keyed operation plugins. Scene remains reference-only and
+optional aggregation is reserved for a separate future Session design.
 
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence

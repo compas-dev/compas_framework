@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted.
+Superseded in part by ADR 013.
 
 ## Context
 
@@ -107,3 +107,7 @@ Later redesign/regression consumer: `compas_model`.
 Accepted on 2026-11-07. Persistent fields use the closed base schema and
 explicit MRO-composed declarations described above. Item ownership and
 serialization packaging are decided separately by Accepted ADR 010.
+
+Superseded in part on 2026-11-07. Accepted ADR 013 retains the closed-schema,
+explicit-field principle but moves durable state from node extensions onto
+ordinary stable scene-object attributes and rejects attribute interception.

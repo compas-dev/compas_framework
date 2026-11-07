@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Superseded by ADRs 013–014 before acceptance.
 
 ## Context
 
@@ -99,4 +99,4 @@ first; callers pass child presentation explicitly.
 
 ## Decision
 
-Pending explicit user approval.
+Not accepted. Superseded on 2026-11-07 by Accepted ADRs 013–014.

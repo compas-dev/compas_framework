@@ -6,10 +6,10 @@ Last updated: 2026-11-07
 
 Current phase: `architecture correction`
 
-Status: ADRs 001–010 are Accepted. ADRs 011–012 remain unresolved alternatives;
-ADRs 013–014 are the preferred Proposed correction. Phase 1 indexed buffers
-are complete and green. Phase 2 is paused because the current design duplicates
-state and lets installed backends change scene-object types.
+Status: ADRs 013–014 are Accepted. ADRs 008–009 and the unaccepted alternatives
+011–012 are superseded as recorded in the decision index. Phase 1 indexed
+buffers are complete and green. Phase 2 is paused until stable scene objects
+and context-keyed operation plugins are implemented and verified.
 
 Read next:
 
@@ -22,9 +22,9 @@ Read next:
 
 - Accepted: [ADRs 001–010](decisions/README.md), including ADRs 008–010 on
   2026-11-07.
-- Proposed alternatives: ADRs 011–012.
-- Proposed and preferred: ADR 013 hierarchy-only nodes and stable scene objects;
-  ADR 014 context-keyed operation plugins.
+- Accepted: ADR 013 hierarchy-only nodes and stable scene objects; ADR 014
+  context-keyed operation plugins.
+- Superseded: ADR 008, part of ADR 009, and unaccepted ADRs 011–012.
 - Scope boundary: `compas_model`, notebook, and CAD hosts are later or
   compatibility consumers; `compas_session` requires an explicit inclusion
   decision. Do not modify package source outside the initial scope, merge, or
@@ -75,9 +75,8 @@ Read next:
 
 ## Next tasks
 
-1. Obtain explicit decisions on preferred Proposed ADRs 013–014 and their
-   disposition of ADRs 008–009 and 011–012.
-2. If accepted, implement and independently verify the architecture correction.
+1. Implement and independently verify Accepted ADRs 013–014 in core and Viewer.
+2. Update exact-candidate framework and compatibility gates.
 3. Resume Phase 2 Viewer state and selection work only after that gate passes.
 
 ## Blockers and approval gates

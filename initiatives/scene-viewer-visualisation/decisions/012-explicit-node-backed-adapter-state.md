@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Superseded by ADR 013 before acceptance.
 
 ## Context
 
@@ -76,4 +76,4 @@ always-bound adapter.
 
 ## Decision
 
-Pending explicit user approval.
+Not accepted. Superseded on 2026-11-07 by Accepted ADR 013.
