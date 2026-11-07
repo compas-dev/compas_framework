@@ -9,8 +9,12 @@ Current phase: `integration verification`
 ADRs 013–014 are implemented and independently approved in core and Viewer.
 They replace the earlier adapter design with hierarchy-only nodes, stable
 backend-neutral scene objects, and context-keyed `draw`/`clear` operations.
-Phase 2 remains paused until the refreshed exact-candidate framework gate is
-green.
+The refreshed exact-candidate framework gate is green, so the accepted Phase 2
+work may resume independently of the proposed contextual form extension.
+
+ADRs 015–016 now propose contextual object-settings contributions and explicit
+field binding/mutation semantics. No implementation is authorized until both
+are explicitly approved.
 
 Read next:
 
@@ -43,12 +47,13 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Confirm the remaining core PR 1540 matrix rerun completes green.
-2. Resume Phase 2 Viewer state and selection work from the verified stable-scene foundation.
-3. Run candidate-artifact verification before claiming independently built artifact compatibility.
+1. Review and approve or revise Proposed ADRs 015–016.
+2. Confirm the remaining core PR 1540 matrix rerun completes green.
+3. Resume Phase 2 from the verified stable-scene foundation after its approval gates are clear.
 
 ## Approval gates
 
 - The accepted initial implementation scope is core, Viewer, and framework.
 - Adding model, session, notebook, or host packages requires explicit approval.
+- Contextual form implementation requires explicit approval of ADRs 015–016.
 - Do not merge or publish without explicit approval.

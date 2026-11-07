@@ -3,7 +3,8 @@
 ADRs 013–014 are Accepted and supersede the implemented node/runtime-adapter
 model of ADR 008, part of ADR 009, and the unaccepted alternatives in ADRs
 011–012. ADR 010 remains Accepted with item references moved to stable scene
-objects.
+objects. ADRs 015–016 propose a Viewer-owned mechanism for contextual
+object-settings fields; they are not approved for implementation.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -21,6 +22,8 @@ objects.
 | 012 | [Explicit node-backed adapter state](012-explicit-node-backed-adapter-state.md) | Superseded before acceptance | 011 |
 | 013 | [Hierarchy-only nodes and stable scene objects](013-hierarchy-nodes-and-stable-sceneobjects.md) | Accepted | Supersedes 008/009 placement; preserves 010 |
 | 014 | [Context-keyed scene operation plugins](014-context-keyed-scene-operations.md) | Accepted | 013; replaces backend class registration |
+| 015 | [Contextual scene form contributions](015-contextual-scene-form-contributions.md) | Proposed | 013; respects 014 |
+| 016 | [Scene form field bindings](016-scene-form-field-bindings.md) | Proposed | 015; 010 and 013 semantics |
 
 ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A

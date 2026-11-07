@@ -14,9 +14,11 @@ measurements, annotations, scale/legend overlays, and public dock/command
 composition. It should not attempt a universal renderer API, a generic reactive
 framework, sub-object editing, a shell, or host-application migration.
 
-ADRs 013–014 are Accepted and the architecture correction may proceed before
-Phase 2. Session redesign and Viewer/Session convenience operations remain
-later work.
+ADRs 013–014 are Accepted, implemented, and verified. Session redesign and
+Viewer/Session convenience operations remain later work.
+
+ADRs 015–016 propose a later Viewer-owned contextual form mechanism. They are
+not approved for implementation.
 
 ## New evidence requiring amendment
 
@@ -391,8 +393,37 @@ operation registry keyed by `(context, scene-object type, operation)`. Runtime
 buffers, host handles, picking state, and caches live outside durable objects.
 
 ADRs 011–012 record the unaccepted first node-first alternative. Accepted ADRs
-013–014 record the selected design. Phase 2 remains paused until it is
-implemented and verified.
+013–014 record the selected design, which is now implemented and verified.
+
+## Proposed contextual object-settings contributions
+
+Viewer's object-settings form currently selects controls through hardcoded
+attribute checks on private render helpers. This confuses renderer-facing
+aliases with editable UI capabilities and provides no supported extension
+point for packages that need to expose a particular stable scene-object
+attribute or represented-item parameter.
+
+The proposed correction is deliberately Viewer-owned. Lightweight plugins
+register declarative contributions by context, form identifier, stable
+scene-object type, and contribution ID. Providers are invoked only when the
+form is populated, compose through the stable type MRO, and describe flat
+field links. Viewer remains responsible for controls, layout, mutation,
+failure handling, and refresh. Field ordering is deterministic across explicit
+order, MRO rank, contribution ID, and provider-return sequence. A provider
+failure aborts form population with a contextual diagnostic; it does not leave
+a partial form.
+
+The initial scope is only `object-settings`, with Boolean, numeric, text, and
+color editors. A field explicitly targets either a stable scene-object
+attribute or an attribute/parameter of its already bound represented item.
+Successful changes request either a draw-only or geometry rebuild refresh.
+Fields for unresolved items are omitted without implicit loading, and failed
+setters restore the prior value without refreshing.
+
+This mechanism does not extend core's `draw`/`clear` registry, attach UI
+metadata to durable objects, return arbitrary Qt controls from plugins, or
+introduce a general form-schema framework. The existing general parameter
+dialog remains available during the initial migration.
 
 ## Decision record
 
@@ -410,6 +441,9 @@ implemented and verified.
 12. [ADR 012 — Explicit node-backed adapter state](decisions/012-explicit-node-backed-adapter-state.md)
 13. [ADR 013 — Hierarchy-only nodes and stable scene objects](decisions/013-hierarchy-nodes-and-stable-sceneobjects.md)
 14. [ADR 014 — Context-keyed scene operation plugins](decisions/014-context-keyed-scene-operations.md)
+15. [ADR 015 — Contextual scene form contributions](decisions/015-contextual-scene-form-contributions.md)
+16. [ADR 016 — Scene form field bindings](decisions/016-scene-form-field-bindings.md)
 
 ADRs 013–014 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
-in the decision index; ADR 010 remains Accepted with amended terminology.
+in the decision index; ADR 010 remains Accepted with amended terminology. ADRs
+015–016 remain Proposed and block contextual form implementation.

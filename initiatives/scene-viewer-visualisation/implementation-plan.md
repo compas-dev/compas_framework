@@ -2,9 +2,9 @@
 
 ## Status
 
-Architecture correction approved. ADRs 013–014 are Accepted and supersede the
-implemented adapter model. Phase 2 remains paused until the correction is
-implemented and verified.
+Architecture correction implemented and verified. ADRs 013–014 are Accepted
+and supersede the adapter model. Phase 2 may resume. Contextual form work is
+blocked on Proposed ADRs 015–016.
 
 ## Dependency graph
 
@@ -69,8 +69,7 @@ large-indexed-input evidence passes at exact candidate heads.
 
 Governing ADRs: 001, 003, 004, 007, 008, and 009.
 
-Status: paused until the Accepted ADR 013–014 scene architecture correction is
-implemented and verified.
+Status: ready on the implemented and verified ADR 013–014 scene foundation.
 
 1. Separate persistent Viewer configuration from transient Viewer state.
 2. Implement the object-selection model and migrate viewport, rectangle, tree,
@@ -84,6 +83,27 @@ implemented and verified.
 
 Exit gate: all selection paths share one model; transform/undo tests cover
 parents, batches, failures, and buffer-update scope.
+
+## Proposed contextual object-settings work
+
+Governing ADRs: 013, 014, 015, and 016.
+
+Status: blocked pending explicit approval of ADRs 015–016.
+
+1. Add the lightweight Viewer-owned contribution registry and deterministic
+   MRO composition.
+2. Add the flat field descriptor and the two explicit binding targets,
+   editor sets, and refresh modes.
+3. Migrate built-in object-settings controls and remove attribute-driven
+   capability inference.
+4. Add package contributions only for demonstrated fields; keep plugin
+   discovery free of Qt and graphics imports.
+5. Verify mutation, rollback, unresolved-item behavior, refresh scope,
+   provider failure atomicity, serialization exclusion, and multiple contexts.
+
+Exit gate: object-settings fields are explicit and contextual; stable scene
+objects and external items retain their accepted ownership and serialization;
+all applicable Viewer package and framework integration checks pass.
 
 ## Phase 3 — Annotations and overlays
 
