@@ -57,6 +57,18 @@ def test_native_candidate_integration_runs_from_the_protected_initiative_branch(
     assert "inputs.manifest_path || '.github/candidates/native-linux-py312.json'" in workflow
 
 
+def test_scene_candidate_integration_pins_exact_source_revisions():
+    source = Path(__file__).parents[1]
+    requirements = (source / ".github" / "scene-candidates" / "requirements.txt").read_text()
+    workflow = (source / ".github" / "workflows" / "scene-candidate-integration.yml").read_text()
+
+    assert "compas.git@f878cd102e87e7859030af96c7871a5b3345cf7d" in requirements
+    assert "compas_viewer.git@18c87acac907c6d749d95a0e8f56ae2abd021ed2" in requirements
+    assert "branches: [c3-upgrade]" in workflow
+    assert "requirements.txt" in workflow
+    assert "source-installed-candidates" in workflow
+
+
 def test_framework_examples_page_is_link_oriented():
     page = (Path(__file__).parents[1] / "docs" / "examples.md").read_text()
 

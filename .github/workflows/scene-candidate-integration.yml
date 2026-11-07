@@ -1,0 +1,49 @@
+name: scene-candidate-integration
+
+on:
+  pull_request:
+    branches: [c3-upgrade]
+    paths:
+      - .github/scene-candidates/**
+      - .github/workflows/scene-candidate-integration.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scene-candidate-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-installed-candidates:
+    runs-on: ubuntu-24.04
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          version: "0.12.7"
+      - name: Install test tools and exact source candidates
+        run: |
+          uv venv
+          uv pip install --python .venv/bin/python pytest==9.0.2 pyright==1.1.414
+          uv pip install --python .venv/bin/python --requirements .github/scene-candidates/requirements.txt
+      - name: Check installed scene typing boundary
+        run: >-
+          uv run --no-sync pyright
+          --pythonversion 3.12
+          .github/scene-candidates/test_scene_integration.py
+      - name: Exercise installed scene and Viewer behavior
+        run: >-
+          uv run --no-sync pytest
+          --basetemp "${RUNNER_TEMP}/scene-candidate-pytest"
+          -o cache_dir="${RUNNER_TEMP}/scene-candidate-cache"
+          .github/scene-candidates/test_scene_integration.py
