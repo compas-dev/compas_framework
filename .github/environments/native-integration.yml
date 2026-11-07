@@ -1,0 +1,8 @@
+name: compas-framework-native-integration
+channels:
+  - conda-forge
+dependencies:
+  - python =3.12
+  - pip =26.2.1
+  - pythonocc-core =7.9.3
+  - uv =0.12.7
