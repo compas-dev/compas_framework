@@ -48,9 +48,9 @@ state are never serialized. Do not add Qt signals or GPU contracts to core.
 
 ## Compatibility
 
-Core serialized scene contracts remain authoritative. Removing transient
-Viewer fields from scene-object settings may change Viewer-specific serialized
-data and requires fixture inspection and migration documentation.
+ADR 008 proposes replacing the current incomplete scene serialization without
+a compatibility loader. Removing transient Viewer fields and introducing the
+new scene-node schema therefore form a deliberate C3 serialization break.
 
 ## Verification
 

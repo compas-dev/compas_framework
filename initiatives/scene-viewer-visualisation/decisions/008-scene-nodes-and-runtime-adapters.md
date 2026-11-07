@@ -121,11 +121,11 @@ blocked until this amendment and ADR 009 are approved.
 
 ## Compatibility
 
-The existing serialized scene shape requires an explicit one-way loader into
-the new node schema. Old files have no durable node GUID, so the loader
-generates one deterministically only where the legacy hierarchy supplies a
-stable path; otherwise it generates and documents a new identity. It preserves
-known legacy settings and rejects ambiguous state rather than guessing.
+The new node schema replaces the existing serialized scene shape. The initial
+implementation does not include a compatibility loader because current files
+omit required state and cannot be migrated reliably without guessing. If
+concrete legacy files later require recovery, migration tooling needs separate
+evidence, scope, and approval.
 
 Existing public code may continue to receive a `SceneObject` adapter from
 `Scene.add`, but code that treats adapter identity or constructor side effects

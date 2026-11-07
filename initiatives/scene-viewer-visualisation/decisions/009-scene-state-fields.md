@@ -74,10 +74,10 @@ extension values remain inactive and round-trip unchanged under ADR 008.
 
 ## Compatibility
 
-Legacy `settings` mappings are accepted only by the legacy scene loader and
-mapped into declared base/extension fields. Unknown unnamespaced legacy keys
-cannot be assigned safely and must be reported; they are not passed to
-constructors. Once migrated, only the explicit schema is written.
+Legacy `settings` mappings are not accepted by the new serializer. They are
+incomplete, unversioned, and cannot be mapped into declared base/extension
+fields reliably. The new implementation reads and writes only the explicit
+schema. Any later recovery tool remains separate from runtime serialization.
 
 ## Verification
 

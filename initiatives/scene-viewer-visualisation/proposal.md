@@ -238,8 +238,9 @@ design is proven.
   shared indexed vertices. Current examples and adapters migrate together.
   A deprecated parallel constructor is not proposed.
 - Existing core scene serialization is not sufficient for the approved
-  architecture. ADRs 008–009 define a legacy loader and a new explicit node
-  schema; implementation is blocked pending their approval.
+  architecture. ADRs 008–009 define a new explicit node schema without a
+  compatibility loader for existing scene files; implementation is blocked
+  pending their approval.
 - Current `Tag` and `ArrowOverlay` data may require a documented migration to
   the accepted annotation/overlay types. Exact compatibility should be checked
   against serialized fixtures before implementation; do not silently reinterpret

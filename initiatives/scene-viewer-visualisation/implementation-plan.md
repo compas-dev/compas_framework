@@ -32,8 +32,8 @@ Status: blocked on approval of ADRs 008–009.
    and compatibility-only consumers against the proposed node/adapter split.
 3. Implement the closed scene node/state schema, durable node GUIDs, separate
    item store, and two-phase deserialize/bind lifecycle.
-4. Implement explicit MRO-composed extension field declarations and the legacy
-   settings loader; preserve unknown namespaced extension state.
+4. Implement explicit MRO-composed extension field declarations; preserve
+   unknown namespaced extension state within the new schema.
 5. Migrate core and Viewer adapters without serializing caches, selection,
    construction commands, or runtime handles. Use the draft ModelViewer failure
    as external regression evidence, not as behavior to preserve.
