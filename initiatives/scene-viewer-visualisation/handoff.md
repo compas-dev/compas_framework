@@ -4,11 +4,11 @@ Last updated: 2026-11-07
 
 ## Resume here
 
-Current phase: `architecture`
+Current phase: `implementation`
 
-Status: Cross-package reconnaissance and the architecture proposal are
-complete. ADRs 001–007 are Proposed and awaiting explicit approval; no package
-source changes are authorized.
+Status: Cross-package reconnaissance and architecture are complete. The user
+accepted ADRs 001–007 on 2026-11-07; implementation may begin in dependency
+order within the approved initial scope.
 
 Read next:
 
@@ -19,12 +19,12 @@ Read next:
 
 ## Decisions and approvals
 
-- Accepted: none for this initiative.
-- Proposed or unresolved: [ADRs 001–007](decisions/README.md) require explicit
-  approval.
+- Accepted: [ADRs 001–007](decisions/README.md).
+- Proposed or unresolved: none.
 - Scope boundary: notebook and CAD hosts are compatibility consumers;
   `compas_session` requires an explicit inclusion decision. Do not modify
-  package source, merge, or publish without the corresponding approval.
+  package source outside the initial scope, merge, or publish without the
+  corresponding approval.
 
 ## Working state
 

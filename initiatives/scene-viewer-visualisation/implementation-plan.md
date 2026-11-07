@@ -2,8 +2,8 @@
 
 ## Status
 
-Proposed architecture only. No implementation task below is authorized until
-its governing ADRs are explicitly Accepted.
+Architecture approved. ADRs 001–007 are Accepted; implementation may proceed
+in dependency order within the approved initial scope.
 
 ## Dependency graph
 

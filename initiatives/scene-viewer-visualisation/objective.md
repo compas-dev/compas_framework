@@ -100,5 +100,5 @@ home and contract.
 
 ## Current status
 
-Reconnaissance is complete. Architecture and ADRs are not yet approved. No
-package source changes are authorized.
+Reconnaissance and architecture are complete. ADRs 001–007 are Accepted and
+implementation is authorized for the approved initial scope.

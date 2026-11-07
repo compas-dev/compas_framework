@@ -3,8 +3,8 @@
 This initiative aligns backend-neutral scene infrastructure, viewer rendering
 and interaction, and model-to-scene integration across the COMPAS framework.
 
-Current phase: **architecture proposal complete and awaiting approval; no
-package source changes authorized**.
+Current phase: **architecture approved; implementation may begin in dependency
+order**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
