@@ -34,13 +34,13 @@ accepted design or proposed scope.
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas` | `initiative/typing-alignment` | `99b82a6673ff7d05c1c323c8921135c274993f11` | [1539](https://github.com/compas-dev/compas/pull/1539) | Pushed draft |
-| `compas-dev/compas_cgal` | `initiative/typing-alignment` | `bb3624e714719d543c61768320d91811ba96cc6c` | [81](https://github.com/compas-dev/compas_cgal/pull/81) | Pushed draft |
-| `compas-dev/compas_libigl` | `initiative/typing-alignment` | `710b2b6714839a203fc8a6c62c437c0f6735ba0e` | [47](https://github.com/compas-dev/compas_libigl/pull/47) | Pushed draft |
-| `compas-dev/compas_occ` | `initiative/typing-alignment` | `7fdf2ffb57d1de16308020e14ec626d79e65a034` | [32](https://github.com/compas-dev/compas_occ/pull/32) | Pushed draft |
-| `BlockResearchGroup/compas_model` | `initiative/repository-modernisation` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | [68](https://github.com/BlockResearchGroup/compas_model/pull/68) | Pushed draft |
-| `compas-dev/compas_viewer` | `initiative/repository-modernisation` | `cf5a5195bda840a511319d6b7201978af68c15e3` | [232](https://github.com/compas-dev/compas_viewer/pull/232) | Pushed draft |
-| `compas-dev/compas_framework` | `initiative/candidate-artifact-integration` | `663a4438902e479e2b14c3a2319649030a314ce7` | [2](https://github.com/compas-dev/compas_framework/pull/2) | Pushed draft; clean |
+| `compas-dev/compas` | `remove-future` | `99b82a6673ff7d05c1c323c8921135c274993f11` | [1539](https://github.com/compas-dev/compas/pull/1539) | Integrated; PR closed with exact-head record |
+| `compas-dev/compas_cgal` | `c3-upgrade` | `bb3624e714719d543c61768320d91811ba96cc6c` | [81](https://github.com/compas-dev/compas_cgal/pull/81) | Integrated; PR merged |
+| `compas-dev/compas_libigl` | `c3-upgrade` | `710b2b6714839a203fc8a6c62c437c0f6735ba0e` | [47](https://github.com/compas-dev/compas_libigl/pull/47) | Integrated; PR merged |
+| `compas-dev/compas_occ` | `c3-upgrade` | `7fdf2ffb57d1de16308020e14ec626d79e65a034` | [32](https://github.com/compas-dev/compas_occ/pull/32) | Integrated; PR merged |
+| `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | [68](https://github.com/BlockResearchGroup/compas_model/pull/68) | Integrated; PR merged |
+| `compas-dev/compas_viewer` | `c3-upgrade` | `cf5a5195bda840a511319d6b7201978af68c15e3` | [232](https://github.com/compas-dev/compas_viewer/pull/232) | Integrated; PR merged |
+| `compas-dev/compas_framework` | `initiative/plugin-implementations` | `bc7b1449f875c957b923e29971e53f71a1744062` | None yet | Active; based on updated `c3-upgrade` |
 
 Before editing any package, verify that its recorded head is still current and
 inspect that repository for unrelated dirty paths.
@@ -56,8 +56,9 @@ inspect that repository for unrelated dirty paths.
   verifies exact candidate retrieval and secret-free installed execution at
   framework head `663a4438902e479e2b14c3a2319649030a314ce7`: four runtime
   contracts pass and Pyright reports zero errors and warnings.
-- The temporary framework retrieval secrets have been removed. `main` remains
-  untouched; all listed pull requests remain draft and unmerged.
+- The temporary framework retrieval secrets have been removed. Completed
+  package initiatives are integrated into `remove-future` or `c3-upgrade`;
+  `main` remains untouched.
 
 ## Next tasks
 
