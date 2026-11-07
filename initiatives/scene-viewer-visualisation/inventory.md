@@ -1,0 +1,146 @@
+# Scene, Viewer, and Visualisation Inventory
+
+Inventory date: 2026-11-07.
+
+## Audited checkpoints
+
+| Repository | Branch | Exact head | State |
+|---|---|---|---|
+| `compas-dev/compas` | `remove-future` | `99b82a6673ff7d05c1c323c8921135c274993f11` | Clean |
+| `compas-dev/compas_viewer` | `c3-upgrade` | `cf5a5195bda840a511319d6b7201978af68c15e3` | Clean |
+| `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | Clean |
+| `compas-dev/compas_session` | `c3-upgrade` | `e0bdd02aa8490248c6f2f36042651d8ebfc4442b` | Clean |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | Based on `e797d49f77ac32b65371497a21925a02b7d048d8` | Clean before initiative documents |
+
+## Core scene infrastructure
+
+`compas.scene.Scene` owns a serializable tree, item and scene-object stores,
+context selection, hierarchy mutation, drawing traversal, and glTF conversion.
+`SceneObject` combines serializable visual configuration with context-adapter
+factory dispatch, local/world transformations, renderer identifiers, and
+manual cache invalidation.
+
+The global context registry maps item types to adapter classes and uses plugin
+registration. Its lifecycle offers `clear`, `before_draw`, and `after_draw`,
+but no renderer capability, event, change-notification, reverse-picking, or
+incremental-update contract. Core has no common indexed render-buffer type.
+
+Core tests cover context registration, hierarchy, transformations,
+serialization, glTF conversion, and scene ownership. They do not cover
+selection, interaction state, undo, incremental redraw, overlays, or batched
+render data. The visualisation introduction is stale in its use of `data`, its
+transformation explanation, and its assumptions about available adapters.
+
+## Viewer architecture
+
+`Viewer` coordinates the Qt application, `ViewerScene`, renderer,
+`ViewerState`, commands, events, and UI as a singleton. `ViewerScene` fixes the
+context to `"Viewer"`, maps picking colors, and directly coordinates renderer
+and sidebar updates. `ViewerSceneObject` converts items into point, line,
+front-face, and back-face channels and reaches the active viewer through that
+singleton.
+
+`BufferManager` efficiently batches ordinary objects into shared GPU-oriented
+buffers and can update transforms without rebuilding topology. However,
+`BufferGeometry` accepts expanded point, line-vertex, and triangle-vertex
+arrays rather than shared vertices plus edge or triangle indices. Examples and
+several adapters therefore duplicate vertices manually. `TessellationObject`
+and `PolygonalSurfaceObject` already demonstrate indexed paths, but there is no
+uniform public convenience layer.
+
+Viewport and scene-tree multi-selection exist. Selection is stored as mutable
+`is_selected` flags on scene objects and synchronized by imperative refresh
+calls. There is no separate observable selection model, selection-change
+event, complete rectangle-deselection path, or common programmatic mutation
+contract.
+
+Programmatic transforms and efficient transform-buffer updates exist, but
+there is no object gizmo, transformation command, multi-object transform UI,
+or defined undo contract. `Tag` and `ArrowOverlay` provide useful text and
+arrow primitives, but the renderer special-cases their concrete classes. No
+measurement, dimension, scale-bar, legend, or general overlay contract exists.
+
+`ViewerState` provides observable dotted-path access to persistent
+configuration. Selection, active tools, gestures, scene mutations, and command
+execution live elsewhere. Commands and UI definitions offer useful extension
+points, but there is no comparable public dock composition API and no console,
+terminal, assistant, or safe execution boundary.
+
+## Model integration
+
+`compas_model` owns backend-neutral model scene adapters, Viewer-specific
+adapters, a `ModelViewer` controller, NumPy-based `RenderGeometry`, quality
+settings, a revision-aware CPU cache, hierarchy projections, selection,
+inspectors, and contact layers.
+
+The authoritative `Model.tree` and rendered `Scene` hierarchy intentionally
+remain separate. `ModelViewer` constructs and indexes the scene projection,
+but reaches into concrete viewer sidebar and renderer APIs. Structural changes
+are reconciled through explicit rebuilds rather than an observed projection
+contract.
+
+Model render geometry preserves separate indexed filled triangles and visible
+line segments, but Viewer-specific adapters expand some arrays back to Python
+lists. This makes buffer ownership and reusable conversion responsibilities
+unclear. Package tests and documentation cover the current controller well,
+including multi-selection, visibility, caching, contacts, and offscreen viewer
+integration.
+
+## Adjacent packages
+
+`compas_session` persists a generic core scene, data, settings, and undo/redo
+history, but it is not a reactive viewer/UI state store. Notebook and CAD-host
+packages consume core scene contracts under different runtime constraints.
+They should be checked for compatibility with approved core changes, but
+implementation migration would broaden the initial initiative materially.
+
+## Framework evidence
+
+Package-local core, viewer, and model tests provide substantial evidence. The
+framework repository currently has no installed cross-package scene/viewer
+test. The plugin initiative separately requires a coordinated installed
+model/viewer registry and lifecycle test; this initiative should coordinate
+that gate rather than duplicate it.
+
+Focused reconnaissance results:
+
+- Core scene/plugin/glTF suite: 53 passed; one non-authoritative cache-write
+  warning because the checkout cache directory was not writable.
+- Viewer selection/state/tessellation/tag/overlay suite: 35 passed offscreen.
+- Model integration behavior was inspected from its existing tests and build
+  workflow; no new model tests were run during this inventory.
+
+## Principal gaps and risks
+
+1. Durable scene state, persistent configuration, and transient interaction
+   state do not have explicit ownership boundaries.
+2. Renderer identity has no common reverse mapping to scene objects or domain
+   elements.
+3. Scene mutations, selection, renderer updates, and UI refreshes use
+   distributed imperative paths.
+4. Raw indexed buffers lack a uniform public input and batching contract.
+5. Overlay rendering is coupled to concrete Viewer classes.
+6. Model controllers depend on private or concrete viewer structure.
+7. Core appearance serialization and glTF export do not cover all visual
+   settings consistently.
+8. Per-object pickability conflicts with batching for large auxiliary data.
+9. Singleton coupling makes state, commands, rendering, and scene behavior
+   harder to test independently.
+10. Scope can expand rapidly across notebook and host adapters unless initial
+    and compatibility-only packages are explicit.
+
+## Architecture questions
+
+1. Does core own only scene hierarchy and transformations, or also neutral
+   render primitives and change events?
+2. Where do indexed buffers, picking identities, and reverse lookup live?
+3. What observable state model unifies viewport, tree, and programmatic
+   selection without making UI state serializable scene data?
+4. What change categories allow transform-only, style-only, geometry, and
+   hierarchy updates to remain efficient?
+5. Which annotation and overlay objects are durable, transient, or both?
+6. How should domain controllers depend on public viewer capabilities rather
+   than widget and renderer internals?
+7. What is the smallest safe extension boundary for docks, consoles, and
+   optional assistant integrations?
+8. Which scene appearance semantics must serialization and glTF preserve?
