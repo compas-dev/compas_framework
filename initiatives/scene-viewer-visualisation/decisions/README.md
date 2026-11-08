@@ -11,14 +11,15 @@ attribute tables, their editing semantics, configured Viewer identity, and a
 configuration lifecycle/field audit. Their implementation is verified locally
 and in hosted Viewer and framework CI. ADR 003 is implemented, locally
 verified, independently approved, and green in hosted Viewer and refreshed
-framework CI.
+framework CI. ADR 004 is implemented, locally verified, and independently
+approved; refreshed hosted verification is pending.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
 | 001 | [Ownership and state boundaries](001-ownership-boundaries.md) | Accepted | Geometry 022/024; Plugin 002 |
 | 002 | [Indexed Viewer buffer geometry](002-indexed-buffer-geometry.md) | Accepted | 001; Typing structural inputs |
 | 003 | [Viewer state and object selection](003-viewer-state-and-selection.md) | Accepted; implemented, local verification passed | 001 |
-| 004 | [Transformations, refresh, and undo](004-transform-refresh-undo.md) | Accepted | 001, 003 |
+| 004 | [Transformations, refresh, and undo](004-transform-refresh-undo.md) | Accepted; implemented, local verification passed | 001, 003 |
 | 005 | [Annotations, measurements, and overlays](005-annotations-and-overlays.md) | Accepted | 001, 002, 003 |
 | 006 | [Public Viewer integration facade](006-viewer-integration-facade.md) | Accepted | 001, 003, 004, 005 |
 | 007 | [Initial scope and verification](007-scope-and-verification.md) | Accepted | 001–006; Plugin 005 |
@@ -50,4 +51,7 @@ independent review, and hosted Viewer and framework checks passed. ADR 003 now
 has one Viewer-owned ordered object selection, with all interaction paths
 migrated and scene-local mutation APIs removed. Local verification,
 independent review, the hosted Viewer matrix, and refreshed framework checks
-passed.
+passed. ADR 004 now provides atomic world-space multi-object transforms, four
+explicit refresh categories, and a private Viewer-level reversible transform
+transaction stack. Local verification and independent review passed; refreshed
+hosted checks remain pending.

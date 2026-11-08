@@ -3,17 +3,20 @@ import os
 import subprocess
 import sys
 from importlib.metadata import distribution
+from math import pi
 
 import pytest
 from compas.data import json_dumps
 from compas.data import json_loads
 from compas.geometry import Box
+from compas.geometry import Rotation
 from compas.geometry import Translation
 from compas.scene import Scene
 from compas.scene import SceneItemNotBoundError
 from compas.scene import SceneObject
 from compas.scene import ShapeObject
 from compas.scene import register_scene_operation
+from compas_viewer import Viewer
 from compas_viewer.config import Config
 from compas_viewer.forms import REMOVE_EDITABLE_ATTRIBUTE
 from compas_viewer.forms import register_scene_attribute_contribution
@@ -23,8 +26,8 @@ from compas_viewer.scene import ViewerScene
 from compas_viewer.selection import Selection
 from compas_viewer.uidefinitions import default_sidebar_items
 
-CORE_COMMIT = "0b4555c23d570589bf9eab412cfa5a71312e1aa2"
-VIEWER_COMMIT = "fd61b1b7ab5334dedeb2dc3ebdda43c0c693bf5c"
+CORE_COMMIT = "a4cc38a4f54d147f1ff45e19673b32f089576e2f"
+VIEWER_COMMIT = "a4fe52e51f7254c13df9659f9a61dc22ebbc1daa"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -116,6 +119,37 @@ def test_indexed_buffer_geometry_stays_indexed_and_roundtrips():
     assert restored.triangles is not None
     assert restored.triangles.shape == (2, 3)
     assert restored.triangles.tolist() == [[0, 1, 2], [1, 3, 2]]
+
+
+def test_viewer_transform_history_and_refresh_contract():
+    viewer = Viewer()
+
+    parent = viewer.scene.add_group(
+        "Rotated parent",
+        transformation=Rotation.from_axis_and_angle([0, 0, 1], pi / 2),
+    )
+    child = viewer.scene.add(
+        Box(1.0),
+        parent=parent,
+        transformation=Translation.from_vector([1, 0, 0]),
+    )
+    previous_local = child.transformation.copy()
+    previous_world = child.worldtransformation.copy()
+    delta = Translation.from_vector([2, 0, 0])
+
+    viewer.transform_objects([child], delta)
+
+    assert child.worldtransformation == delta * previous_world
+    assert child.transformation == parent.worldtransformation.inverse() * delta * previous_world
+    viewer.refresh_geometry([child])
+    viewer.refresh_appearance([child])
+    assert viewer.undo()
+    assert child.transformation == previous_local
+    assert viewer.redo()
+
+    child.transformation = previous_local
+    viewer.refresh_transform([child])
+    assert not viewer.undo()
 
 
 def test_contextual_editable_scene_state_is_graphics_free_and_not_serialized():

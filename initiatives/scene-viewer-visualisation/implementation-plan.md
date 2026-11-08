@@ -12,7 +12,9 @@ verified, and independently approved in their required order: ADR 019, ADR 020,
 ADR 017, then ADR 018. Their hosted verification passed. ADR 003 object
 selection is now implemented, locally verified, independently approved, and
 green in the hosted Viewer matrix and refreshed exact-candidate verification.
-The current phase is Phase 2 ADR 004 transformations, refresh, and undo.
+ADR 004 transformations, refresh, and undo is implemented, locally verified,
+independently approved, and pushed; refreshed package and exact-candidate
+verification is pending. The current phase is Phase 2 integration verification.
 
 ## Dependency graph
 
@@ -79,7 +81,8 @@ Governing ADRs: 001, 003, 004, 007, 008, and 009.
 Status: ADR 003 object selection is implemented, locally verified, and
 independently approved on the verified ADR 013–014 scene foundation. The hosted
 Viewer matrix and exact-candidate verification passed. ADR 004 transformations,
-refresh, and undo remains next.
+refresh, and undo is implemented, locally verified, and independently approved;
+hosted verification is pending.
 
 1. [Complete] Separate persistent Viewer configuration from transient Viewer
    state.
@@ -88,14 +91,17 @@ refresh, and undo remains next.
 3. [Complete] Remove scene-owned selection as a second authority and update
    serialization/tests. Keep only the read-only scene-object projection needed
    by rendering.
-4. Add atomic multi-object transform transactions, categorized refresh, and
-   the reversible transaction stack.
-5. Add a minimal transform interaction only after command/programmatic
-   semantics pass; visual gizmo design may be a follow-up if it requires new
+4. [Complete] Add atomic multi-object transform transactions, categorized
+   refresh, and the Viewer-level reversible transaction stack.
+5. [Complete] Add the transform-selected command and undo/redo menu operations
+   after command/programmatic semantics passed. No transform-input UI was
+   invented; visual gizmo design remains a follow-up if it requires new
    choices.
 
 Exit gate: all selection paths share one model; transform/undo tests cover
-parents, batches, failures, and buffer-update scope.
+parents, batches, failures, world/local conversion, cached descendant bounds,
+history invalidation, and buffer-update scope. The local gate passed; hosted
+package and exact-candidate verification is pending.
 
 ## Contextual object-settings work
 

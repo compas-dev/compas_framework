@@ -4,7 +4,7 @@ Last updated: 2026-11-08
 
 ## Resume here
 
-Current phase: `Phase 2 ADR 004 transformations, refresh, and undo`
+Current phase: `Phase 2 ADR 004 integration verification`
 
 ADRs 013–014 are implemented and independently approved in core and Viewer.
 They replace the earlier adapter design with hierarchy-only nodes, stable
@@ -35,6 +35,15 @@ selection input are removed. Selection is intentionally transient and absent
 from scene serialization. Local package and exact-source integration checks,
 the complete hosted Viewer matrix, and refreshed exact-candidate checks pass.
 
+ADR 004 transformations, refresh, and undo is implemented and independently
+approved. One world-space delta is applied atomically to ordered current-scene
+targets, converted through captured parent world transformations, and recorded
+as one entry in a private Viewer-level undo/redo stack. Geometry, appearance,
+transform, and hierarchy refreshes have explicit public operations. Hidden and
+item-less groups now participate in runtime buffers so parent transforms remain
+valid. Local Viewer, documentation, core scene, and exact-source integration
+checks pass; refreshed hosted checks are pending.
+
 Architectural watchpoint: the user remains uncertain that the overall
 `Data`/scene-state/extension model is the final destination. The current
 Accepted ADRs remain authoritative. If implementation produces concrete
@@ -52,18 +61,18 @@ Read next:
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `ef10a8c` plus this evidence update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Contracts and refreshed exact source-installed candidates passed |
-| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `0b4555c23d570589bf9eab412cfa5a71312e1aa2` | [1540](https://github.com/compas-dev/compas/pull/1540) | Complete hosted matrix and documentation audit passed |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `fd61b1b7ab5334dedeb2dc3ebdda43c0c693bf5c` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | ADR 003 local checks, review, build, distributions, coverage, policy, and all nine OS/Python quality jobs passed |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `89cfcd6` plus the current ADR 004 integration update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Local ADR 004 exact-source contract passed; refreshed hosted gate pending |
+| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `a4cc38a4f54d147f1ff45e19673b32f089576e2f` | [1540](https://github.com/compas-dev/compas/pull/1540) | Core transformation docs and local strict build passed; refreshed hosted matrix pending |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `a4fe52e51f7254c13df9659f9a61dc22ebbc1daa` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | ADR 004 local checks, review, build, distributions, coverage, policy, and all nine OS/Python quality jobs passed |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
 ## Verification evidence
 
 | Layer | Status | Evidence |
 |---|---|---|
-| Local package checks | Passed with one local-policy exclusion | Core passed 2,169 tests, Ruff, focused Pyright, strict docs, and independent review. Viewer ADRs 003 and 017–020 passed their local package checks and independent reviews. The selection-focused suite passed 138 tests and the broader suite passed 259 tests after excluding Viewer’s ignored local `docs/examples/__temp` repository-policy artifact; Ruff, Pyright, strict docs, and diff checks passed. |
-| Framework integration | Passed | The source gate pins Viewer `fd61b1b7ab5334dedeb2dc3ebdda43c0c693bf5c` and additionally verifies the transient selection contract. Local source execution passed 5 public contract tests with the exact-install assertion skipped by design; Ruff, Pyright, the direct pin assertion, and the diff check passed. Hosted contracts and exact source-installed candidates passed. |
-| Package CI | Passed | Core passed its complete hosted matrix. Viewer ADR 003 passed build, distributions, coverage, policy, and all nine OS/Python quality jobs. |
+| Local package checks | Passed with one local-policy exclusion | Viewer passed 289 tests with only the known ignored local `docs/examples/__temp` policy assertion deselected; Ruff, format, Pyright, strict docs, and independent review passed. Core scene tests and strict documentation passed. |
+| Framework integration | Local passed; hosted pending | The source gate pins core `a4cc38a4f54d147f1ff45e19673b32f089576e2f` and Viewer `a4fe52e51f7254c13df9659f9a61dc22ebbc1daa`. It verifies non-commuting parent/world conversion, undo/redo, history-preserving geometry/appearance refresh, and history-invalidating external transform refresh. Local source execution passed 6 public contract tests with the exact-install assertion skipped by design; Ruff, Pyright, and the direct pin assertion passed. |
+| Package CI | Viewer passed; core pending | Viewer passed build, distributions, coverage, policy, and all nine OS/Python quality jobs. The refreshed core matrix is still running. |
 | Candidate artifacts | Not run | Required before independently built artifact compatibility is claimed. |
 
 The broader `tests/test_package.py` run is locally unavailable because the
@@ -73,11 +82,12 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Implement accepted ADR 004 transformations, categorized refresh, and undo.
-2. Run candidate-artifact verification before claiming independently built
+1. Complete refreshed core, Viewer, and exact framework-candidate hosted
+   verification for ADR 004.
+2. Begin accepted ADR 005 annotations, measurements, and overlays after the
+   ADR 004 integration gate is green.
+3. Run candidate-artifact verification before claiming independently built
    artifact compatibility.
-3. Revisit the recorded `Data`/scene-state/extensions watchpoint only if
-   concrete implementation evidence warrants an amendment.
 
 ## Approval gates
 
