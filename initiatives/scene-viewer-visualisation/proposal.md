@@ -25,7 +25,8 @@ approved and green in package and exact-candidate integration CI.
 
 ADRs 017–020 authorize lazy datastructure element-attribute tables and editing,
 configured Viewer identity, and an explicit configuration lifecycle/field
-audit. Implementation and verification remain pending.
+audit. Their implementation is locally verified and independently approved;
+hosted Viewer and framework verification remains pending.
 
 ## New evidence requiring amendment
 
@@ -516,5 +517,7 @@ ADRs 013–016 are Accepted. ADRs 008–009 and 011–012 are superseded as reco
 in the decision index; ADR 010 remains Accepted with amended terminology.
 The amended ADR 015–016 implementation is complete and verified; the
 superseded `FormField` implementation was replaced.
-ADRs 017–020 are Accepted. Implement ADR 019, then ADR 020, followed by ADR 017
-and ADR 018 so configuration and sidebar ownership are established first.
+ADRs 017–020 are Accepted and were implemented in order ADR 019, ADR 020, ADR
+017, then ADR 018 so configuration and sidebar ownership were established
+first. Local verification and independent review passed; hosted verification
+remains pending.

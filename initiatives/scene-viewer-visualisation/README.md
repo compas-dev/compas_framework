@@ -3,7 +3,7 @@
 This initiative aligns backend-neutral scene infrastructure with Viewer
 rendering, interaction, state, and UI composition.
 
-Current phase: **Viewer configuration and datastructure-table implementation**.
+Current phase: **integration verification**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -22,7 +22,9 @@ future Session design.
 
 Accepted ADRs 017–020 govern lazy Mesh/Graph element-attribute tables, their
 editing semantics, configured Viewer identity, and configuration lifecycle.
-Implementation proceeds in order ADR 019, ADR 020, ADR 017, then ADR 018.
+They are implemented, locally verified, and independently approved. Hosted
+Viewer and framework checks and candidate-artifact verification remain
+pending.
 
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence

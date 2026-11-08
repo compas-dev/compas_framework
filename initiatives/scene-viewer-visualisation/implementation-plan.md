@@ -3,12 +3,15 @@
 ## Status
 
 Architecture correction implemented and verified. ADRs 013–014 are Accepted
-and supersede the adapter model. Phase 2 may resume. Accepted ADRs 015–016 now
-authorize `SceneStateField`-backed editability, non-state editable declarations,
-and contextual overrides; the superseded implementations were replaced and the
+and supersede the adapter model. Accepted ADRs 015–016 govern
+`SceneStateField`-backed editability, non-state editable declarations, and
+contextual overrides; the superseded implementations were replaced and the
 amended contract is independently approved and green in package and
-exact-candidate integration CI. Accepted ADRs 017–020 authorize the next Viewer
-work in the required order ADR 019, ADR 020, ADR 017, then ADR 018.
+exact-candidate integration CI. Accepted ADRs 017–020 are implemented, locally
+verified, and independently approved in their required order: ADR 019, ADR 020,
+ADR 017, then ADR 018. Hosted verification of the refreshed Viewer and exact
+framework candidates remains pending. The current phase is integration
+verification.
 
 ## Dependency graph
 
@@ -126,47 +129,51 @@ framework integration checks pass.
 
 Governing ADRs: 019 and 020.
 
-Status: authorized by Accepted ADRs 019–020; implementation and verification
-pending.
+Status: implemented, locally verified, and independently approved. Hosted
+package and exact-candidate verification remains pending.
 
-Implement ADR 019 first. ADR 020 follows because its schema validation and
-startup application depend on the accepted identity contract.
+Implementation record: ADR 019 was completed first. ADR 020 followed because
+its schema validation and startup application depend on the accepted identity
+contract.
 
-1. Apply validated startup configuration before Qt application/window
-   construction; connect title, icon, dimensions, and fullscreen.
-2. Retain dataclasses, add path-aware validation, and separate startup
+1. Applied validated startup configuration before Qt application/window
+   construction and connected title, icon, dimensions, and fullscreen.
+2. Retained dataclasses, added path-aware validation, and separated startup
    configuration from transient Viewer state.
-3. Implement the schema-2 field audit and migration/rejection behavior.
-4. Verify identity, icons, fullscreen, status bar, every field disposition,
+3. Implemented the schema-2 field audit and migration/rejection behavior.
+4. Verified identity, icons, fullscreen, status bar, every field disposition,
    setup-only mutation semantics, serialization, and typed subclass extension.
 
-Exit gate: startup identity and configuration are validated and effective;
-removed fields are absent; transient state is not serialized.
+Local exit gate: passed. Startup identity and configuration are validated and
+effective; removed fields are absent; transient state is not serialized.
 
 ## Datastructure attribute tables
 
 Governing ADRs: 006, 017, and 018.
 
-Status: authorized by Accepted ADRs 017–018; implementation and verification
-pending after ADRs 019–020 establish configuration and sidebar ownership.
+Status: implemented, locally verified, and independently approved after ADRs
+019–020 established configuration and sidebar ownership. Hosted package and
+exact-candidate verification remains pending.
 
-1. Add lazy Mesh and Graph element-attribute table models using declared
+Implementation record:
+
+1. Added lazy Mesh and Graph element-attribute table models using declared
    default mappings and singular domain APIs.
-2. Add sidebar tabs only for domains with declared columns; preserve mapping
-   insertion order and omit sparse undeclared attributes.
-3. Add supported scalar delegates, singular setter/unset mutation, effective
+2. Added sidebar tabs only for domains with declared columns, preserved mapping
+   insertion order, and omitted sparse undeclared attributes.
+3. Added supported scalar delegates, singular setter/unset mutation, effective
    values, local selection, and conservative Viewer refresh.
-4. Verify laziness, large/empty structures, value types, reset behavior,
+4. Verified laziness, large/empty structures, value types, reset behavior,
    atomic failure, and excluded first-version features.
 
-Exit gate: tables are lazy, declared-domain-driven, Viewer-owned, and verified
-without core API changes.
+Local exit gate: passed. Tables are lazy, declared-domain-driven, Viewer-owned,
+and verified without core API changes.
 
-The required implementation order is ADR 019, ADR 020, ADR 017, then ADR 018.
-Configuration work owns startup and sidebar visibility surfaces; tables follow
-only after those ownership changes stabilize. Coordinate file ownership across
-both sections and preserve the architectural watchpoint recorded in the
-proposal without inventing a replacement model during implementation.
+The implementation order was ADR 019, ADR 020, ADR 017, then ADR 018.
+Configuration work established startup and sidebar visibility ownership before
+the tables followed. The architectural watchpoint recorded in the proposal
+remains active during integration verification; concrete contrary evidence
+must be brought back without inventing a replacement model speculatively.
 
 ## Phase 3 — Annotations and overlays
 

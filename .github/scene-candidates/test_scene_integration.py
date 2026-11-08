@@ -14,14 +14,16 @@ from compas.scene import SceneItemNotBoundError
 from compas.scene import SceneObject
 from compas.scene import ShapeObject
 from compas.scene import register_scene_operation
+from compas_viewer.config import Config
 from compas_viewer.forms import REMOVE_EDITABLE_ATTRIBUTE
 from compas_viewer.forms import register_scene_attribute_contribution
 from compas_viewer.forms import scene_editable_attributes
 from compas_viewer.scene import BufferGeometry
 from compas_viewer.scene import ViewerScene
+from compas_viewer.uidefinitions import default_sidebar_items
 
 CORE_COMMIT = "314443976a056174ac755e4393059cb37795dda1"
-VIEWER_COMMIT = "21a45d5352e89bdfab32aea0588532b414bfac87"
+VIEWER_COMMIT = "794e3819b8d35e6555d5173e929031e5829ebeb0"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -46,6 +48,11 @@ from compas.plugins import PluginManager
 
 manager = PluginManager()
 manager.load_plugins()
+from compas_viewer.config import Config
+from compas_viewer.uidefinitions import default_sidebar_items
+
+assert Config().schema_version == 2
+assert any(item.get("type") == "DatastructureAttributes" for item in default_sidebar_items())
 modules = tuple(sys.modules)
 assert "compas_viewer.plugins" in modules
 assert not any(name == "PySide6" or name.startswith("PySide6.") for name in modules)
@@ -55,6 +62,44 @@ assert not any(name == "OpenGL" or name.startswith("OpenGL.") for name in module
     if os.environ.get("COMPAS_SCENE_SOURCE_CHECKOUTS") != "1":
         environment.pop("PYTHONPATH", None)
     subprocess.run([sys.executable, "-c", code], check=True, env=environment)
+
+
+def test_viewer_configuration_and_sidebar_contracts():
+    defaults = Config()
+    config = Config.from_dict(
+        {
+            "schema_version": 2,
+            "window": {"title": "Framework Viewer"},
+            "renderer": {"view": "ortho"},
+        }
+    )
+    payload = config.to_dict()
+
+    assert defaults.window.title == "COMPAS Viewer"
+    assert defaults.window.icon is None
+    assert config.schema_version == 2
+    assert config.window.title == "Framework Viewer"
+    assert config.window.icon is None
+    assert config.renderer.view == "ortho"
+    assert set(payload) == {"schema_version", "vectorsize", "ui", "window", "renderer", "camera"}
+    assert "about" not in payload["window"]
+    assert "opacity" not in payload["renderer"]
+    assert "show_widgets" not in payload["ui"]["sidebar"]
+    assert "sceneform" not in payload["ui"]["sidebar"]
+    assert [item["type"] for item in default_sidebar_items()] == [
+        "SceneTree",
+        "ObjectSetting",
+        "DatastructureAttributes",
+        "CameraSetting",
+        "DisplaySetting",
+    ]
+
+    with pytest.raises(ValueError, match=r"window\.about"):
+        Config.from_dict({"schema_version": 2, "window": {"about": "retired"}})
+    with pytest.raises(ValueError, match=r"window\.icon"):
+        Config.from_dict({"schema_version": 2, "window": {"icon": "relative.png"}})
+    with pytest.raises(ValueError, match=r"window\.width"):
+        Config.from_dict({"schema_version": 2, "window": {"width": 0}})
 
 
 def test_indexed_buffer_geometry_stays_indexed_and_roundtrips():

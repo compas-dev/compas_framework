@@ -8,7 +8,9 @@ settings from one normalized mapping: editable `SceneStateField` entries plus
 narrowly declared non-state attributes. The earlier `FormField` implementation
 has been replaced and verified. ADRs 017–020 authorize lazy datastructure
 attribute tables, their editing semantics, configured Viewer identity, and a
-configuration lifecycle/field audit; implementation remains pending.
+configuration lifecycle/field audit. Their implementation is locally verified
+and independently approved; hosted Viewer and framework verification remains
+pending.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -40,6 +42,8 @@ ADRs 015–016 were accepted and amended on 2026-11-08. Durable semantic fields
 declare editability on their existing `SceneStateField`; only non-state
 attributes use `__editable_attributes__`. Context overrides remain runtime-only,
 and public `FormField`, item-target, and core refresh-hook semantics are removed.
-ADRs 017–020 were accepted on 2026-11-08. Implementation proceeds in the
-required order ADR 019, ADR 020, ADR 017, then ADR 018 so configuration and
-sidebar ownership are established before the attribute tables are added.
+ADRs 017–020 were accepted on 2026-11-08 and implemented in the required order
+ADR 019, ADR 020, ADR 017, then ADR 018 so configuration and sidebar ownership
+were established before the attribute tables were added. Local verification
+and independent review passed; hosted Viewer and framework checks remain
+pending.
