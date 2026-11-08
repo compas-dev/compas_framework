@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -27,8 +27,7 @@ geometry algorithm tolerances.
 
 ## Recommendation
 
-Choose option 1 unless an explicit process-wide tolerance editing workflow is
-separately approved.
+Choose option 1.
 
 Add one typed `measurement` group to Viewer configuration:
 
@@ -39,10 +38,13 @@ Add one typed `measurement` group to Viewer configuration:
 
 Expose the values through one **Units and Measurement** sidebar tab. Unit and
 precision are presentation settings used by transient labels and snapshot into
-persistent dimensions according to ADR 022. The recommended first version
-shows tolerance read-only and identifies its owner. Whether the same panel may
-edit process-wide tolerance remains unresolved and requires explicit approval;
-it must never happen as a side effect of editing Viewer presentation.
+persistent dimensions according to ADR 022. The first version shows tolerance
+read-only and identifies its owner. Whether the same panel may
+edit process-wide tolerance is outside this decision; it must never happen as a
+side effect of editing Viewer presentation.
+
+An optional Settings-menu action may focus the same **Units and Measurement**
+tab. It does not create a second settings surface or duplicate state.
 
 Unit, precision, and displayed tolerance are informational or presentational;
 they are not sources of geometric correctness. Snap resolution and component
@@ -82,14 +84,27 @@ configuration version.
 - Verify ordinary Viewer setting changes never mutate COMPAS global tolerance.
 - If tolerance editing is later approved, verify it is explicit, process-wide,
   and cannot be confused with Viewer-only state.
-- Verify the measurement panel does not promise snapping or unit conversion.
+- Verify the measurement panel does not configure snapping or promise unit
+  conversion.
 
 ## Dependencies
 
-- Refines Accepted ADR 005 and proposed ADR 022.
+- Refines Accepted ADRs 005 and 022.
 - Amends the scoped configuration lifecycle of Accepted ADR 020 without making
   general Viewer configuration reactive.
 - Coordinates with proposed ADR 026 measurement interaction.
 - Respects Accepted ADR 028: presentation settings do not determine whether an
   anchor is fixed, associative, resolved, or geometrically correct.
+
+## Decision
+
+Approved on 2026-11-08. Viewer adds a nested measurement configuration group
+for editable coordinate-unit declaration and display precision, exposed through
+one **Units and Measurement** sidebar tab. The same tab shows the active global
+COMPAS tolerance read-only with its process-wide ownership clear; Viewer never
+silently mutates it. Measurement correctness comes from the approved snapping
+path rather than unit, precision, or displayed tolerance. An optional Settings
+menu action may focus the tab but does not duplicate it. The rationale is one
+discoverable presentation surface without restoring the obsolete root unit or
+creating a misleading Viewer-local geometry tolerance.
 

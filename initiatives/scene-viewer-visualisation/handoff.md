@@ -56,7 +56,10 @@ fixed or associative anchors; both modes snap, associative mode never silently
 falls back, and removed component references become explicitly unresolved.
 ADRs 021–022 are Accepted: narrow durable annotation data lives in
 `compas.scene`, and persistent dimensions snapshot declared unit and precision
-without implicit conversion. Proposed ADRs 025–027 block implementation.
+without implicit conversion. ADR 027 is Accepted: one Units and Measurement tab
+owns editable Viewer unit/precision presentation and shows global COMPAS
+tolerance read-only; snapping, not presentation, governs correctness. Proposed
+ADRs 025–026 block implementation.
 
 Architectural watchpoint: the user remains uncertain that the overall
 `Data`/scene-state/extension model is the final destination. The current
@@ -96,9 +99,8 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Approve or amend ADR 027 Viewer unit/precision presentation and tolerance
-   UI lifecycle.
-2. Approve or amend ADR 025 overlay contracts and ADR 026 supported snapping
+1. Approve or amend ADR 025 scale and legend overlay contracts.
+2. Approve or amend ADR 026 supported snapping
    and measurement acquisition.
 3. After all Phase 3 ADRs are accepted, split implementation ownership across
    core annotations, Viewer rendering/tools, and framework integration.
@@ -110,6 +112,6 @@ This is an environment provenance failure, not a scene-gate failure.
 - Contextual form implementation is complete under Accepted ADRs 015–016.
 - Datastructure tables/editing and configuration implementation is complete
   and verified under Accepted ADRs 017–020.
-- ADRs 021–024 and 028 are Accepted; Phase 3 source changes remain blocked by
-  proposed ADRs 025–027.
+- ADRs 021–024 and 027–028 are Accepted; Phase 3 source changes remain blocked
+  by proposed ADRs 025–026.
 - Do not merge or publish without explicit approval.
