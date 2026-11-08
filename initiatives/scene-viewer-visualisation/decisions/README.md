@@ -13,6 +13,12 @@ and in hosted Viewer and framework CI. ADR 003 is implemented, locally
 verified, independently approved, and green in hosted Viewer and refreshed
 framework CI. ADR 004 is implemented, locally verified, and independently
 approved; refreshed hosted Viewer, core, and framework verification passed.
+ADRs 021, 022, 025, 026, and 027 refine the remaining Phase 3 public contracts
+and are Proposed. ADR 023 records the explicitly approved clean break from the
+experimental `Tag` and `ArrowOverlay` paths. ADR 024 records the explicitly
+approved separation between transient inspection and persistent dimension
+annotation outcomes. ADR 028 records the explicitly approved fixed and
+associative persistent anchor model.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -20,7 +26,7 @@ approved; refreshed hosted Viewer, core, and framework verification passed.
 | 002 | [Indexed Viewer buffer geometry](002-indexed-buffer-geometry.md) | Accepted | 001; Typing structural inputs |
 | 003 | [Viewer state and object selection](003-viewer-state-and-selection.md) | Accepted; implemented, local verification passed | 001 |
 | 004 | [Transformations, refresh, and undo](004-transform-refresh-undo.md) | Accepted; implemented and verified | 001, 003 |
-| 005 | [Annotations, measurements, and overlays](005-annotations-and-overlays.md) | Accepted | 001, 002, 003 |
+| 005 | [Annotations, measurements, and overlays](005-annotations-and-overlays.md) | Accepted, amended by 024/028 | 001, 002, 003 |
 | 006 | [Public Viewer integration facade](006-viewer-integration-facade.md) | Accepted | 001, 003, 004, 005 |
 | 007 | [Initial scope and verification](007-scope-and-verification.md) | Accepted | 001–006; Plugin 005 |
 | 008 | [Serializable scene nodes and runtime adapters](008-scene-nodes-and-runtime-adapters.md) | Superseded by 013–014 | 001; verified round-trip regressions |
@@ -36,6 +42,14 @@ approved; refreshed hosted Viewer, core, and framework verification passed.
 | 018 | [Datastructure element-attribute editing](018-datastructure-attribute-editing.md) | Accepted | 017; 006/016 refresh ownership |
 | 019 | [Configured Viewer identity](019-configured-viewer-identity.md) | Accepted | Independent |
 | 020 | [Viewer configuration lifecycle and field audit](020-viewer-config-lifecycle-and-audit.md) | Accepted | 019; sidebar coordination with 017–018 |
+| 021 | [Durable annotation ownership and schema](021-durable-annotation-ownership.md) | Proposed | 005; 010; 013–014 |
+| 022 | [Distance-dimension unit semantics](022-distance-dimension-units.md) | Proposed | 021; 027; 005; 020 |
+| 023 | [Clean break for legacy Viewer annotations](023-annotation-clean-break.md) | Accepted | 021; 005 |
+| 024 | [Measurement outcomes and persistence](024-measurement-outcomes-and-persistence.md) | Accepted | 005; 021–022; 026 |
+| 025 | [Scale and legend overlay contracts](025-scale-and-legend-overlays.md) | Proposed | 005–006; 023 |
+| 026 | [Measurement interaction and acquisition](026-measurement-interaction-and-acquisition.md) | Proposed | 005; 024; 021–022; 003–004; 006; 027 |
+| 027 | [Viewer measurement settings and UI](027-viewer-measurement-settings.md) | Proposed | 005; 020; 022; 026 |
+| 028 | [Fixed and associative dimension anchors](028-dimension-anchor-modes.md) | Accepted | 005; 024; 021; 026 |
 
 ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A
@@ -55,3 +69,12 @@ passed. ADR 004 now provides atomic world-space multi-object transforms, four
 explicit refresh categories, and a private Viewer-level reversible transform
 transaction stack. Local verification and independent review passed; refreshed
 hosted Viewer, core, and framework checks passed.
+ADRs 023–024 and 028 were accepted on 2026-11-08. `Tag`, `ArrowOverlay`, their
+aliases, and their serialized dtype paths will be removed rather than preserved
+through a compatibility layer. Viewer will distinguish live transient
+inspection from persistent dimension annotation; transient results never
+mutate Scene, while persistent completion creates one `DistanceDimension` with
+independently fixed or associative anchors. Both UI modes use snapping,
+associative acquisition never silently falls back, and removed components make
+anchors explicitly unresolved. Implementation remains blocked on proposed ADRs
+021–022 and 025–027.

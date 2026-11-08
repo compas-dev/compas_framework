@@ -4,7 +4,7 @@ Last updated: 2026-11-08
 
 ## Resume here
 
-Current phase: `Phase 3 ADR 005 annotations, measurements, and overlays`
+Current phase: `Phase 3 annotation architecture approval`
 
 ADRs 013–014 are implemented and independently approved in core and Viewer.
 They replace the earlier adapter design with hierarchy-only nodes, stable
@@ -45,6 +45,17 @@ valid. Local Viewer, documentation, core scene, and exact-source integration
 checks pass. The refreshed core and Viewer package matrices and exact framework
 candidate gate also pass.
 
+Phase 3 reconnaissance found that `TextAnnotation` is currently only an alias
+for the Viewer-owned serialized `Tag`, while `ArrowOverlay` is actually durable
+world-anchored scene content. ADR 023 is Accepted: both obsolete public names
+and serialized dtype paths will be removed without aliases or legacy decoding.
+ADR 024 is also Accepted: live measurement inspection is transient and does
+not mutate Scene, while an explicit persistent mode creates a durable
+`DistanceDimension`. ADR 028 is Accepted: one dimension type has independently
+fixed or associative anchors; both modes snap, associative mode never silently
+falls back, and removed component references become explicitly unresolved.
+Proposed ADRs 021–022 and 025–027 block implementation.
+
 Architectural watchpoint: the user remains uncertain that the overall
 `Data`/scene-state/extension model is the final destination. The current
 Accepted ADRs remain authoritative. If implementation produces concrete
@@ -62,7 +73,7 @@ Read next:
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `16d017d` plus this evidence update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Contracts and exact source-installed candidates passed |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `f4370a4` plus this architecture update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Contracts and exact source-installed candidates passed |
 | `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `a4cc38a4f54d147f1ff45e19673b32f089576e2f` | [1540](https://github.com/compas-dev/compas/pull/1540) | Complete hosted matrix, coverage, NumPy, metadata, and documentation checks passed |
 | `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `a4fe52e51f7254c13df9659f9a61dc22ebbc1daa` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | ADR 004 local checks, review, build, distributions, coverage, policy, and all nine OS/Python quality jobs passed |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
@@ -83,9 +94,12 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Begin accepted ADR 005 annotations, measurements, and overlays.
-2. Run candidate-artifact verification before claiming independently built
-   artifact compatibility.
+1. Approve or amend ADR 021 annotation ownership/schema and ADR 022 dimension
+   presentation snapshots.
+2. Approve or amend ADR 027 Viewer unit/precision presentation and tolerance
+   UI lifecycle.
+3. Approve or amend ADR 025 overlay contracts and ADR 026 supported snapping
+   and measurement acquisition.
 
 ## Approval gates
 
@@ -94,4 +108,6 @@ This is an environment provenance failure, not a scene-gate failure.
 - Contextual form implementation is complete under Accepted ADRs 015–016.
 - Datastructure tables/editing and configuration implementation is complete
   and verified under Accepted ADRs 017–020.
+- ADRs 023–024 and 028 are Accepted; Phase 3 source changes remain blocked by
+  proposed ADRs 021–022 and 025–027.
 - Do not merge or publish without explicit approval.

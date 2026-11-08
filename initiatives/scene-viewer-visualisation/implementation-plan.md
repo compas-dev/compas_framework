@@ -14,7 +14,9 @@ selection is now implemented, locally verified, independently approved, and
 green in the hosted Viewer matrix and refreshed exact-candidate verification.
 ADR 004 transformations, refresh, and undo is implemented, locally verified,
 independently approved, and green in refreshed package and exact-candidate
-verification. The current phase is Phase 3 annotations and overlays.
+verification. The current phase is Phase 3 annotation architecture approval.
+ADRs 023–024 and 028 are Accepted; proposed ADRs 021–022 and 025–027 block
+implementation.
 
 ## Dependency graph
 
@@ -190,14 +192,30 @@ must be brought back without inventing a replacement model speculatively.
 
 ## Phase 3 — Annotations and overlays
 
-Governing ADRs: 001–005 and 007.
+Governing ADRs: 001–005, 007, and 021–028.
 
-1. Inspect current Tag/Arrow serialized behavior and document the exact
-   migration.
-2. Implement world text annotation and distance dimension scene items/adapters.
-3. Implement measurement tool preview, cancel, and completion.
-4. Implement scale and legend screen overlays through one Viewer overlay layer.
-5. Remove concrete approved-type checks from the main render loop.
+Status: existing `Tag` and `ArrowOverlay` behavior and serialization were
+audited. ADR 023 approves a clean break with no aliases or legacy decoding.
+ADR 024 approves distinct transient inspection and persistent dimension
+outcomes. ADR 028 approves one dimension type with fixed and associative
+anchors, snapping in both UI modes, no silent fallback, and explicit unresolved
+references. Implementation waits for approval of ADR 021 ownership/schema, ADR
+022 dimension-unit snapshots, ADR 025 scale/legend overlays, ADR 026 supported
+snap acquisition, and ADR 027 Viewer presentation settings and tolerance UI.
+
+1. [Complete] Inspect current `Tag`/`ArrowOverlay` serialized behavior and
+   approve the clean-break migration in ADR 023.
+2. [Complete] Separate transient measurement inspection from persistent
+   dimension-annotation outcomes in ADR 024.
+3. [Complete] Define fixed and associative persistent dimension anchors in ADR
+   028.
+4. Implement world text, arrow, and distance annotation scene items/adapters
+   after ADRs 021–022 and 027 are approved.
+5. Implement transient inspection plus fixed/associative persistent dimension
+   snapping, preview, cancel, and completion after ADR 026 is approved.
+6. Implement scale and legend screen overlays through one Viewer overlay layer
+   after ADR 025 is approved.
+7. Remove concrete approved-type checks from the main render loop.
 
 Exit gate: durable annotation round trips, transient overlays do not serialize,
 and visual behavior passes offscreen and package artifact tests.
