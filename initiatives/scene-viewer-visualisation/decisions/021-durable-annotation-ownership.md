@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -82,4 +82,13 @@ a compatibility loader.
 - Implements Accepted ADR 028's fixed and associative anchor model.
 - Respects Accepted ADRs 010, 013, and 014 for item references, stable scene
   objects, and context-keyed rendering operations.
+
+## Decision
+
+Approved on 2026-11-08. Durable `TextAnnotation`, `ArrowAnnotation`, and
+`DistanceDimension` data belong to `compas.scene`; Viewer provides rendering
+operations only. The schemas remain narrow and backend-neutral, with
+presentation, hierarchy, and transformation owned by scene objects. The
+rationale is that durable scene intent must load and serialize without a
+visualization backend or renderer-specific resources.
 

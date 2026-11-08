@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -84,5 +84,15 @@ initial serialized semantics without reviving the removed Viewer root unit.
 - Depends on proposed ADR 027 for Viewer measurement-setting ownership.
 - Refines Accepted ADR 005.
 - Respects Accepted ADR 020's removal of the unowned Viewer root unit.
+
+## Decision
+
+Approved on 2026-11-08. Persistent dimensions snapshot the active Viewer unit
+and precision at creation, while transient inspections use their current
+values. The unit declares the coordinates' existing unit and formats a suffix;
+it never performs implicit conversion. Durable dimensions retain their
+snapshot when Viewer preferences change, and tolerance is not duplicated on
+each dimension. The rationale is deterministic, honest formatting without an
+unowned source unit or hidden conversion.
 
 
