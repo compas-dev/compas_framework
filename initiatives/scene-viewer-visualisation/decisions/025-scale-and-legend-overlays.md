@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -66,4 +66,15 @@ These are new transient Viewer APIs. They do not preserve the obsolete durable
 - Refines Accepted ADR 005.
 - Uses Accepted ADR 006 for the public Viewer facade.
 - Respects Accepted ADR 023's annotation/overlay vocabulary boundary.
+
+## Decision
+
+Approved on 2026-11-08. Viewer owns one ordered, concrete overlay layer with
+public add/remove operations. The initial `ScaleBarOverlay` reports world scale
+at the camera-target plane using readable `1–2–5 × 10ⁿ` lengths, with its
+perspective depth limitation explicit. The initial `LegendOverlay` contains an
+optional title and ordered categorical label/color entries. Both remain
+screen-space, unpicked, and absent from Scene serialization. The rationale is a
+small useful contract without a general overlay registry, continuous-colormap
+semantics, or misleading global perspective scale.
 

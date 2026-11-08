@@ -58,8 +58,10 @@ ADRs 021–022 are Accepted: narrow durable annotation data lives in
 `compas.scene`, and persistent dimensions snapshot declared unit and precision
 without implicit conversion. ADR 027 is Accepted: one Units and Measurement tab
 owns editable Viewer unit/precision presentation and shows global COMPAS
-tolerance read-only; snapping, not presentation, governs correctness. Proposed
-ADRs 025–026 block implementation.
+tolerance read-only; snapping, not presentation, governs correctness. ADR 025
+is Accepted: one ordered Viewer overlay layer owns a camera-target scale
+bar and categorical legend, neither picked nor serialized. Proposed ADR 026 is
+the only remaining Phase 3 blocker.
 
 Architectural watchpoint: the user remains uncertain that the overall
 `Data`/scene-state/extension model is the final destination. The current
@@ -99,11 +101,12 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Approve or amend ADR 025 scale and legend overlay contracts.
-2. Approve or amend ADR 026 supported snapping
+1. Approve or amend ADR 026 supported snapping
    and measurement acquisition.
-3. After all Phase 3 ADRs are accepted, split implementation ownership across
+2. After all Phase 3 ADRs are accepted, split implementation ownership across
    core annotations, Viewer rendering/tools, and framework integration.
+3. Implement and verify the accepted Phase 3 contracts without adding a
+   general overlay, snapping, or tool framework.
 
 ## Approval gates
 
@@ -112,6 +115,6 @@ This is an environment provenance failure, not a scene-gate failure.
 - Contextual form implementation is complete under Accepted ADRs 015–016.
 - Datastructure tables/editing and configuration implementation is complete
   and verified under Accepted ADRs 017–020.
-- ADRs 021–024 and 027–028 are Accepted; Phase 3 source changes remain blocked
-  by proposed ADRs 025–026.
+- ADRs 021–025 and 027–028 are Accepted; Phase 3 source changes remain blocked
+  by proposed ADR 026.
 - Do not merge or publish without explicit approval.
