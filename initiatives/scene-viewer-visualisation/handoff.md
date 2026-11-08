@@ -44,9 +44,9 @@ Read next:
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `0e0de91` plus this evidence update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Contracts and exact installed-candidate gate passed |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `667a281` plus this pin update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Refreshed local source gate passed; hosted exact-candidate rerun pending |
 | `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `0b4555c23d570589bf9eab412cfa5a71312e1aa2` | [1540](https://github.com/compas-dev/compas/pull/1540) | Complete hosted matrix and documentation audit passed |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `fc0baac234cc652288d988ea63a5b2127111ee0a` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Complete hosted matrix, distributions, and documentation audit passed |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `898d583155ca7782de8365e809ac38acaa68de80` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Complete hosted matrix, distributions, documentation audit, and example refresh passed |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
 ## Verification evidence
@@ -54,7 +54,7 @@ Read next:
 | Layer | Status | Evidence |
 |---|---|---|
 | Local package checks | Passed with one local-policy exclusion | Core passed 2,169 tests, Ruff, focused Pyright, strict docs, and independent review. The refreshed Viewer ADR 017–020 implementation passed its local package checks and independent review. The documentation audits are complete at both refreshed heads. Viewer’s ignored local `docs/examples/__temp` directory remains the recorded repository-policy exclusion. |
-| Framework integration | Passed | The refreshed source gate pins the exact new heads and covers graphics-free discovery, stable scene identity, single-source editable `SceneStateField` declarations, contextual contribution/removal, data-only mutation, serialization exclusion, hierarchy and operation behavior, indexed-buffer round trips, schema-2 configuration, retired-field rejection, and datastructure-sidebar availability. Local source execution passed 5 public contract tests with the exact-install assertion skipped by design; hosted contracts and source-installed candidates passed. |
+| Framework integration | Passed locally; hosted rerun pending | The source gate pins the Viewer documentation-example head and covers graphics-free discovery, stable scene identity, single-source editable `SceneStateField` declarations, contextual contribution/removal, data-only mutation, serialization exclusion, hierarchy and operation behavior, indexed-buffer round trips, schema-2 configuration, retired-field rejection, and datastructure-sidebar availability. Local source execution passed 5 public contract tests with the exact-install assertion skipped by design; Ruff, Pyright, and the direct pin assertion passed. |
 | Package CI | Passed | Core passed its complete OS/Python matrix, coverage, patch/project coverage, NumPy, metadata, and changelog checks. Viewer passed build, distributions, coverage, policy, and all nine OS/Python quality jobs. |
 | Candidate artifacts | Not run | Required before independently built artifact compatibility is claimed. |
 
@@ -65,9 +65,10 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Run candidate-artifact verification before claiming independently built
+1. Run the refreshed exact-candidate framework gate.
+2. Run candidate-artifact verification before claiming independently built
    artifact compatibility.
-2. Revisit the recorded `Data`/scene-state/extensions watchpoint when concrete
+3. Revisit the recorded `Data`/scene-state/extensions watchpoint when concrete
    implementation evidence warrants an amendment.
 
 ## Approval gates
