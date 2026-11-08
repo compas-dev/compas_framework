@@ -3,7 +3,7 @@
 This initiative aligns backend-neutral scene infrastructure with Viewer
 rendering, interaction, state, and UI composition.
 
-Current phase: **architecture correction approved; implementation pending**.
+Current phase: **editable-attribute and contextual-form implementation**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -12,9 +12,12 @@ Current phase: **architecture correction approved; implementation pending**.
 - [Implementation plan](implementation-plan.md)
 - [Current handoff](handoff.md)
 
-ADRs 013–014 are Accepted and define hierarchy-only nodes, stable durable scene
-objects, and context-keyed operation plugins. Scene remains reference-only and
-optional aggregation is reserved for a separate future Session design.
+The stable scene architecture correction in Accepted ADRs 013–014 is
+implemented and verified: nodes are hierarchy-only, durable scene objects are
+stable, and backend operations are context-keyed. Amended Accepted ADRs
+015–016 now govern class-owned editable-attribute declarations and
+Viewer-owned contextual forms. Scene remains reference-only, and optional
+aggregation is reserved for a separate future Session design.
 
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence

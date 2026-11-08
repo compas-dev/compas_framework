@@ -4,7 +4,7 @@ Last updated: 2026-11-08
 
 ## Resume here
 
-Current phase: `integration verification`
+Current phase: `implementation`
 
 ADRs 013–014 are implemented and independently approved in core and Viewer.
 They replace the earlier adapter design with hierarchy-only nodes, stable
@@ -13,8 +13,10 @@ The refreshed exact-candidate framework gate is green, so the accepted Phase 2
 work may resume.
 
 ADRs 015–016 were explicitly approved on 2026-11-08. They authorize contextual
-object-settings contributions and explicit field binding/mutation semantics;
-implementation and verification remain pending.
+object settings through class-owned editable-attribute declarations and
+runtime-only contextual overrides. Their amendment supersedes the current
+public `FormField`, item-target, and field-refresh implementation, which must
+be replaced and verified.
 
 Read next:
 
@@ -47,10 +49,10 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Implement and verify ADR 015's lightweight contribution registry and
-   deterministic composition in Viewer.
-2. Implement and verify ADR 016's field bindings, mutation/rollback path, and
-   built-in object-settings migration.
+1. Replace the current `FormField` implementation with ADR 015's class-owned,
+   MRO-composed editable-attribute declarations.
+2. Implement ADR 016's contextual mapping overrides, atomic mutation, and
+   Viewer-owned conservative refresh.
 3. Confirm the remaining core PR 1540 matrix rerun and then run the applicable
    candidate-artifact compatibility gate.
 

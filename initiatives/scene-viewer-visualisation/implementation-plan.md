@@ -4,8 +4,8 @@
 
 Architecture correction implemented and verified. ADRs 013–014 are Accepted
 and supersede the adapter model. Phase 2 may resume. Accepted ADRs 015–016 now
-authorize contextual form work; implementation and verification remain
-pending.
+authorize class-owned editable declarations and contextual overrides; the
+superseded `FormField` implementation must be replaced and verified.
 
 ## Dependency graph
 
@@ -90,22 +90,28 @@ parents, batches, failures, and buffer-update scope.
 Governing ADRs: 013, 014, 015, and 016.
 
 Status: authorized by Accepted ADRs 015–016; implementation and verification
-pending.
+of the amended design pending.
 
-1. Add the lightweight Viewer-owned contribution registry and deterministic
-   MRO composition.
-2. Add the flat field descriptor and the two explicit binding targets,
-   editor sets, and refresh modes.
-3. Migrate built-in object-settings controls and remove attribute-driven
-   capability inference.
-4. Add package contributions only for demonstrated fields; keep plugin
-   discovery free of Qt and graphics imports.
-5. Verify mutation, rollback, unresolved-item behavior, refresh scope,
-   provider failure atomicity, serialization exclusion, and multiple contexts.
+1. Remove the public `FormField` API, item-target bindings, field refresh
+   modes, and the parallel built-in Viewer field inventory.
+2. Add MRO-composed class-level editable-attribute declarations to stable
+   scene-object classes, separately from `SceneStateField`.
+3. Add graphics-free context contributions that extend, replace, or remove
+   entries through the same mapping with exact registry keys, deterministic
+   lexical contribution ordering, and conflict errors.
+4. Migrate object settings to introspect values, editor, writability, default
+   labels, and order; keep represented-item parameters in `ParameterForm`.
+5. Apply default assignment or the optional synchronous data-side callback
+   atomically, then let Viewer conservatively rebuild/redraw/refresh after
+   success only.
+6. Verify composition, removal, conflicts, rollback, graphics-free discovery,
+   serialization exclusion, `SceneStateField` separation, and multiple
+   contexts.
 
-Exit gate: object-settings fields are explicit and contextual; stable scene
-objects and external items retain their accepted ownership and serialization;
-all applicable Viewer package and framework integration checks pass.
+Exit gate: stable scene-object classes are the sole built-in editable-attribute
+source; context plugins only modify the same neutral mapping; Viewer exclusively
+owns form UI and post-mutation refresh; core exposes no form or refresh protocol;
+all applicable core, Viewer, and framework integration checks pass.
 
 ## Phase 3 — Annotations and overlays
 

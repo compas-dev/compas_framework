@@ -17,8 +17,9 @@ framework, sub-object editing, a shell, or host-application migration.
 ADRs 013–014 are Accepted, implemented, and verified. Session redesign and
 Viewer/Session convenience operations remain later work.
 
-ADRs 015–016 authorize a Viewer-owned contextual form mechanism. Implementation
-and verification remain pending.
+ADRs 015–016 authorize class-owned editable-attribute declarations with
+runtime-only contextual overrides. The earlier `FormField` implementation must
+be replaced and the amended design verified.
 
 ## New evidence requiring amendment
 
@@ -395,35 +396,39 @@ buffers, host handles, picking state, and caches live outside durable objects.
 ADRs 011–012 record the unaccepted first node-first alternative. Accepted ADRs
 013–014 record the selected design, which is now implemented and verified.
 
-## Accepted contextual object-settings contributions
+## Accepted editable scene-object declarations
 
-Viewer's object-settings form currently selects controls through hardcoded
-attribute checks on private render helpers. This confuses renderer-facing
-aliases with editable UI capabilities and provides no supported extension
-point for packages that need to expose a particular stable scene-object
-attribute or represented-item parameter.
+Stable `SceneObject` classes own MRO-composed class-level mappings of editable
+attributes. Each entry identifies one scene-object attribute and may contain
+neutral metadata/data plus an optional synchronous data-side update callback
+with signature `(owner, value) -> None`; ordinary entries use `setattr`.
+Editable declarations remain separate from `SceneStateField` persistence.
 
-The accepted correction is deliberately Viewer-owned. Lightweight plugins
-register declarative contributions by context, form identifier, stable
-scene-object type, and contribution ID. Providers are invoked only when the
-form is populated, compose through the stable type MRO, and describe flat
-field links. Viewer remains responsible for controls, layout, mutation,
-failure handling, and refresh. Field ordering is deterministic across explicit
-order, MRO rank, contribution ID, and provider-return sequence. A provider
-failure aborts form population with a contextual diagnostic; it does not leave
-a partial form.
+Declarations compose base-to-derived. A derived declaration replaces an
+existing entry without moving it, a new entry appends, and `None` removes an
+inherited entry. Viewer introspects the resolved values, editor, writability,
+default labels, and order. It does not maintain a parallel built-in field list
+or expose public `FormField` values.
 
-The initial scope is only `object-settings`, with Boolean, numeric, text, and
-color editors. A field explicitly targets either a stable scene-object
-attribute or an attribute/parameter of its already bound represented item.
-Successful changes request either a draw-only or geometry rebuild refresh.
-Fields for unresolved items are omitted without implicit loading, and failed
-setters restore the prior value without refreshing.
+Graphics-free context plugins may extend, replace, or remove entries through
+the same mapping. They compose general-to-specific by stable scene-object MRO.
+Their key is `(context, stable SceneObject type, contribution ID)`. Within each
+MRO specificity, contributions apply by lexical contribution ID while
+preserving mapping insertion order. Duplicate exact registrations and
+same-specificity edits or removals of one attribute are errors rather than
+load-order overrides. Contributions and resolved mappings are runtime-only and
+never serialized.
 
-This mechanism does not extend core's `draw`/`clear` registry, attach UI
-metadata to durable objects, return arbitrary Qt controls from plugins, or
-introduce a general form-schema framework. The existing general parameter
-dialog remains available during the initial migration.
+After a successful mutation, Viewer exclusively decides whether to rebuild
+render data, redraw, and refresh UI. Context plugins only modify neutral
+editable-attribute declarations. Core contains no refresh callback, refresh
+category, or context protocol. Failed mutation restores the control and
+triggers no view refresh.
+
+The initial scope is only stable scene-object attributes in object settings.
+Represented-item parameters remain on the existing `ParameterForm` path. The
+amended ADRs explicitly supersede the earlier public `FormField`, item-target,
+and field-level refresh design, whose current implementation must be replaced.
 
 ## Decision record
 
@@ -441,10 +446,10 @@ dialog remains available during the initial migration.
 12. [ADR 012 — Explicit node-backed adapter state](decisions/012-explicit-node-backed-adapter-state.md)
 13. [ADR 013 — Hierarchy-only nodes and stable scene objects](decisions/013-hierarchy-nodes-and-stable-sceneobjects.md)
 14. [ADR 014 — Context-keyed scene operation plugins](decisions/014-context-keyed-scene-operations.md)
-15. [ADR 015 — Contextual scene form contributions](decisions/015-contextual-scene-form-contributions.md)
-16. [ADR 016 — Scene form field bindings](decisions/016-scene-form-field-bindings.md)
+15. [ADR 015 — Editable scene-object attribute declarations](decisions/015-contextual-scene-form-contributions.md)
+16. [ADR 016 — Contextual editable-attribute overrides and mutation](decisions/016-scene-form-field-bindings.md)
 
 ADRs 013–016 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
 in the decision index; ADR 010 remains Accepted with amended terminology.
-Contextual form implementation under ADRs 015–016 is authorized but remains
-pending.
+The amended ADR 015–016 implementation is authorized; the superseded
+`FormField` implementation must be replaced and the new contract verified.

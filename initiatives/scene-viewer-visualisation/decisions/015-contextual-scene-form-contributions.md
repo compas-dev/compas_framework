@@ -1,119 +1,116 @@
-# ADR 015: Contextual Scene Form Contributions
+# ADR 015: Editable Scene-Object Attribute Declarations
 
 ## Status
 
-Accepted.
+Accepted, amended on 2026-11-08.
 
 ## Context
 
 Viewer's object-settings form currently decides which controls to show through
-hardcoded attribute checks on private render helpers. This couples the form to
-renderer aliases, makes capability exceptions such as face-less graph objects
-ad hoc, and gives external packages no supported way to expose a specific
-stable scene-object attribute or represented-item parameter.
+hardcoded attribute checks on private render helpers. An initial implementation
+of this ADR added public `FormField` values and a parallel Viewer-owned field
+inventory. That duplicates knowledge already owned by stable `SceneObject`
+classes and lets the form description drift from the object API.
 
-The accepted scene architecture keeps durable `SceneObject` types stable and
-backend-neutral. ADR 014 deliberately limits core's context-keyed scene
-operation registry to `draw` and `clear`. Forms, controls, layout, and refresh
-behavior are Viewer UI concerns and must not become serialized scene state.
+Editable attributes are part of the stable scene-object contract. Viewer
+exclusively owns form layout, widgets, and post-mutation render and UI refresh.
+The design must preserve that boundary without adding UI state to serialized
+objects or mixing editable declarations with `SceneStateField` persistence
+declarations.
 
 ## Options
 
-1. Add a Viewer-owned registry of declarative form contributions.
-2. Let plugins construct and return arbitrary Viewer or Qt components.
-3. Add form operations to core's context-keyed scene operation registry.
-4. Store form annotations on durable scene-object classes or instances.
-5. Retain hardcoded `hasattr`-based form construction.
+1. Let stable `SceneObject` classes declare their editable attributes and
+   compose those declarations through the class MRO.
+2. Maintain public `FormField` objects in a parallel Viewer registry.
+3. Infer fields from annotations, constructor parameters, or `hasattr` checks.
+4. Store form state or widget metadata on scene-object instances.
 
-## Recommendation
+## Decision
 
 Choose option 1.
 
-`compas_viewer` owns a runtime registry keyed by:
+Every stable `SceneObject` class may provide one class-level mapping of editable
+attribute names to neutral declaration data. A declaration identifies the
+attribute and may contain only neutral metadata/data needed to describe it. It
+may also provide one optional synchronous data-side update callback with the
+contract:
 
 ```text
-(context, form, stable scene-object type, contribution ID)
+(owner, value) -> None
 ```
 
-The initial public form identifier is only `object-settings`. Registration is
-lightweight and may occur during ordinary plugin discovery without importing
-Qt, OpenGL, or another graphics runtime. A provider is called only when that
-form is populated. It receives the stable scene object and the explicit
-transient Viewer/runtime context, and returns declarative field links governed
-by ADR 016.
+Without a callback, mutation uses `setattr(owner, attribute, value)`. A
+callback exists only for a data-side update that cannot be expressed by direct
+assignment. It is not a Viewer, rendering, refresh, context, or asynchronous
+hook. The callback must be atomic: if it raises, it leaves the owner unchanged.
 
-Applicable contributions are collected through the stable scene-object MRO,
-from general types to specific types. Fields are sorted deterministically by
-`(field.order, general-to-specific MRO rank, contribution_id,
-provider-return sequence)`. Registering the same exact registry key twice is
-an error. Producing the same final field ID twice is also an error; a more
-specific provider does not silently replace another provider's field.
+Declarations compose from base class to derived class:
 
-If a provider raises, Viewer aborts population of the complete form and
-reports the context, form identifier, stable scene-object type, and
-contribution ID. It never silently omits a failed contribution or exposes a
-partially rebuilt form.
+- a derived declaration for an existing attribute replaces its data while
+  retaining the attribute's existing position;
+- a newly declared attribute appends after inherited attributes; and
+- a value of `None` removes an inherited attribute.
 
-The Viewer creates the controls, applies its consistent layout and lifecycle,
-and performs mutations through one binding path. Providers do not return
-ready-made widgets. By contract, a provider must not mutate the scene object
-or represented item while describing the form.
+Viewer introspects the resolved attribute value, editor, writability, default
+label, and order. There is no public `FormField` object and no parallel
+hardcoded Viewer inventory of built-in editable fields. Viewer owns control
+construction and layout, but the stable class remains the source of truth for
+which of its attributes are editable.
 
-The built-in object-settings controls migrate to built-in contributions.
-Unsupported capabilities are omitted rather than inferred from renderer
-attributes. For example, a graph contributes no face field, while mesh and
-shape contributions may do so. The current private face-capability workaround
-can then be removed.
+Editable declarations are runtime class metadata. They are graphics-free,
+contain no Qt or OpenGL objects, and are never serialized with a scene object.
+They are separate from `SceneStateField`: declaring an attribute editable does
+not make it durable, and declaring a state field does not make it editable.
+
+The initial scope contains only attributes owned by stable `SceneObject`
+instances. Represented-item parameters remain available through the existing
+`ParameterForm`; they are not part of this declaration mechanism.
 
 ## Consequences
 
-- Packages can expose only the fields appropriate for a particular form and
-  Viewer context without replacing scene-object classes.
-- Stable scene objects remain free of Viewer-specific form metadata.
-- Plugin discovery remains graphics-free and control construction stays
-  consistent.
-- The registry is intentionally a Viewer extension point, not a universal
-  form or schema framework.
-- Arbitrary widgets, nested layouts, conditional schema languages, and other
-  form identifiers require demonstrated needs and separate approval.
+- Stable scene-object classes own one authoritative editable-attribute
+  inventory.
+- Viewer no longer infers editing capabilities from renderer aliases or a
+  parallel list.
+- Neutral class declarations remain usable by more than one UI context without
+  putting form or render behavior in core.
+- Arbitrary widgets, represented-item parameters, nested paths, asynchronous
+  updates, and refresh callbacks are outside this contract.
 
 ## Compatibility
 
-The first implementation replaces the hardcoded object-settings population
-path without adding durable fields or changing scene serialization. The
-existing general represented-item `ParameterForm` remains available. Explicit
-item-parameter contributions may coexist with it; replacing the general dialog
-is not part of this decision.
+The current public `FormField` implementation and hardcoded Viewer field
+inventory must be replaced. This is an approved correction before that API is
+treated as stable. Existing represented-item `ParameterForm` behavior remains
+separate and unchanged.
 
 ## Verification
 
-- Compose general and specific contributions in the complete deterministic
-  order defined above.
-- Reject duplicate exact registrations and duplicate final field IDs.
-- Verify a provider exception reports the complete registry context, aborts
-  population, and leaves no partially rebuilt form.
-- Verify Graph omits face controls while Mesh and Shape retain them.
-- Verify providers are invoked only while the requested form is populated.
-- Prove plugin discovery imports no graphics or UI modules.
-- Verify built-in providers leave scene objects, represented items, and their
-  serialized data unchanged while describing a form.
-- Verify two contexts can contribute different fields for the same stable
-  scene-object type.
+- Compose declarations base-to-derived with position-preserving overrides,
+  appended new attributes, and `None` removal.
+- Verify Viewer derives the value, editor, writability, default label, and
+  order without a built-in field inventory.
+- Verify a default declaration uses `setattr` and a declared callback receives
+  exactly `(owner, value)` synchronously and leaves the owner unchanged when it
+  raises.
+- Prove declaration resolution imports no graphics or UI modules.
+- Prove declarations and resolved editor state are absent from scene-object
+  serialization.
+- Verify `SceneStateField` and editable declarations remain independent.
+- Verify represented-item parameters continue through `ParameterForm` rather
+  than this mechanism.
 
 ## Dependencies
 
 - Depends on Accepted ADR 013 for stable scene-object types.
-- Respects ADR 014's restricted `draw`/`clear` operation surface and does not
-  extend the core scene operation registry.
-- Its implementation depends on Accepted ADR 016 for the declarative field and
-  mutation contract; the Viewer ownership decision can be approved
-  independently.
+- Respects ADR 014's restricted `draw`/`clear` operation surface.
+- Context-specific declaration changes are governed by Accepted ADR 016.
 
-## Decision
+## Amendment
 
-Approved on 2026-11-08. Viewer owns one lightweight contextual form registry
-whose providers return declarative field links rather than widgets. The
-rationale is to make supported fields explicit and extensible while keeping
-stable scene objects backend-neutral, plugin discovery graphics-free, and
-control construction, lifecycle, ordering, and failure handling consistent in
-Viewer.
+Approved on 2026-11-08. This amendment supersedes the earlier accepted design
+in which Viewer providers returned public `FormField` values for scene-object
+and represented-item targets with explicit field refresh modes. The current
+implementation of that design must be replaced by the class-owned declaration
+model above.
