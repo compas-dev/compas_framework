@@ -20,10 +20,11 @@ from compas_viewer.forms import register_scene_attribute_contribution
 from compas_viewer.forms import scene_editable_attributes
 from compas_viewer.scene import BufferGeometry
 from compas_viewer.scene import ViewerScene
+from compas_viewer.selection import Selection
 from compas_viewer.uidefinitions import default_sidebar_items
 
 CORE_COMMIT = "0b4555c23d570589bf9eab412cfa5a71312e1aa2"
-VIEWER_COMMIT = "898d583155ca7782de8365e809ac38acaa68de80"
+VIEWER_COMMIT = "fd61b1b7ab5334dedeb2dc3ebdda43c0c693bf5c"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -170,14 +171,16 @@ def test_stable_scene_roundtrip_operations_and_explicit_binding():
     original = scene.add(
         box,
         name="Box",
-        is_selected=True,
         show=False,
         transformation=transformation,
         u=7,
         v=9,
     )
+    selection = Selection(scene.object)
+    selection.add(original)
 
     assert type(original) is ShapeObject
+    assert selection.objects == (original,)
     assert original.node.object_guid == original.guid
     assert original.node.__data__ == {"object": str(original.guid), "children": []}
 
@@ -204,6 +207,7 @@ def test_stable_scene_roundtrip_operations_and_explicit_binding():
     assert "opaque-handle" not in payload
     assert "FrameworkIntegration" not in payload
     assert "is_selected" not in payload
+    assert '"selection"' not in payload
     assert "render_objects" not in payload
     assert "instance_colors" not in payload
 
@@ -221,7 +225,7 @@ def test_stable_scene_roundtrip_operations_and_explicit_binding():
     assert restored.show is True
     assert (restored.u, restored.v) == (7, 9)
     assert restored_scene.item_store == {}
-    assert not restored_scene.is_selected(restored)
+    assert not Selection(restored_scene.object)
     with pytest.raises(SceneItemNotBoundError, match=str(restored_box.guid)):
         _ = restored.item
 

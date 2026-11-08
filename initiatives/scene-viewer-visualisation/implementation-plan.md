@@ -9,9 +9,10 @@ contextual overrides; the superseded implementations were replaced and the
 amended contract is independently approved and green in package and
 exact-candidate integration CI. Accepted ADRs 017–020 are implemented, locally
 verified, and independently approved in their required order: ADR 019, ADR 020,
-ADR 017, then ADR 018. Hosted verification of the refreshed Viewer and exact
-framework candidates remains pending. The current phase is integration
-verification.
+ADR 017, then ADR 018. Their hosted verification passed. ADR 003 object
+selection is now implemented, locally verified, independently approved, and
+green in the hosted Viewer matrix; refreshed exact-candidate verification is
+pending. The current phase is Phase 2 selection integration verification.
 
 ## Dependency graph
 
@@ -75,12 +76,18 @@ large-indexed-input evidence passes at exact candidate heads.
 
 Governing ADRs: 001, 003, 004, 007, 008, and 009.
 
-Status: ready on the implemented and verified ADR 013–014 scene foundation.
+Status: ADR 003 object selection is implemented, locally verified, and
+independently approved on the verified ADR 013–014 scene foundation. The hosted
+Viewer matrix passed; exact-candidate verification is pending. ADR 004
+transformations, refresh, and undo remains next.
 
-1. Separate persistent Viewer configuration from transient Viewer state.
-2. Implement the object-selection model and migrate viewport, rectangle, tree,
-   commands, renderer settings, and programmatic Viewer APIs.
-3. Remove `is_selected` as a second authority and update serialization/tests.
+1. [Complete] Separate persistent Viewer configuration from transient Viewer
+   state.
+2. [Complete] Implement the object-selection model and migrate viewport,
+   rectangle, tree, commands, renderer settings, and programmatic Viewer APIs.
+3. [Complete] Remove scene-owned selection as a second authority and update
+   serialization/tests. Keep only the read-only scene-object projection needed
+   by rendering.
 4. Add atomic multi-object transform transactions, categorized refresh, and
    the reversible transaction stack.
 5. Add a minimal transform interaction only after command/programmatic
@@ -129,8 +136,8 @@ framework integration checks pass.
 
 Governing ADRs: 019 and 020.
 
-Status: implemented, locally verified, and independently approved. Hosted
-package and exact-candidate verification remains pending.
+Status: implemented, locally verified, independently approved, and passed in
+hosted package and exact-candidate verification.
 
 Implementation record: ADR 019 was completed first. ADR 020 followed because
 its schema validation and startup application depend on the accepted identity
@@ -151,9 +158,9 @@ effective; removed fields are absent; transient state is not serialized.
 
 Governing ADRs: 006, 017, and 018.
 
-Status: implemented, locally verified, and independently approved after ADRs
-019–020 established configuration and sidebar ownership. Hosted package and
-exact-candidate verification remains pending.
+Status: implemented, locally verified, independently approved, and passed in
+hosted package and exact-candidate verification after ADRs 019–020 established
+configuration and sidebar ownership.
 
 Implementation record:
 

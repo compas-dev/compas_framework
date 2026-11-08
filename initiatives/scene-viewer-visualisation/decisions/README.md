@@ -8,15 +8,16 @@ settings from one normalized mapping: editable `SceneStateField` entries plus
 narrowly declared non-state attributes. The earlier `FormField` implementation
 has been replaced and verified. ADRs 017–020 authorize lazy datastructure
 attribute tables, their editing semantics, configured Viewer identity, and a
-configuration lifecycle/field audit. Their implementation is locally verified
-and independently approved; hosted Viewer and framework verification remains
-pending.
+configuration lifecycle/field audit. Their implementation is verified locally
+and in hosted Viewer and framework CI. ADR 003 is implemented, locally
+verified, independently approved, and green in hosted Viewer CI; refreshed
+framework verification is pending.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
 | 001 | [Ownership and state boundaries](001-ownership-boundaries.md) | Accepted | Geometry 022/024; Plugin 002 |
 | 002 | [Indexed Viewer buffer geometry](002-indexed-buffer-geometry.md) | Accepted | 001; Typing structural inputs |
-| 003 | [Viewer state and object selection](003-viewer-state-and-selection.md) | Accepted | 001 |
+| 003 | [Viewer state and object selection](003-viewer-state-and-selection.md) | Accepted; implemented, local verification passed | 001 |
 | 004 | [Transformations, refresh, and undo](004-transform-refresh-undo.md) | Accepted | 001, 003 |
 | 005 | [Annotations, measurements, and overlays](005-annotations-and-overlays.md) | Accepted | 001, 002, 003 |
 | 006 | [Public Viewer integration facade](006-viewer-integration-facade.md) | Accepted | 001, 003, 004, 005 |
@@ -44,6 +45,9 @@ attributes use `__editable_attributes__`. Context overrides remain runtime-only,
 and public `FormField`, item-target, and core refresh-hook semantics are removed.
 ADRs 017–020 were accepted on 2026-11-08 and implemented in the required order
 ADR 019, ADR 020, ADR 017, then ADR 018 so configuration and sidebar ownership
-were established before the attribute tables were added. Local verification
-and independent review passed; hosted Viewer and framework checks remain
-pending.
+were established before the attribute tables were added. Local verification,
+independent review, and hosted Viewer and framework checks passed. ADR 003 now
+has one Viewer-owned ordered object selection, with all interaction paths
+migrated and scene-local mutation APIs removed. Local verification,
+independent review, and the hosted Viewer matrix passed; refreshed framework
+checks remain pending.
