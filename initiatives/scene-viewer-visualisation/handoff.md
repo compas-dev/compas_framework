@@ -39,6 +39,7 @@ Read next:
 1. [Implementation plan](implementation-plan.md)
 2. [Decision index](decisions/README.md)
 3. [Proposal](proposal.md)
+4. [Exploratory UI sketch](ui.md)
 
 ## Exact candidates
 
