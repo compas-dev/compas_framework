@@ -13,11 +13,10 @@ and in hosted Viewer and framework CI. ADR 003 is implemented, locally
 verified, independently approved, and green in hosted Viewer and refreshed
 framework CI. ADR 004 is implemented, locally verified, and independently
 approved; refreshed hosted Viewer, core, and framework verification passed.
-ADRs 021–025 and 027–028 record the accepted durable annotation ownership,
-unit snapshots, clean-break migration, transient/persistent outcomes, overlay
-contracts, Viewer measurement presentation, and fixed/associative anchor
-model. ADR 026 refines the remaining snapping and acquisition contract and is
-Proposed.
+ADRs 021–028 record the accepted Phase 3 durable annotation ownership, unit
+snapshots, clean-break migration, transient/persistent outcomes, overlay
+contracts, snapping and acquisition, Viewer measurement presentation, and
+fixed/associative anchor model.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -46,7 +45,7 @@ Proposed.
 | 023 | [Clean break for legacy Viewer annotations](023-annotation-clean-break.md) | Accepted | 021; 005 |
 | 024 | [Measurement outcomes and persistence](024-measurement-outcomes-and-persistence.md) | Accepted | 005; 021–022; 026 |
 | 025 | [Scale and legend overlay contracts](025-scale-and-legend-overlays.md) | Accepted | 005–006; 023 |
-| 026 | [Measurement interaction and acquisition](026-measurement-interaction-and-acquisition.md) | Proposed | 005; 024; 021–022; 003–004; 006; 027 |
+| 026 | [Measurement interaction and acquisition](026-measurement-interaction-and-acquisition.md) | Accepted | 005; 024; 021–022; 003–004; 006; 027–028 |
 | 027 | [Viewer measurement settings and UI](027-viewer-measurement-settings.md) | Accepted | 005; 020; 022; 026 |
 | 028 | [Fixed and associative dimension anchors](028-dimension-anchor-modes.md) | Accepted | 005; 024; 021; 026 |
 
@@ -68,7 +67,7 @@ passed. ADR 004 now provides atomic world-space multi-object transforms, four
 explicit refresh categories, and a private Viewer-level reversible transform
 transaction stack. Local verification and independent review passed; refreshed
 hosted Viewer, core, and framework checks passed.
-ADRs 021–025 and 027–028 were accepted on 2026-11-08. Durable annotations live
+ADRs 021–028 were accepted on 2026-11-08. Durable annotations live
 in `compas.scene` and load without Viewer. Persistent dimensions snapshot the
 declared Viewer unit and precision without implicit conversion. `Tag`,
 `ArrowOverlay`, their aliases, and their serialized dtype paths are removed
@@ -82,4 +81,8 @@ precision plus read-only global COMPAS tolerance. It neither restores the old
 root unit nor mutates global tolerance; snapping governs correctness.
 ADR 025 adds one ordered Viewer overlay layer, a camera-target scale bar, and
 an ordered categorical legend without serialization or picking. Implementation
-remains blocked on proposed ADR 026.
+ADR 026 adds one prioritized screen-space snapping result and one-shot transient
+and persistent tool lifecycles. Fixed mode accepts every initial snap kind;
+associative mode initially supports points, vertices, graph nodes, and
+parameterized line/edge locations without silent fallback. All Phase 3
+architecture decisions are Accepted and implementation may begin.

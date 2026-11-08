@@ -4,7 +4,7 @@ Last updated: 2026-11-08
 
 ## Resume here
 
-Current phase: `Phase 3 annotation architecture approval`
+Current phase: `Phase 3 implementation planning`
 
 ADRs 013–014 are implemented and independently approved in core and Viewer.
 They replace the earlier adapter design with hierarchy-only nodes, stable
@@ -60,8 +60,10 @@ without implicit conversion. ADR 027 is Accepted: one Units and Measurement tab
 owns editable Viewer unit/precision presentation and shows global COMPAS
 tolerance read-only; snapping, not presentation, governs correctness. ADR 025
 is Accepted: one ordered Viewer overlay layer owns a camera-target scale
-bar and categorical legend, neither picked nor serialized. Proposed ADR 026 is
-the only remaining Phase 3 blocker.
+bar and categorical legend, neither picked nor serialized. ADR 026 is Accepted:
+one prioritized screen-space snap result supports all fixed snap kinds and
+initial associative point/vertex/node and parameterized line/edge anchors,
+with visible rejection and no fallback. All Phase 3 ADRs are Accepted.
 
 Architectural watchpoint: the user remains uncertain that the overall
 `Data`/scene-state/extension model is the final destination. The current
@@ -101,11 +103,11 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Approve or amend ADR 026 supported snapping
-   and measurement acquisition.
-2. After all Phase 3 ADRs are accepted, split implementation ownership across
+1. Split implementation ownership across
    core annotations, Viewer rendering/tools, and framework integration.
-3. Implement and verify the accepted Phase 3 contracts without adding a
+2. Implement the accepted contracts in dependency order: core annotations,
+   Viewer presentation/settings, rendering/overlays, then snapping/tools.
+3. Verify package and exact-candidate integration without adding a
    general overlay, snapping, or tool framework.
 
 ## Approval gates
@@ -115,6 +117,6 @@ This is an environment provenance failure, not a scene-gate failure.
 - Contextual form implementation is complete under Accepted ADRs 015–016.
 - Datastructure tables/editing and configuration implementation is complete
   and verified under Accepted ADRs 017–020.
-- ADRs 021–025 and 027–028 are Accepted; Phase 3 source changes remain blocked
-  by proposed ADR 026.
+- ADRs 021–028 are Accepted; Phase 3 source implementation is approved within
+  their recorded scope.
 - Do not merge or publish without explicit approval.

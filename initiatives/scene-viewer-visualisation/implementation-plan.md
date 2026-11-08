@@ -14,8 +14,8 @@ selection is now implemented, locally verified, independently approved, and
 green in the hosted Viewer matrix and refreshed exact-candidate verification.
 ADR 004 transformations, refresh, and undo is implemented, locally verified,
 independently approved, and green in refreshed package and exact-candidate
-verification. The current phase is Phase 3 annotation architecture approval.
-ADRs 021–025 and 027–028 are Accepted; proposed ADR 026 blocks implementation.
+verification. ADRs 021–028 are Accepted. The current phase advances to Phase 3
+implementation planning and file ownership.
 
 ## Dependency graph
 
@@ -200,9 +200,10 @@ outcomes. ADR 028 approves one dimension type with fixed and associative
 anchors, snapping in both UI modes, no silent fallback, and explicit unresolved
 references. ADRs 021–022 place narrow durable annotation data in `compas.scene`
 and define persistent unit/precision snapshots without implicit conversion.
-ADR 025 approves the ordered scale/legend overlay layer. Implementation waits
-for approval of ADR 026 supported snap acquisition. ADR 027 approves nested
-Viewer measurement presentation settings and the Units and Measurement UI.
+ADR 025 approves the ordered scale/legend overlay layer. ADR 026 approves the
+initial prioritized snap-result contract and one-shot tool lifecycle. ADR 027
+approves nested Viewer measurement presentation settings and the Units and
+Measurement UI. Phase 3 implementation may begin.
 
 1. [Complete] Inspect current `Tag`/`ArrowOverlay` serialized behavior and
    approve the clean-break migration in ADR 023.
@@ -215,8 +216,8 @@ Viewer measurement presentation settings and the Units and Measurement UI.
 5. [Complete] Approve Viewer unit/precision presentation and read-only global
    tolerance UI in ADR 027.
 6. Implement world text, arrow, and distance annotation scene items/adapters.
-7. Implement transient inspection plus fixed/associative persistent dimension
-   snapping, preview, cancel, and completion after ADR 026 is approved.
+7. Implement the approved transient inspection plus fixed/associative
+   persistent dimension snapping, preview, cancel, and completion.
 8. Implement the approved scale and legend screen overlays through one Viewer
    overlay layer.
 9. Remove concrete approved-type checks from the main render loop.
