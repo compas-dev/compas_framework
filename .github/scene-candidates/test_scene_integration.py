@@ -23,7 +23,7 @@ from compas_viewer.scene import ViewerScene
 from compas_viewer.uidefinitions import default_sidebar_items
 
 CORE_COMMIT = "314443976a056174ac755e4393059cb37795dda1"
-VIEWER_COMMIT = "794e3819b8d35e6555d5173e929031e5829ebeb0"
+VIEWER_COMMIT = "594ed282692e5d5bda15064a3b791eb8bf8499c5"
 
 
 def _installed_commit(distribution_name: str) -> str:

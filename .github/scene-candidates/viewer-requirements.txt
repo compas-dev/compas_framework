@@ -1,1 +1,1 @@
-compas_viewer @ git+https://github.com/compas-dev/compas_viewer.git@794e3819b8d35e6555d5173e929031e5829ebeb0
+compas_viewer @ git+https://github.com/compas-dev/compas_viewer.git@594ed282692e5d5bda15064a3b791eb8bf8499c5

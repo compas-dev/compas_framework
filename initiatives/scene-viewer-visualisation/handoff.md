@@ -45,7 +45,7 @@ Read next:
 |---|---|---|---|---|
 | `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `8bdb6d6b16ad70c46138445ef3e16eb13882c1c3` plus this evidence update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Refreshed local source gate passed; hosted checks pending |
 | `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `314443976a056174ac755e4393059cb37795dda1` | [1540](https://github.com/compas-dev/compas/pull/1540) | Complete hosted matrix passed |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `794e3819b8d35e6555d5173e929031e5829ebeb0` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | ADRs 017–020 locally verified and independently approved; hosted checks pending |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `594ed282692e5d5bda15064a3b791eb8bf8499c5` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | ADRs 017–020 locally verified and independently approved; hosted rerun pending for this refreshed head |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
 ## Verification evidence
