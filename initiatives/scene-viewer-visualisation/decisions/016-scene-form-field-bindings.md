@@ -82,9 +82,9 @@ are not extended or overridden through this registry.
 
 ## Compatibility
 
-The current `FormField`-based context registry, represented-item targets, and
-field-level `draw`/`geometry` refresh modes must be removed. Built-in object
-settings migrate to class declarations; only genuinely contextual differences
+The former `FormField`-based context registry, represented-item targets, and
+field-level `draw`/`geometry` refresh modes were removed. Built-in object
+settings migrated to class declarations; only genuinely contextual differences
 remain plugin contributions. Existing `ParameterForm` behavior is preserved.
 
 ## Verification
@@ -117,4 +117,5 @@ remain plugin contributions. Existing `ParameterForm` behavior is preserved.
 
 Approved on 2026-11-08. This amendment supersedes the earlier accepted flat
 `FormField` binding contract, including item targets and field-level refresh
-semantics. The current implementation of that earlier design must be replaced.
+semantics. The implementation of that earlier design was replaced by the
+implemented and verified amendment.

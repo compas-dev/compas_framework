@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -101,11 +101,16 @@ rather than silently accepting or storing them.
 
 ## Dependencies
 
-- Depends on Proposed ADR 019 for the identity fields that schema 2 validates
+- Depends on Accepted ADR 019 for the identity fields that schema 2 validates
   and applies at startup.
 - Independent of ADRs 015–018, but sidebar implementation must coordinate file
   ownership with ADRs 017–018.
 
 ## Decision
 
-Pending explicit user approval.
+Approved on 2026-11-08. Viewer retains typed nested dataclasses, adds explicit
+path-aware validation, separates startup configuration from transient state,
+and applies the complete schema-version-2 field audit and migration contract.
+The rationale is to keep configuration simple and truthful without Pydantic,
+untyped plugin dictionaries, reactive-state promises, or silent preservation
+of removed and unknown fields.

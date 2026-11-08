@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -88,4 +88,8 @@ the existing represented-item `ParameterForm`.
 
 ## Decision
 
-Pending explicit user approval.
+Approved on 2026-11-08. Viewer owns lazy Mesh and Graph element-attribute table
+models whose domains and columns come from declared defaults and existing
+singular datastructure APIs. The rationale is to keep large tables scalable and
+their schema explicit without copying all values, scanning sparse dictionaries,
+adding per-cell components, or introducing a new core abstraction.

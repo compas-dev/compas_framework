@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -79,10 +79,15 @@ setters, and unset operations remain authoritative.
 
 ## Dependencies
 
-- Depends on Proposed ADR 017 for the lazy table model and declared columns.
+- Depends on Accepted ADR 017 for the lazy table model and declared columns.
 - Uses Viewer refresh ownership established by ADRs 006 and 016 without
   extending the scene-object editable-attribute mechanism.
 
 ## Decision
 
-Pending explicit user approval.
+Approved on 2026-11-08. The initial editor supports only declared Boolean,
+integer, float, and text values; mutations and resets use the existing singular
+datastructure APIs, table selection remains local, and successful changes use
+one conservative Viewer refresh path. The rationale is to preserve declared
+types and default/local semantics without unsafe coercion, direct dictionary
+writes, batch operations, undo, or viewport component-selection coupling.

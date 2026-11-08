@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -67,4 +67,8 @@ meaning. The optional icon is additive startup configuration.
 
 ## Decision
 
-Pending explicit user approval.
+Approved on 2026-11-08. `WindowConfig.title` is the single startup identity for
+the Qt application and main window, while `WindowConfig.icon` selects either
+the packaged icon or an existing absolute custom path. The rationale is to
+make identity and startup window behavior deterministic without duplicate
+names, post-construction mutation, or a separate runtime identity API.

@@ -3,7 +3,7 @@
 This initiative aligns backend-neutral scene infrastructure with Viewer
 rendering, interaction, state, and UI composition.
 
-Current phase: **editable-attribute and contextual-form implementation**.
+Current phase: **Viewer configuration and datastructure-table implementation**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -20,8 +20,9 @@ non-state editable attributes, and Viewer-owned contextual forms. Scene
 remains reference-only, and optional aggregation is reserved for a separate
 future Session design.
 
-Proposed ADRs 017–020 cover lazy Mesh/Graph element-attribute tables, their
+Accepted ADRs 017–020 govern lazy Mesh/Graph element-attribute tables, their
 editing semantics, configured Viewer identity, and configuration lifecycle.
+Implementation proceeds in order ADR 019, ADR 020, ADR 017, then ADR 018.
 
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence

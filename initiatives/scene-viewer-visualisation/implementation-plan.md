@@ -5,8 +5,10 @@
 Architecture correction implemented and verified. ADRs 013–014 are Accepted
 and supersede the adapter model. Phase 2 may resume. Accepted ADRs 015–016 now
 authorize `SceneStateField`-backed editability, non-state editable declarations,
-and contextual overrides; superseded implementations must be replaced and
-verified.
+and contextual overrides; the superseded implementations were replaced and the
+amended contract is independently approved and green in package and
+exact-candidate integration CI. Accepted ADRs 017–020 authorize the next Viewer
+work in the required order ADR 019, ADR 020, ADR 017, then ADR 018.
 
 ## Dependency graph
 
@@ -25,8 +27,7 @@ ADRs 001–010 ----------> ADR 007 rollout gate
 
 Governing ADRs: 001, 008, 009, and 010.
 
-Status: implemented, but subject to the Accepted ADR 013–014 correction before
-Phase 2 proceeds.
+Status: implemented and verified after the Accepted ADR 013–014 correction.
 
 1. Add the verified Viewer round-trip regression and a minimal core adapter
    test covering the constructor-before-attachment failure. Keep the actual
@@ -90,40 +91,64 @@ parents, batches, failures, and buffer-update scope.
 
 Governing ADRs: 013, 014, 015, and 016.
 
-Status: authorized by Accepted ADRs 015–016; implementation and verification
-of the amended design pending.
+Status: implemented and independently verified under amended Accepted ADRs
+015–016.
 
-1. Remove the public `FormField` API, item-target bindings, field refresh
+Implementation record:
+
+1. Removed the public `FormField` API, item-target bindings, field refresh
    modes, the parallel built-in Viewer field inventory, and the first separate
    `EditableAttribute` implementation.
-2. Add `editable` and the optional atomic data-only `update` callback to
-   `SceneStateField`; reject `update` when the field is not editable.
-3. Reserve `__editable_attributes__` for non-state fields, initially `name` and
-   `opacity`, and compose both MRO sources through
+2. Added `editable` and the optional atomic data-only `update` callback to
+   `SceneStateField`, rejecting `update` when the field is not editable.
+3. Reserved `__editable_attributes__` for non-state fields, initially `name`
+   and `opacity`, and composed both MRO sources through
    `SceneObject.editable_attributes()` without duplicate subclass names.
-4. Add graphics-free context contributions that filter, extend, or replace
+4. Added graphics-free context contributions that filter, extend, or replace
    entries through the same mapping with exact registry keys, deterministic
    lexical contribution ordering, and conflict errors.
-5. Migrate object settings to infer presentation and writability from the
-   normalized mapping and current values; keep represented-item parameters in
-   `ParameterForm`.
-6. Apply default assignment or the optional synchronous data-side callback
-   atomically, then let Viewer conservatively rebuild/redraw/refresh after
-   success only.
-7. Verify source composition, removal, conflicts, rollback, graphics-free
+5. Migrated object settings to infer presentation and writability from the
+   normalized mapping and current values; represented-item parameters remain
+   in `ParameterForm`.
+6. Applied default assignment or the optional synchronous data-side callback
+   atomically; Viewer conservatively rebuilds/redraws/refreshes after success
+   only.
+7. Verified source composition, removal, conflicts, rollback, graphics-free
    discovery, serialization exclusion, and multiple contexts.
 
-Exit gate: durable semantic attributes use `SceneStateField` as their single
-source; non-state names are declared once; context plugins only modify the
+Exit gate: passed. Durable semantic attributes use `SceneStateField` as their
+single source; non-state names are declared once; context plugins only modify the
 normalized mapping; Viewer exclusively owns form UI and post-mutation refresh;
 core exposes no form or refresh protocol; all applicable core, Viewer, and
 framework integration checks pass.
 
-## Proposed datastructure attribute tables
+## Viewer identity and configuration lifecycle
+
+Governing ADRs: 019 and 020.
+
+Status: authorized by Accepted ADRs 019–020; implementation and verification
+pending.
+
+Implement ADR 019 first. ADR 020 follows because its schema validation and
+startup application depend on the accepted identity contract.
+
+1. Apply validated startup configuration before Qt application/window
+   construction; connect title, icon, dimensions, and fullscreen.
+2. Retain dataclasses, add path-aware validation, and separate startup
+   configuration from transient Viewer state.
+3. Implement the schema-2 field audit and migration/rejection behavior.
+4. Verify identity, icons, fullscreen, status bar, every field disposition,
+   setup-only mutation semantics, serialization, and typed subclass extension.
+
+Exit gate: startup identity and configuration are validated and effective;
+removed fields are absent; transient state is not serialized.
+
+## Datastructure attribute tables
 
 Governing ADRs: 006, 017, and 018.
 
-Status: blocked pending explicit approval of ADRs 017–018.
+Status: authorized by Accepted ADRs 017–018; implementation and verification
+pending after ADRs 019–020 establish configuration and sidebar ownership.
 
 1. Add lazy Mesh and Graph element-attribute table models using declared
    default mappings and singular domain APIs.
@@ -137,29 +162,11 @@ Status: blocked pending explicit approval of ADRs 017–018.
 Exit gate: tables are lazy, declared-domain-driven, Viewer-owned, and verified
 without core API changes.
 
-## Proposed Viewer identity and configuration lifecycle
-
-Governing ADRs: 019 and 020.
-
-Status: blocked pending explicit approval of ADRs 019–020.
-
-ADR 019 is independently decidable. ADR 020 depends on its identity contract
-for schema validation and startup application.
-
-1. Apply validated startup configuration before Qt application/window
-   construction; connect title, icon, dimensions, and fullscreen.
-2. Retain dataclasses, add path-aware validation, and separate startup
-   configuration from transient Viewer state.
-3. Implement the schema-2 field audit and migration/rejection behavior.
-4. Verify identity, icons, fullscreen, status bar, every field disposition,
-   setup-only mutation semantics, serialization, and typed subclass extension.
-
-Exit gate: startup identity and configuration are validated and effective;
-removed fields are absent; transient state is not serialized.
-
-Implementation of the two proposed sections must coordinate ownership of
-sidebar and startup UI files. Neither proposal authorizes implementation before
-its ADRs are accepted.
+The required implementation order is ADR 019, ADR 020, ADR 017, then ADR 018.
+Configuration work owns startup and sidebar visibility surfaces; tables follow
+only after those ownership changes stabilize. Coordinate file ownership across
+both sections and preserve the architectural watchpoint recorded in the
+proposal without inventing a replacement model during implementation.
 
 ## Phase 3 — Annotations and overlays
 

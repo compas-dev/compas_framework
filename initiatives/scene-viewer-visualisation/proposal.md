@@ -20,11 +20,12 @@ Viewer/Session convenience operations remain later work.
 ADRs 015–016 authorize one normalized editable-attribute mapping composed from
 editable `SceneStateField` entries, narrowly declared non-state attributes,
 and runtime-only contextual overrides. The earlier `FormField` implementation
-must be replaced and the amended design verified.
+was replaced; the amended core and Viewer implementation is independently
+approved and green in package and exact-candidate integration CI.
 
-ADRs 017–020 propose lazy datastructure element-attribute tables and editing,
+ADRs 017–020 authorize lazy datastructure element-attribute tables and editing,
 configured Viewer identity, and an explicit configuration lifecycle/field
-audit. They are not approved for implementation.
+audit. Implementation and verification remain pending.
 
 ## New evidence requiring amendment
 
@@ -272,8 +273,8 @@ design is proven.
 - Existing core scene serialization is not sufficient for the approved
   architecture. ADRs 008–009 define a new explicit node schema without a
   compatibility loader for existing scene files. ADR 010 separates
-  reference-only descriptions from a possible future Session aggregate;
-  implementation is blocked pending its approval.
+  reference-only descriptions from a possible future Session aggregate; its
+  accepted replacement is implemented and verified.
 - Current `Tag` and `ArrowOverlay` data may require a documented migration to
   the accepted annotation/overlay types. Exact compatibility should be checked
   against serialized fixtures before implementation; do not silently reinterpret
@@ -437,10 +438,10 @@ The initial scope is only stable scene-object attributes in object settings.
 Represented-item parameters remain on the existing `ParameterForm` path. The
 amended ADRs explicitly supersede the earlier public `FormField`, item-target,
 and field-level refresh design and the first uncommitted separate
-`EditableAttribute` declaration design. Their current implementation must be
-replaced.
+`EditableAttribute` declaration design. The replacement is implemented and
+verified.
 
-## Proposed datastructure element-attribute tables
+## Accepted datastructure element-attribute tables
 
 Viewer may add lazy `QAbstractTableModel` views for Mesh and Graph element
 attributes without changing core. Domains and columns come from existing
@@ -448,14 +449,14 @@ attributes without changing core. Domains and columns come from existing
 insertion order defines columns; sparse undeclared attributes are not scanned
 or shown. Tabs exist only for domains with declared attributes.
 
-The proposed editing contract supports Boolean, integer, float, and text
+The accepted editing contract supports Boolean, integer, float, and text
 defaults. Other types are read-only. Cells show effective values, mutate
 through singular setters, and reset through singular unset operations. Table
 selection remains local, and Viewer refreshes conservatively after successful
 mutation. Default-schema editing, sparse-column discovery, batch editing,
 undo, and viewport component selection remain outside the first version.
 
-## Proposed Viewer identity and configuration lifecycle
+## Accepted Viewer identity and configuration lifecycle
 
 The existing `WindowConfig.title` should consistently supply Qt application
 name, display name, and window title. `icon=None` selects the packaged icon;
@@ -476,6 +477,17 @@ explicit retired fields. Typed Viewer subclasses may add typed dataclass
 configuration fields with their own validation. Direct mutation is setup-time
 only, replacing `viewer.config` is unsupported, and dotted-path `ViewerState`
 access is transitional rather than an extension API.
+
+## Architectural watchpoint
+
+The user has reserved judgment on whether the overall relationship between
+`Data`, durable scene state, and extension mechanisms is the final model. The
+current Accepted ADRs remain authoritative and implementation should proceed
+as specified. If implementation evidence exposes duplicated ownership,
+non-transparent extension paths, forced representation changes, or another
+concrete mismatch, bring that evidence back for an explicit amendment or new
+decision. Do not preemptively reopen the accepted architecture or add a
+speculative replacement model.
 
 ## Decision record
 
@@ -502,6 +514,7 @@ access is transitional rather than an extension API.
 
 ADRs 013–016 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
 in the decision index; ADR 010 remains Accepted with amended terminology.
-The amended ADR 015–016 implementation is authorized; the superseded
-`FormField` implementation must be replaced and the new contract verified.
-ADRs 017–020 remain Proposed and block their respective implementation work.
+The amended ADR 015–016 implementation is complete and verified; the
+superseded `FormField` implementation was replaced.
+ADRs 017–020 are Accepted. Implement ADR 019, then ADR 020, followed by ADR 017
+and ADR 018 so configuration and sidebar ownership are established first.

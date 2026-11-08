@@ -20,10 +20,17 @@ supersedes the public `FormField` design and the first uncommitted separate
 are pushed, independently approved, and green in package and exact-candidate
 integration CI.
 
-ADRs 017–020 are Proposed. They cover lazy Mesh/Graph element-attribute tables,
-their narrow editing semantics, configured Viewer identity, and configuration
-lifecycle/field cleanup. No implementation is authorized until the relevant
-ADRs are explicitly approved.
+ADRs 017–020 were explicitly approved on 2026-11-08. They authorize lazy
+Mesh/Graph element-attribute tables, their narrow editing semantics, configured
+Viewer identity, and configuration lifecycle/field cleanup. Implement ADR 019,
+then ADR 020, followed by ADR 017 and ADR 018 so configuration and sidebar
+ownership stabilize before table work.
+
+Architectural watchpoint: the user remains uncertain that the overall
+`Data`/scene-state/extension model is the final destination. The current
+Accepted ADRs remain authoritative. If implementation produces concrete
+evidence that warrants redirection, stop and bring that evidence back for an
+explicit amendment or new decision; do not reopen the model speculatively.
 
 Read next:
 
@@ -56,16 +63,18 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Review and approve or revise Proposed ADRs 017–020.
-2. Coordinate sidebar ownership before implementing any approved ADR 017–020 work.
-3. Run candidate-artifact verification before claiming independently built
-   artifact compatibility.
+1. Implement and verify ADR 019's configured Viewer identity.
+2. Implement and verify ADR 020's configuration lifecycle, schema migration,
+   and field audit.
+3. After configuration/sidebar ownership stabilizes, implement ADR 017 and then
+   ADR 018; refresh exact-candidate evidence and run candidate-artifact
+   verification before claiming independently built artifact compatibility.
 
 ## Approval gates
 
 - The accepted initial implementation scope is core, Viewer, and framework.
 - Adding model, session, notebook, or host packages requires explicit approval.
 - Contextual form implementation is authorized by Accepted ADRs 015–016.
-- Datastructure tables/editing and configuration work remain blocked on
-  Proposed ADRs 017–020.
+- Datastructure tables/editing and configuration work are authorized by
+  Accepted ADRs 017–020 in the recorded implementation order.
 - Do not merge or publish without explicit approval.
