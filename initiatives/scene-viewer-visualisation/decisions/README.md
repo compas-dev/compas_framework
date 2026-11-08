@@ -10,8 +10,8 @@ has been replaced and verified. ADRs 017–020 authorize lazy datastructure
 attribute tables, their editing semantics, configured Viewer identity, and a
 configuration lifecycle/field audit. Their implementation is verified locally
 and in hosted Viewer and framework CI. ADR 003 is implemented, locally
-verified, independently approved, and green in hosted Viewer CI; refreshed
-framework verification is pending.
+verified, independently approved, and green in hosted Viewer and refreshed
+framework CI.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -49,5 +49,5 @@ were established before the attribute tables were added. Local verification,
 independent review, and hosted Viewer and framework checks passed. ADR 003 now
 has one Viewer-owned ordered object selection, with all interaction paths
 migrated and scene-local mutation APIs removed. Local verification,
-independent review, and the hosted Viewer matrix passed; refreshed framework
-checks remain pending.
+independent review, the hosted Viewer matrix, and refreshed framework checks
+passed.

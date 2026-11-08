@@ -11,8 +11,8 @@ exact-candidate integration CI. Accepted ADRs 017–020 are implemented, locally
 verified, and independently approved in their required order: ADR 019, ADR 020,
 ADR 017, then ADR 018. Their hosted verification passed. ADR 003 object
 selection is now implemented, locally verified, independently approved, and
-green in the hosted Viewer matrix; refreshed exact-candidate verification is
-pending. The current phase is Phase 2 selection integration verification.
+green in the hosted Viewer matrix and refreshed exact-candidate verification.
+The current phase is Phase 2 ADR 004 transformations, refresh, and undo.
 
 ## Dependency graph
 
@@ -78,8 +78,8 @@ Governing ADRs: 001, 003, 004, 007, 008, and 009.
 
 Status: ADR 003 object selection is implemented, locally verified, and
 independently approved on the verified ADR 013–014 scene foundation. The hosted
-Viewer matrix passed; exact-candidate verification is pending. ADR 004
-transformations, refresh, and undo remains next.
+Viewer matrix and exact-candidate verification passed. ADR 004 transformations,
+refresh, and undo remains next.
 
 1. [Complete] Separate persistent Viewer configuration from transient Viewer
    state.

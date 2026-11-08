@@ -4,7 +4,7 @@ Last updated: 2026-11-08
 
 ## Resume here
 
-Current phase: `Phase 2 selection integration verification`
+Current phase: `Phase 2 ADR 004 transformations, refresh, and undo`
 
 ADRs 013–014 are implemented and independently approved in core and Viewer.
 They replace the earlier adapter design with hierarchy-only nodes, stable
@@ -32,9 +32,8 @@ ADR 003 object selection is implemented and independently approved. Viewer
 state now owns one ordered GUID selection, every viewport/tree/command/settings
 path uses it, and scene-local selection mutation APIs and the `Scene.add`
 selection input are removed. Selection is intentionally transient and absent
-from scene serialization. Local package and exact-source integration checks and
-the complete hosted Viewer matrix pass; refreshed exact-candidate checks are
-pending.
+from scene serialization. Local package and exact-source integration checks,
+the complete hosted Viewer matrix, and refreshed exact-candidate checks pass.
 
 Architectural watchpoint: the user remains uncertain that the overall
 `Data`/scene-state/extension model is the final destination. The current
@@ -53,7 +52,7 @@ Read next:
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `84d9102` plus the current selection integration update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Local selection contract passed; refreshed hosted gate pending |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `ef10a8c` plus this evidence update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Contracts and refreshed exact source-installed candidates passed |
 | `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `0b4555c23d570589bf9eab412cfa5a71312e1aa2` | [1540](https://github.com/compas-dev/compas/pull/1540) | Complete hosted matrix and documentation audit passed |
 | `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `fd61b1b7ab5334dedeb2dc3ebdda43c0c693bf5c` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | ADR 003 local checks, review, build, distributions, coverage, policy, and all nine OS/Python quality jobs passed |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
@@ -63,7 +62,7 @@ Read next:
 | Layer | Status | Evidence |
 |---|---|---|
 | Local package checks | Passed with one local-policy exclusion | Core passed 2,169 tests, Ruff, focused Pyright, strict docs, and independent review. Viewer ADRs 003 and 017–020 passed their local package checks and independent reviews. The selection-focused suite passed 138 tests and the broader suite passed 259 tests after excluding Viewer’s ignored local `docs/examples/__temp` repository-policy artifact; Ruff, Pyright, strict docs, and diff checks passed. |
-| Framework integration | Local passed; hosted pending | The source gate pins Viewer `fd61b1b7ab5334dedeb2dc3ebdda43c0c693bf5c` and additionally verifies the transient selection contract. Local source execution passed 5 public contract tests with the exact-install assertion skipped by design; Ruff, Pyright, the direct pin assertion, and the diff check passed. |
+| Framework integration | Passed | The source gate pins Viewer `fd61b1b7ab5334dedeb2dc3ebdda43c0c693bf5c` and additionally verifies the transient selection contract. Local source execution passed 5 public contract tests with the exact-install assertion skipped by design; Ruff, Pyright, the direct pin assertion, and the diff check passed. Hosted contracts and exact source-installed candidates passed. |
 | Package CI | Passed | Core passed its complete hosted matrix. Viewer ADR 003 passed build, distributions, coverage, policy, and all nine OS/Python quality jobs. |
 | Candidate artifacts | Not run | Required before independently built artifact compatibility is claimed. |
 
@@ -74,12 +73,11 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Complete refreshed exact framework-candidate hosted verification for ADR
-   003.
-2. Implement accepted ADR 004 transformations, categorized refresh, and undo
-   after the selection verification is green.
-3. Run candidate-artifact verification before claiming independently built
+1. Implement accepted ADR 004 transformations, categorized refresh, and undo.
+2. Run candidate-artifact verification before claiming independently built
    artifact compatibility.
+3. Revisit the recorded `Data`/scene-state/extensions watchpoint only if
+   concrete implementation evidence warrants an amendment.
 
 ## Approval gates
 
