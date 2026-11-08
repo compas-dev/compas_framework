@@ -4,8 +4,9 @@
 
 Architecture correction implemented and verified. ADRs 013–014 are Accepted
 and supersede the adapter model. Phase 2 may resume. Accepted ADRs 015–016 now
-authorize class-owned editable declarations and contextual overrides; the
-superseded `FormField` implementation must be replaced and verified.
+authorize `SceneStateField`-backed editability, non-state editable declarations,
+and contextual overrides; superseded implementations must be replaced and
+verified.
 
 ## Dependency graph
 
@@ -93,25 +94,30 @@ Status: authorized by Accepted ADRs 015–016; implementation and verification
 of the amended design pending.
 
 1. Remove the public `FormField` API, item-target bindings, field refresh
-   modes, and the parallel built-in Viewer field inventory.
-2. Add MRO-composed class-level editable-attribute declarations to stable
-   scene-object classes, separately from `SceneStateField`.
-3. Add graphics-free context contributions that extend, replace, or remove
+   modes, the parallel built-in Viewer field inventory, and the first separate
+   `EditableAttribute` implementation.
+2. Add `editable` and the optional atomic data-only `update` callback to
+   `SceneStateField`; reject `update` when the field is not editable.
+3. Reserve `__editable_attributes__` for non-state fields, initially `name` and
+   `opacity`, and compose both MRO sources through
+   `SceneObject.editable_attributes()` without duplicate subclass names.
+4. Add graphics-free context contributions that filter, extend, or replace
    entries through the same mapping with exact registry keys, deterministic
    lexical contribution ordering, and conflict errors.
-4. Migrate object settings to introspect values, editor, writability, default
-   labels, and order; keep represented-item parameters in `ParameterForm`.
-5. Apply default assignment or the optional synchronous data-side callback
+5. Migrate object settings to infer presentation and writability from the
+   normalized mapping and current values; keep represented-item parameters in
+   `ParameterForm`.
+6. Apply default assignment or the optional synchronous data-side callback
    atomically, then let Viewer conservatively rebuild/redraw/refresh after
    success only.
-6. Verify composition, removal, conflicts, rollback, graphics-free discovery,
-   serialization exclusion, `SceneStateField` separation, and multiple
-   contexts.
+7. Verify source composition, removal, conflicts, rollback, graphics-free
+   discovery, serialization exclusion, and multiple contexts.
 
-Exit gate: stable scene-object classes are the sole built-in editable-attribute
-source; context plugins only modify the same neutral mapping; Viewer exclusively
-owns form UI and post-mutation refresh; core exposes no form or refresh protocol;
-all applicable core, Viewer, and framework integration checks pass.
+Exit gate: durable semantic attributes use `SceneStateField` as their single
+source; non-state names are declared once; context plugins only modify the
+normalized mapping; Viewer exclusively owns form UI and post-mutation refresh;
+core exposes no form or refresh protocol; all applicable core, Viewer, and
+framework integration checks pass.
 
 ## Phase 3 — Annotations and overlays
 

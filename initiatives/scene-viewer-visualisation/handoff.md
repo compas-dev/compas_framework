@@ -13,10 +13,11 @@ The refreshed exact-candidate framework gate is green, so the accepted Phase 2
 work may resume.
 
 ADRs 015–016 were explicitly approved on 2026-11-08. They authorize contextual
-object settings through class-owned editable-attribute declarations and
-runtime-only contextual overrides. Their amendment supersedes the current
-public `FormField`, item-target, and field-refresh implementation, which must
-be replaced and verified.
+object settings through editable `SceneStateField` entries, narrowly declared
+non-state attributes, and runtime-only contextual overrides. Their amendment
+supersedes the public `FormField` design and the first uncommitted separate
+`EditableAttribute` design; current implementations must be replaced and
+verified.
 
 Read next:
 
@@ -49,8 +50,8 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Replace the current `FormField` implementation with ADR 015's class-owned,
-   MRO-composed editable-attribute declarations.
+1. Replace current form/editable implementations with ADR 015's normalized
+   `SceneStateField` plus non-state editable-attribute mapping.
 2. Implement ADR 016's contextual mapping overrides, atomic mutation, and
    Viewer-owned conservative refresh.
 3. Confirm the remaining core PR 1540 matrix rerun and then run the applicable

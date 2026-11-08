@@ -17,9 +17,10 @@ framework, sub-object editing, a shell, or host-application migration.
 ADRs 013–014 are Accepted, implemented, and verified. Session redesign and
 Viewer/Session convenience operations remain later work.
 
-ADRs 015–016 authorize class-owned editable-attribute declarations with
-runtime-only contextual overrides. The earlier `FormField` implementation must
-be replaced and the amended design verified.
+ADRs 015–016 authorize one normalized editable-attribute mapping composed from
+editable `SceneStateField` entries, narrowly declared non-state attributes,
+and runtime-only contextual overrides. The earlier `FormField` implementation
+must be replaced and the amended design verified.
 
 ## New evidence requiring amendment
 
@@ -398,17 +399,20 @@ ADRs 011–012 record the unaccepted first node-first alternative. Accepted ADRs
 
 ## Accepted editable scene-object declarations
 
-Stable `SceneObject` classes own MRO-composed class-level mappings of editable
-attributes. Each entry identifies one scene-object attribute and may contain
-neutral metadata/data plus an optional synchronous data-side update callback
-with signature `(owner, value) -> None`; ordinary entries use `setattr`.
-Editable declarations remain separate from `SceneStateField` persistence.
+Durable semantic fields use their existing `SceneStateField` as the single
+source of persistence and editability. That field gains only `editable=False`
+and an optional synchronous atomic data-side `update(owner, value) -> None`
+callback; providing `update` while not editable is invalid. Ordinary mutation
+uses `setattr`.
 
-Declarations compose base-to-derived. A derived declaration replaces an
-existing entry without moving it, a new entry appends, and `None` removes an
-inherited entry. Viewer introspects the resolved values, editor, writability,
-default labels, and order. It does not maintain a parallel built-in field list
-or expose public `FormField` values.
+`SceneObject.__editable_attributes__` is reserved for genuinely editable
+non-state attributes, initially `name` and `opacity`. Its values are only
+optional update callbacks. `SceneObject.editable_attributes()` composes both
+sources base-to-derived into one ordered `name -> optional callback` mapping
+without duplicating subclass state-field names. Core contains no labels,
+editors, arbitrary data, form identifiers, refresh categories, or context
+metadata. Viewer infers presentation and does not maintain a parallel built-in
+field list or expose public `FormField` values.
 
 Graphics-free context plugins may extend, replace, or remove entries through
 the same mapping. They compose general-to-specific by stable scene-object MRO.
@@ -428,7 +432,9 @@ triggers no view refresh.
 The initial scope is only stable scene-object attributes in object settings.
 Represented-item parameters remain on the existing `ParameterForm` path. The
 amended ADRs explicitly supersede the earlier public `FormField`, item-target,
-and field-level refresh design, whose current implementation must be replaced.
+and field-level refresh design and the first uncommitted separate
+`EditableAttribute` declaration design. Their current implementation must be
+replaced.
 
 ## Decision record
 
@@ -446,7 +452,7 @@ and field-level refresh design, whose current implementation must be replaced.
 12. [ADR 012 — Explicit node-backed adapter state](decisions/012-explicit-node-backed-adapter-state.md)
 13. [ADR 013 — Hierarchy-only nodes and stable scene objects](decisions/013-hierarchy-nodes-and-stable-sceneobjects.md)
 14. [ADR 014 — Context-keyed scene operation plugins](decisions/014-context-keyed-scene-operations.md)
-15. [ADR 015 — Editable scene-object attribute declarations](decisions/015-contextual-scene-form-contributions.md)
+15. [ADR 015 — Editable scene-object attributes](decisions/015-contextual-scene-form-contributions.md)
 16. [ADR 016 — Contextual editable-attribute overrides and mutation](decisions/016-scene-form-field-bindings.md)
 
 ADRs 013–016 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded

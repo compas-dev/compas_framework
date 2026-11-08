@@ -15,9 +15,10 @@ Current phase: **editable-attribute and contextual-form implementation**.
 The stable scene architecture correction in Accepted ADRs 013–014 is
 implemented and verified: nodes are hierarchy-only, durable scene objects are
 stable, and backend operations are context-keyed. Amended Accepted ADRs
-015–016 now govern class-owned editable-attribute declarations and
-Viewer-owned contextual forms. Scene remains reference-only, and optional
-aggregation is reserved for a separate future Session design.
+015–016 now govern `SceneStateField`-backed editability, narrowly declared
+non-state editable attributes, and Viewer-owned contextual forms. Scene
+remains reference-only, and optional aggregation is reserved for a separate
+future Session design.
 
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence

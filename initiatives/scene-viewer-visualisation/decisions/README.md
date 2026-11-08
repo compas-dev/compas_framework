@@ -3,9 +3,10 @@
 ADRs 013–016 are Accepted. ADRs 013–014 supersede the implemented
 node/runtime-adapter model of ADR 008, part of ADR 009, and the unaccepted
 alternatives in ADRs 011–012. ADR 010 remains Accepted with item references
-moved to stable scene objects. ADRs 015–016 authorize a Viewer-owned mechanism
-for contextual object-settings fields based on class-owned editable-attribute
-declarations; the earlier `FormField` implementation must be replaced.
+moved to stable scene objects. ADRs 015–016 authorize contextual object
+settings from one normalized mapping: editable `SceneStateField` entries plus
+narrowly declared non-state attributes. The earlier `FormField` implementation
+must be replaced.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -23,13 +24,13 @@ declarations; the earlier `FormField` implementation must be replaced.
 | 012 | [Explicit node-backed adapter state](012-explicit-node-backed-adapter-state.md) | Superseded before acceptance | 011 |
 | 013 | [Hierarchy-only nodes and stable scene objects](013-hierarchy-nodes-and-stable-sceneobjects.md) | Accepted | Supersedes 008/009 placement; preserves 010 |
 | 014 | [Context-keyed scene operation plugins](014-context-keyed-scene-operations.md) | Accepted | 013; replaces backend class registration |
-| 015 | [Editable scene-object attribute declarations](015-contextual-scene-form-contributions.md) | Accepted, amended | 013; respects 014 |
+| 015 | [Editable scene-object attributes](015-contextual-scene-form-contributions.md) | Accepted, amended | 013; respects 014 |
 | 016 | [Contextual editable-attribute overrides and mutation](016-scene-form-field-bindings.md) | Accepted, amended | 015; respects 014 |
 
 ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A
 redesigned Session is the likely aggregate under separate future approval.
-ADRs 015–016 were accepted and amended on 2026-11-08. The amendment makes
-stable scene-object classes the source of editable declarations, keeps context
-overrides runtime-only, and removes public `FormField`, item-target, and core
-refresh-hook semantics.
+ADRs 015–016 were accepted and amended on 2026-11-08. Durable semantic fields
+declare editability on their existing `SceneStateField`; only non-state
+attributes use `__editable_attributes__`. Context overrides remain runtime-only,
+and public `FormField`, item-target, and core refresh-hook semantics are removed.

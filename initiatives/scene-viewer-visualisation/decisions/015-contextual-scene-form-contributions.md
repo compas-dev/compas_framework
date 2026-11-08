@@ -1,4 +1,4 @@
-# ADR 015: Editable Scene-Object Attribute Declarations
+# ADR 015: Editable Scene-Object Attributes
 
 ## Status
 
@@ -6,111 +6,114 @@ Accepted, amended on 2026-11-08.
 
 ## Context
 
-Viewer's object-settings form currently decides which controls to show through
-hardcoded attribute checks on private render helpers. An initial implementation
-of this ADR added public `FormField` values and a parallel Viewer-owned field
-inventory. That duplicates knowledge already owned by stable `SceneObject`
-classes and lets the form description drift from the object API.
+Viewer's object-settings form currently infers editable controls from private
+render-helper attributes. The first accepted correction introduced a separate
+class-level editable-attribute declaration for every editable property. That
+would duplicate durable semantic attribute names already declared by
+`SceneStateField`, allowing persistence and editability declarations to drift.
 
-Editable attributes are part of the stable scene-object contract. Viewer
-exclusively owns form layout, widgets, and post-mutation render and UI refresh.
-The design must preserve that boundary without adding UI state to serialized
-objects or mixing editable declarations with `SceneStateField` persistence
-declarations.
+Core needs one normalized answer to “which stable scene-object attributes are
+editable?” without acquiring labels, editor choices, form layout, rendering
+refresh policy, or other Viewer concerns.
 
 ## Options
 
-1. Let stable `SceneObject` classes declare their editable attributes and
-   compose those declarations through the class MRO.
-2. Maintain public `FormField` objects in a parallel Viewer registry.
-3. Infer fields from annotations, constructor parameters, or `hasattr` checks.
-4. Store form state or widget metadata on scene-object instances.
+1. Mark durable semantic fields editable on their existing `SceneStateField`
+   and reserve a separate name-only declaration for editable attributes that
+   are not scene state fields.
+2. Duplicate every editable attribute in a separate class-level declaration.
+3. Infer editable fields from annotations, constructors, or `hasattr` checks.
+4. Put form descriptors or widget metadata on scene-object classes.
 
 ## Decision
 
 Choose option 1.
 
-Every stable `SceneObject` class may provide one class-level mapping of editable
-attribute names to neutral declaration data. A declaration identifies the
-attribute and may contain only neutral metadata/data needed to describe it. It
-may also provide one optional synchronous data-side update callback with the
-contract:
+`SceneStateField` gains only:
+
+- `editable: bool = False`; and
+- an optional synchronous atomic data-only `update(owner, value) -> None`
+  callback.
+
+A state field with `update` and `editable=False` is invalid. Without `update`,
+an editable field uses `setattr(owner, name, value)`. The callback exists only
+for a data-side update that cannot be expressed by direct assignment. It must
+leave the owner unchanged if it raises. It is not a Viewer, form, rendering,
+refresh, context, or asynchronous hook.
+
+Durable semantic editable state uses its existing `SceneStateField` as the
+single source of both persistence and editability. Subclasses do not repeat
+those attribute names in a separate editable declaration.
+
+`SceneObject.__editable_attributes__` remains a class-level mapping only for
+genuinely editable attributes that are not `SceneStateField` entries. Its
+initial core entries are `name` and `opacity`, matching the existing inspector.
+Each mapping value is only an optional synchronous atomic data-only update
+callback; `None` means ordinary `setattr`.
+
+`SceneObject.editable_attributes()` composes both sources across the class MRO
+and returns one normalized ordered mapping:
 
 ```text
-(owner, value) -> None
+attribute name -> optional update callback
 ```
 
-Without a callback, mutation uses `setattr(owner, attribute, value)`. A
-callback exists only for a data-side update that cannot be expressed by direct
-assignment. It is not a Viewer, rendering, refresh, context, or asynchronous
-hook. The callback must be atomic: if it raises, it leaves the owner unchanged.
+MRO composition must not duplicate subclass names. A name resolves once in the
+normalized result, with the most specific applicable definition governing its
+callback while retaining deterministic order.
 
-Declarations compose from base class to derived class:
-
-- a derived declaration for an existing attribute replaces its data while
-  retaining the attribute's existing position;
-- a newly declared attribute appends after inherited attributes; and
-- a value of `None` removes an inherited attribute.
-
-Viewer introspects the resolved attribute value, editor, writability, default
-label, and order. There is no public `FormField` object and no parallel
-hardcoded Viewer inventory of built-in editable fields. Viewer owns control
-construction and layout, but the stable class remains the source of truth for
-which of its attributes are editable.
-
-Editable declarations are runtime class metadata. They are graphics-free,
-contain no Qt or OpenGL objects, and are never serialized with a scene object.
-They are separate from `SceneStateField`: declaring an attribute editable does
-not make it durable, and declaring a state field does not make it editable.
+Core contains no label, editor, arbitrary metadata/data, form identifier,
+refresh category, or context metadata. Viewer infers presentation from the
+resolved object and owns every form and post-mutation refresh decision.
 
 The initial scope contains only attributes owned by stable `SceneObject`
-instances. Represented-item parameters remain available through the existing
-`ParameterForm`; they are not part of this declaration mechanism.
+instances. Represented-item parameters remain on the existing `ParameterForm`
+path.
 
 ## Consequences
 
-- Stable scene-object classes own one authoritative editable-attribute
-  inventory.
-- Viewer no longer infers editing capabilities from renderer aliases or a
-  parallel list.
-- Neutral class declarations remain usable by more than one UI context without
-  putting form or render behavior in core.
-- Arbitrary widgets, represented-item parameters, nested paths, asynchronous
-  updates, and refresh callbacks are outside this contract.
+- Durable semantic fields have one declaration rather than parallel state and
+  editable inventories.
+- Non-state editable attributes remain explicit and narrowly scoped.
+- All consumers receive the same normalized name-to-callback mapping.
+- Core remains free of form presentation and rendering refresh policy.
+- Arbitrary widgets, item parameters, dotted paths, asynchronous callbacks,
+  and refresh callbacks remain outside this contract.
 
 ## Compatibility
 
-The current public `FormField` implementation and hardcoded Viewer field
-inventory must be replaced. This is an approved correction before that API is
-treated as stable. Existing represented-item `ParameterForm` behavior remains
-separate and unchanged.
+The uncommitted separate `EditableAttribute`/declaration design is superseded
+before it becomes public. The current public `FormField` implementation and
+parallel hardcoded Viewer field inventory must also be replaced. Existing
+represented-item `ParameterForm` behavior remains separate and unchanged.
 
 ## Verification
 
-- Compose declarations base-to-derived with position-preserving overrides,
-  appended new attributes, and `None` removal.
-- Verify Viewer derives the value, editor, writability, default label, and
-  order without a built-in field inventory.
-- Verify a default declaration uses `setattr` and a declared callback receives
-  exactly `(owner, value)` synchronously and leaves the owner unchanged when it
-  raises.
-- Prove declaration resolution imports no graphics or UI modules.
-- Prove declarations and resolved editor state are absent from scene-object
+- Compose editable `SceneStateField` entries and non-state
+  `__editable_attributes__` entries across the MRO into one ordered mapping.
+- Verify durable subclass fields are not duplicated in
+  `__editable_attributes__` or the normalized result.
+- Reject a `SceneStateField` with `update` and `editable=False`.
+- Verify default mutation uses `setattr` and callbacks receive exactly
+  `(owner, value)` synchronously and atomically.
+- Verify the initial non-state entries are `name` and `opacity`.
+- Prove core declarations and resolution contain no UI, form, context, or
+  refresh metadata and import no graphics modules.
+- Prove editability declarations and resolved mappings are absent from scene
   serialization.
-- Verify `SceneStateField` and editable declarations remain independent.
-- Verify represented-item parameters continue through `ParameterForm` rather
-  than this mechanism.
+- Verify represented-item parameters continue through `ParameterForm`.
 
 ## Dependencies
 
-- Depends on Accepted ADR 013 for stable scene-object types.
+- Depends on Accepted ADR 013 for stable scene-object types and durable scene
+  state.
 - Respects ADR 014's restricted `draw`/`clear` operation surface.
-- Context-specific declaration changes are governed by Accepted ADR 016.
+- Context-specific normalized mapping changes are governed by Accepted ADR
+  016.
 
 ## Amendment
 
-Approved on 2026-11-08. This amendment supersedes the earlier accepted design
-in which Viewer providers returned public `FormField` values for scene-object
-and represented-item targets with explicit field refresh modes. The current
-implementation of that design must be replaced by the class-owned declaration
-model above.
+Approved on 2026-11-08. This amendment supersedes both the earlier accepted
+public `FormField`/item-target/refresh design and the first uncommitted
+class-level design that separately redeclared durable editable attributes.
+`SceneStateField` is now the single source for durable semantic editable state.

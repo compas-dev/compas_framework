@@ -6,12 +6,13 @@ Accepted, amended on 2026-11-08.
 
 ## Context
 
-ADR 015 makes stable scene-object classes the source of neutral editable
-attribute declarations. A visualization context may still need to expose an
-additional scene-object attribute, refine neutral presentation metadata, or
-hide an otherwise editable attribute. This must use the same declaration model
-without reintroducing a second public field type or putting rendering refresh
-instructions in core.
+ADR 015 makes `SceneStateField` and narrowly scoped
+`__editable_attributes__` declarations the sources of one normalized editable
+attribute mapping. A visualization context may still need to expose an
+additional scene-object attribute, replace its data-side update callback, or
+hide an otherwise editable attribute. This must operate on that normalized
+mapping without reintroducing a second public field type or putting
+presentation and rendering refresh instructions in core.
 
 ## Options
 
@@ -26,12 +27,16 @@ instructions in core.
 Choose option 1.
 
 Context plugins register graphics-free contributions under the exact key
-`(context, stable SceneObject type, contribution ID)`. A contribution uses the
-same attribute-keyed mapping as the class declaration:
+`(context, stable SceneObject type, contribution ID)`. A contribution modifies
+the normalized `attribute name -> optional update callback` mapping:
 
-- a new attribute appends;
-- an existing attribute is replaced while retaining its position; and
-- `None` removes the attribute.
+- a new attribute with an optional callback appends;
+- an existing attribute's callback is replaced while retaining its position;
+  and
+- an explicit removal marker removes the attribute.
+
+The removal marker is distinct from `None`, because `None` means the attribute
+uses ordinary `setattr`.
 
 Resolution starts with the base-to-derived class declarations from ADR 015 and
 then applies applicable context contributions by stable scene-object MRO from
@@ -46,18 +51,19 @@ Class declarations and plugin discovery remain graphics-free. Contributions
 and their resolved mappings are runtime-only and are never serialized.
 
 Viewer introspects the final mapping and owns form construction. It determines
-the control from the current value and neutral metadata, checks writability,
-and applies the default assignment or synchronous data-side callback defined
-by ADR 015. There is no public `FormField` object.
+presentation from the current value, checks writability, and applies the
+default assignment or synchronous data-side callback defined by ADR 015.
+There is no public `FormField` object and the mapping contains no labels,
+editors, arbitrary data, form metadata, or refresh instructions.
 
 Mutation is atomic from the form's perspective. If assignment or the callback
 raises, the owner remains unchanged under ADR 015's callback contract, the
 control is restored to the previous value, the original failure is reported,
 and no view refresh occurs. After a successful mutation, Viewer exclusively
 decides which render-data rebuild, redraw, and UI refresh operations are
-required. Context plugins only modify neutral editable-attribute declarations.
-Core declarations contain no refresh callback, refresh category, or context
-protocol.
+required. Context plugins only filter, extend, or replace normalized attribute
+names and callbacks. Core declarations contain no refresh callback, refresh
+category, or context protocol.
 
 The initial scope is only stable `SceneObject` attributes in object settings.
 Represented-item parameters continue to use the existing `ParameterForm` and
@@ -86,7 +92,8 @@ remain plugin contributions. Existing `ParameterForm` behavior is preserved.
 - Compose class declarations and general-to-specific context contributions in
   lexical contribution-ID and mapping-insertion order, preserving positions
   for replacements and deterministically appending new attributes.
-- Verify `None` removes class-owned or inherited context attributes.
+- Verify the explicit removal marker removes class-owned or inherited context
+  attributes while `None` selects ordinary `setattr`.
 - Reject duplicate exact registrations and same-specificity attribute
   conflicts with diagnostics naming context, scene-object type, and attribute.
 - Verify two contexts may resolve different mappings for the same stable
