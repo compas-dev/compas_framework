@@ -20,6 +20,9 @@ non-state editable attributes, and Viewer-owned contextual forms. Scene
 remains reference-only, and optional aggregation is reserved for a separate
 future Session design.
 
+Proposed ADRs 017–020 cover lazy Mesh/Graph element-attribute tables, their
+editing semantics, configured Viewer identity, and configuration lifecycle.
+
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence
 and a later redesign consumer, not a behavior contract. Session persistence,

@@ -6,7 +6,9 @@ alternatives in ADRs 011–012. ADR 010 remains Accepted with item references
 moved to stable scene objects. ADRs 015–016 authorize contextual object
 settings from one normalized mapping: editable `SceneStateField` entries plus
 narrowly declared non-state attributes. The earlier `FormField` implementation
-must be replaced.
+must be replaced. ADRs 017–020 propose lazy datastructure attribute tables,
+their editing semantics, configured Viewer identity, and a configuration
+lifecycle/field audit; none is approved for implementation.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -26,6 +28,10 @@ must be replaced.
 | 014 | [Context-keyed scene operation plugins](014-context-keyed-scene-operations.md) | Accepted | 013; replaces backend class registration |
 | 015 | [Editable scene-object attributes](015-contextual-scene-form-contributions.md) | Accepted, amended | 013; respects 014 |
 | 016 | [Contextual editable-attribute overrides and mutation](016-scene-form-field-bindings.md) | Accepted, amended | 015; respects 014 |
+| 017 | [Lazy datastructure element-attribute tables](017-lazy-datastructure-attribute-tables.md) | Proposed | 006; sidebar coordination |
+| 018 | [Datastructure element-attribute editing](018-datastructure-attribute-editing.md) | Proposed | 017; 006/016 refresh ownership |
+| 019 | [Configured Viewer identity](019-configured-viewer-identity.md) | Proposed | Independent |
+| 020 | [Viewer configuration lifecycle and field audit](020-viewer-config-lifecycle-and-audit.md) | Proposed | 019; sidebar coordination with 017–018 |
 
 ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A
@@ -34,3 +40,4 @@ ADRs 015–016 were accepted and amended on 2026-11-08. Durable semantic fields
 declare editability on their existing `SceneStateField`; only non-state
 attributes use `__editable_attributes__`. Context overrides remain runtime-only,
 and public `FormField`, item-target, and core refresh-hook semantics are removed.
+ADRs 017–020 remain Proposed pending explicit user approval.

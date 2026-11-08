@@ -22,6 +22,10 @@ editable `SceneStateField` entries, narrowly declared non-state attributes,
 and runtime-only contextual overrides. The earlier `FormField` implementation
 must be replaced and the amended design verified.
 
+ADRs 017–020 propose lazy datastructure element-attribute tables and editing,
+configured Viewer identity, and an explicit configuration lifecycle/field
+audit. They are not approved for implementation.
+
 ## New evidence requiring amendment
 
 - A Viewer Box/ShapeObject local translation `[2, 0, 0]` reloads as
@@ -436,6 +440,43 @@ and field-level refresh design and the first uncommitted separate
 `EditableAttribute` declaration design. Their current implementation must be
 replaced.
 
+## Proposed datastructure element-attribute tables
+
+Viewer may add lazy `QAbstractTableModel` views for Mesh and Graph element
+attributes without changing core. Domains and columns come from existing
+`default_*_attributes` mappings and matching singular APIs. Default mapping
+insertion order defines columns; sparse undeclared attributes are not scanned
+or shown. Tabs exist only for domains with declared attributes.
+
+The proposed editing contract supports Boolean, integer, float, and text
+defaults. Other types are read-only. Cells show effective values, mutate
+through singular setters, and reset through singular unset operations. Table
+selection remains local, and Viewer refreshes conservatively after successful
+mutation. Default-schema editing, sparse-column discovery, batch editing,
+undo, and viewport component selection remain outside the first version.
+
+## Proposed Viewer identity and configuration lifecycle
+
+The existing `WindowConfig.title` should consistently supply Qt application
+name, display name, and window title. `icon=None` selects the packaged icon;
+otherwise the icon is an absolute path. Identity and window behavior are
+startup-only, fullscreen is honored, and configuration is applied before Qt
+application construction. This identity decision is independent of schema
+migration and unrelated field cleanup.
+
+Viewer should retain nested dataclasses and gain explicit path-aware
+validation rather than Pydantic, arbitrary plugin dictionaries, or a reactive
+configuration promise. Schema version 2 connects fullscreen and status-bar
+visibility; removes `about`, obsolete sidebar fields, renderer `opacity`, and
+the duplicated `display` group; removes root `unit` until a unit-aware workflow
+has an approved owner and lifecycle; adds `ortho` to renderer view choices; and
+keeps active `vectorsize`. Schema-1 migration drops known retired fields,
+preserves retained values, and rejects unknown fields; schema 2 rejects
+explicit retired fields. Typed Viewer subclasses may add typed dataclass
+configuration fields with their own validation. Direct mutation is setup-time
+only, replacing `viewer.config` is unsupported, and dotted-path `ViewerState`
+access is transitional rather than an extension API.
+
 ## Decision record
 
 1. [ADR 001 — Ownership and state boundaries](decisions/001-ownership-boundaries.md)
@@ -454,8 +495,13 @@ replaced.
 14. [ADR 014 — Context-keyed scene operation plugins](decisions/014-context-keyed-scene-operations.md)
 15. [ADR 015 — Editable scene-object attributes](decisions/015-contextual-scene-form-contributions.md)
 16. [ADR 016 — Contextual editable-attribute overrides and mutation](decisions/016-scene-form-field-bindings.md)
+17. [ADR 017 — Lazy datastructure element-attribute tables](decisions/017-lazy-datastructure-attribute-tables.md)
+18. [ADR 018 — Datastructure element-attribute editing](decisions/018-datastructure-attribute-editing.md)
+19. [ADR 019 — Configured Viewer identity](decisions/019-configured-viewer-identity.md)
+20. [ADR 020 — Viewer configuration lifecycle and field audit](decisions/020-viewer-config-lifecycle-and-audit.md)
 
 ADRs 013–016 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
 in the decision index; ADR 010 remains Accepted with amended terminology.
 The amended ADR 015–016 implementation is authorized; the superseded
 `FormField` implementation must be replaced and the new contract verified.
+ADRs 017–020 remain Proposed and block their respective implementation work.

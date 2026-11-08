@@ -119,6 +119,48 @@ normalized mapping; Viewer exclusively owns form UI and post-mutation refresh;
 core exposes no form or refresh protocol; all applicable core, Viewer, and
 framework integration checks pass.
 
+## Proposed datastructure attribute tables
+
+Governing ADRs: 006, 017, and 018.
+
+Status: blocked pending explicit approval of ADRs 017–018.
+
+1. Add lazy Mesh and Graph element-attribute table models using declared
+   default mappings and singular domain APIs.
+2. Add sidebar tabs only for domains with declared columns; preserve mapping
+   insertion order and omit sparse undeclared attributes.
+3. Add supported scalar delegates, singular setter/unset mutation, effective
+   values, local selection, and conservative Viewer refresh.
+4. Verify laziness, large/empty structures, value types, reset behavior,
+   atomic failure, and excluded first-version features.
+
+Exit gate: tables are lazy, declared-domain-driven, Viewer-owned, and verified
+without core API changes.
+
+## Proposed Viewer identity and configuration lifecycle
+
+Governing ADRs: 019 and 020.
+
+Status: blocked pending explicit approval of ADRs 019–020.
+
+ADR 019 is independently decidable. ADR 020 depends on its identity contract
+for schema validation and startup application.
+
+1. Apply validated startup configuration before Qt application/window
+   construction; connect title, icon, dimensions, and fullscreen.
+2. Retain dataclasses, add path-aware validation, and separate startup
+   configuration from transient Viewer state.
+3. Implement the schema-2 field audit and migration/rejection behavior.
+4. Verify identity, icons, fullscreen, status bar, every field disposition,
+   setup-only mutation semantics, serialization, and typed subclass extension.
+
+Exit gate: startup identity and configuration are validated and effective;
+removed fields are absent; transient state is not serialized.
+
+Implementation of the two proposed sections must coordinate ownership of
+sidebar and startup UI files. Neither proposal authorizes implementation before
+its ADRs are accepted.
+
 ## Phase 3 — Annotations and overlays
 
 Governing ADRs: 001–005 and 007.

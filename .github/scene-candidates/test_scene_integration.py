@@ -14,11 +14,14 @@ from compas.scene import SceneItemNotBoundError
 from compas.scene import SceneObject
 from compas.scene import ShapeObject
 from compas.scene import register_scene_operation
+from compas_viewer.forms import REMOVE_EDITABLE_ATTRIBUTE
+from compas_viewer.forms import register_scene_attribute_contribution
+from compas_viewer.forms import scene_editable_attributes
 from compas_viewer.scene import BufferGeometry
 from compas_viewer.scene import ViewerScene
 
-CORE_COMMIT = "d43db206afec36450efbe76b53306ce3bd468076"
-VIEWER_COMMIT = "a72b61b777bc3fd448c3d471c48ef7f65334b319"
+CORE_COMMIT = "314443976a056174ac755e4393059cb37795dda1"
+VIEWER_COMMIT = "21a45d5352e89bdfab32aea0588532b414bfac87"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -67,6 +70,52 @@ def test_indexed_buffer_geometry_stays_indexed_and_roundtrips():
     assert restored.triangles is not None
     assert restored.triangles.shape == (2, 3)
     assert restored.triangles.tolist() == [[0, 1, 2], [1, 3, 2]]
+
+
+def test_contextual_editable_scene_state_is_graphics_free_and_not_serialized():
+    sceneobject = ShapeObject(item=Box(1.0), u=7, v=9)
+    original_payload = sceneobject.to_jsonstring()
+
+    geometry_fields = sceneobject.scene_state_fields()["compas.scene.GeometryObject"]
+    editable_state = {field.attribute for field in geometry_fields if field.editable}
+    assert editable_state == {
+        "linecolor",
+        "linewidth",
+        "pointcolor",
+        "pointsize",
+        "show_lines",
+        "show_points",
+        "show_surfaces",
+        "surfacecolor",
+    }
+    assert editable_state <= sceneobject.editable_attributes().keys()
+    assert "u" not in sceneobject.editable_attributes()
+
+    def update_resolution(obj: ShapeObject, value: object) -> None:
+        obj.u = int(value)
+
+    register_scene_attribute_contribution(
+        "FrameworkIntegration",
+        ShapeObject,
+        "shape-resolution",
+        {
+            "name": REMOVE_EDITABLE_ATTRIBUTE,
+            "u": update_resolution,
+        },
+    )
+    resolved = scene_editable_attributes("FrameworkIntegration", sceneobject)
+
+    assert "name" not in resolved
+    assert resolved["u"] is update_resolution
+    assert sceneobject.to_jsonstring() == original_payload
+
+    resolved["u"](sceneobject, 11)
+    assert type(sceneobject) is ShapeObject
+    assert sceneobject.u == 11
+    payload = sceneobject.to_jsonstring()
+    assert "shape-resolution" not in payload
+    assert "FrameworkIntegration" not in payload
+    assert "FormField" not in payload
 
 
 def test_stable_scene_roundtrip_operations_and_explicit_binding():

@@ -16,8 +16,14 @@ ADRs 015–016 were explicitly approved on 2026-11-08. They authorize contextual
 object settings through editable `SceneStateField` entries, narrowly declared
 non-state attributes, and runtime-only contextual overrides. Their amendment
 supersedes the public `FormField` design and the first uncommitted separate
-`EditableAttribute` design; current implementations must be replaced and
-verified.
+`EditableAttribute` design. The replacement core and Viewer implementations
+are pushed and independently approved; hosted package and refreshed framework
+verification are pending.
+
+ADRs 017–020 are Proposed. They cover lazy Mesh/Graph element-attribute tables,
+their narrow editing semantics, configured Viewer identity, and configuration
+lifecycle/field cleanup. No implementation is authorized until the relevant
+ADRs are explicitly approved.
 
 Read next:
 
@@ -29,18 +35,18 @@ Read next:
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `0fe8f4a` plus this evidence update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Exact-source contracts and installed-candidate gate passed |
-| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | runtime candidate `d43db206afec36450efbe76b53306ce3bd468076`; test-only head `41e51713352` | [1540](https://github.com/compas-dev/compas/pull/1540) | Codecov patch/project, coverage, build, and NumPy checks passed; remaining matrix rerun pending |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `a72b61b777bc3fd448c3d471c48ef7f65334b319` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Complete hosted matrix passed |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `c6c835266f6eab6b5fa525b832ed7abf62684243` plus this gate refresh | [7](https://github.com/compas-dev/compas_framework/pull/7) | Local exact-source gate passed; hosted refresh pending |
+| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `314443976a056174ac755e4393059cb37795dda1` | [1540](https://github.com/compas-dev/compas/pull/1540) | Editable scene-state implementation pushed; local checks and independent review passed; hosted rerun pending |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `21a45d5352e89bdfab32aea0588532b414bfac87` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Contextual attribute forms pushed; local checks and independent review passed; hosted rerun pending |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
 ## Verification evidence
 
 | Layer | Status | Evidence |
 |---|---|---|
-| Local package checks | Passed with one local-policy exclusion | Core focused scene/glTF checks, Ruff, Pyright, strict docs, and independent review passed. Viewer passed 161 applicable tests, Ruff, Pyright, strict docs, and independent review. Viewer’s ignored local `docs/examples/__temp` directory remains the sole excluded repository-policy assertion. |
-| Framework integration | Passed | The refreshed gate covers exact revisions, graphics-free discovery, stable semantic types and GUIDs, hierarchy-only nodes, external item rebinding, context-keyed operations without class substitution, transient runtime exclusion, and indexed-buffer round trips. Local source execution passed 3 tests with the exact-install assertion skipped by design; hosted contracts and source-installed candidates passed. |
-| Package CI | Viewer passed; core rerun in progress | Viewer build, coverage, policy, distribution, and all nine OS/Python quality jobs passed. Core's Codecov patch/project, coverage, build, and NumPy checks passed after focused closed-schema tests raised expected patch coverage from 85.59% to 86.10%; the remaining matrix jobs are rerunning. |
+| Local package checks | Passed with one local-policy exclusion | Core passed 2,169 tests, Ruff, focused Pyright, strict docs, and independent review. Viewer passed 177 applicable tests, Ruff, Pyright, strict docs, graphics-free discovery, and independent review. Viewer’s ignored local `docs/examples/__temp` directory remains the sole excluded repository-policy assertion. |
+| Framework integration | Local source gate passed; hosted refresh pending | The refreshed gate pins the exact new heads and covers graphics-free discovery, stable scene identity, single-source editable `SceneStateField` declarations, contextual contribution/removal, data-only mutation, serialization exclusion, hierarchy and operation behavior, and indexed-buffer round trips. Local source execution passed 4 tests with the exact-install assertion skipped by design; Pyright reported 0 errors. |
+| Package CI | Pending refreshed heads | The prior core and Viewer candidates passed their applicable package checks. The new editable-state and contextual-form heads require clean-environment reruns. |
 | Candidate artifacts | Not run | Required before independently built artifact compatibility is claimed. |
 
 The broader `tests/test_package.py` run is locally unavailable because the
@@ -50,16 +56,15 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Replace current form/editable implementations with ADR 015's normalized
-   `SceneStateField` plus non-state editable-attribute mapping.
-2. Implement ADR 016's contextual mapping overrides, atomic mutation, and
-   Viewer-owned conservative refresh.
-3. Confirm the remaining core PR 1540 matrix rerun and then run the applicable
-   candidate-artifact compatibility gate.
+1. Push and verify the refreshed ADR 015–016 framework gate and package checks.
+2. Review and approve or revise Proposed ADRs 017–020.
+3. Coordinate sidebar ownership before implementing any approved ADR 017–020 work.
 
 ## Approval gates
 
 - The accepted initial implementation scope is core, Viewer, and framework.
 - Adding model, session, notebook, or host packages requires explicit approval.
 - Contextual form implementation is authorized by Accepted ADRs 015–016.
+- Datastructure tables/editing and configuration work remain blocked on
+  Proposed ADRs 017–020.
 - Do not merge or publish without explicit approval.
