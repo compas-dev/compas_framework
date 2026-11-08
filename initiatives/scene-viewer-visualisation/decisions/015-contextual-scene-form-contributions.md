@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -105,10 +105,15 @@ is not part of this decision.
 - Depends on Accepted ADR 013 for stable scene-object types.
 - Respects ADR 014's restricted `draw`/`clear` operation surface and does not
   extend the core scene operation registry.
-- Its implementation depends on Proposed ADR 016 for the declarative field and
+- Its implementation depends on Accepted ADR 016 for the declarative field and
   mutation contract; the Viewer ownership decision can be approved
   independently.
 
 ## Decision
 
-Pending explicit user approval.
+Approved on 2026-11-08. Viewer owns one lightweight contextual form registry
+whose providers return declarative field links rather than widgets. The
+rationale is to make supported fields explicit and extensible while keeping
+stable scene objects backend-neutral, plugin discovery graphics-free, and
+control construction, lifecycle, ordering, and failure handling consistent in
+Viewer.

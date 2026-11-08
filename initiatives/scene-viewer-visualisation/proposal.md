@@ -17,8 +17,8 @@ framework, sub-object editing, a shell, or host-application migration.
 ADRs 013–014 are Accepted, implemented, and verified. Session redesign and
 Viewer/Session convenience operations remain later work.
 
-ADRs 015–016 propose a later Viewer-owned contextual form mechanism. They are
-not approved for implementation.
+ADRs 015–016 authorize a Viewer-owned contextual form mechanism. Implementation
+and verification remain pending.
 
 ## New evidence requiring amendment
 
@@ -395,7 +395,7 @@ buffers, host handles, picking state, and caches live outside durable objects.
 ADRs 011–012 record the unaccepted first node-first alternative. Accepted ADRs
 013–014 record the selected design, which is now implemented and verified.
 
-## Proposed contextual object-settings contributions
+## Accepted contextual object-settings contributions
 
 Viewer's object-settings form currently selects controls through hardcoded
 attribute checks on private render helpers. This confuses renderer-facing
@@ -403,7 +403,7 @@ aliases with editable UI capabilities and provides no supported extension
 point for packages that need to expose a particular stable scene-object
 attribute or represented-item parameter.
 
-The proposed correction is deliberately Viewer-owned. Lightweight plugins
+The accepted correction is deliberately Viewer-owned. Lightweight plugins
 register declarative contributions by context, form identifier, stable
 scene-object type, and contribution ID. Providers are invoked only when the
 form is populated, compose through the stable type MRO, and describe flat
@@ -444,6 +444,7 @@ dialog remains available during the initial migration.
 15. [ADR 015 — Contextual scene form contributions](decisions/015-contextual-scene-form-contributions.md)
 16. [ADR 016 — Scene form field bindings](decisions/016-scene-form-field-bindings.md)
 
-ADRs 013–014 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
-in the decision index; ADR 010 remains Accepted with amended terminology. ADRs
-015–016 remain Proposed and block contextual form implementation.
+ADRs 013–016 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
+in the decision index; ADR 010 remains Accepted with amended terminology.
+Contextual form implementation under ADRs 015–016 is authorized but remains
+pending.

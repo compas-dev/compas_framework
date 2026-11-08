@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -96,11 +96,15 @@ format changes.
 
 ## Dependencies
 
-- Depends on Proposed ADR 015 for contribution registration, lookup, and
+- Depends on Accepted ADR 015 for contribution registration, lookup, and
   lifecycle.
 - Reuses accepted stable scene-object and external item-binding semantics from
   ADRs 010 and 013.
 
 ## Decision
 
-Pending explicit user approval.
+Approved on 2026-11-08. Contextual fields use flat named bindings with explicit
+ownership, editor, order, and refresh semantics. The rationale is to provide
+one transparent mutation and rollback path for stable scene-object attributes
+and already-bound item parameters without arbitrary callbacks, dotted paths,
+implicit loading, serialized UI state, or a general schema framework.

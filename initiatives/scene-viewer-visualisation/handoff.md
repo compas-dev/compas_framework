@@ -1,6 +1,6 @@
 # Scene, Viewer, and Visualisation Handoff
 
-Last updated: 2026-11-07
+Last updated: 2026-11-08
 
 ## Resume here
 
@@ -10,11 +10,11 @@ ADRs 013–014 are implemented and independently approved in core and Viewer.
 They replace the earlier adapter design with hierarchy-only nodes, stable
 backend-neutral scene objects, and context-keyed `draw`/`clear` operations.
 The refreshed exact-candidate framework gate is green, so the accepted Phase 2
-work may resume independently of the proposed contextual form extension.
+work may resume.
 
-ADRs 015–016 now propose contextual object-settings contributions and explicit
-field binding/mutation semantics. No implementation is authorized until both
-are explicitly approved.
+ADRs 015–016 were explicitly approved on 2026-11-08. They authorize contextual
+object-settings contributions and explicit field binding/mutation semantics;
+implementation and verification remain pending.
 
 Read next:
 
@@ -47,13 +47,16 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Review and approve or revise Proposed ADRs 015–016.
-2. Confirm the remaining core PR 1540 matrix rerun completes green.
-3. Resume Phase 2 from the verified stable-scene foundation after its approval gates are clear.
+1. Implement and verify ADR 015's lightweight contribution registry and
+   deterministic composition in Viewer.
+2. Implement and verify ADR 016's field bindings, mutation/rollback path, and
+   built-in object-settings migration.
+3. Confirm the remaining core PR 1540 matrix rerun and then run the applicable
+   candidate-artifact compatibility gate.
 
 ## Approval gates
 
 - The accepted initial implementation scope is core, Viewer, and framework.
 - Adding model, session, notebook, or host packages requires explicit approval.
-- Contextual form implementation requires explicit approval of ADRs 015–016.
+- Contextual form implementation is authorized by Accepted ADRs 015–016.
 - Do not merge or publish without explicit approval.

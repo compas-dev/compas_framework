@@ -3,8 +3,9 @@
 ## Status
 
 Architecture correction implemented and verified. ADRs 013–014 are Accepted
-and supersede the adapter model. Phase 2 may resume. Contextual form work is
-blocked on Proposed ADRs 015–016.
+and supersede the adapter model. Phase 2 may resume. Accepted ADRs 015–016 now
+authorize contextual form work; implementation and verification remain
+pending.
 
 ## Dependency graph
 
@@ -84,11 +85,12 @@ Status: ready on the implemented and verified ADR 013–014 scene foundation.
 Exit gate: all selection paths share one model; transform/undo tests cover
 parents, batches, failures, and buffer-update scope.
 
-## Proposed contextual object-settings work
+## Contextual object-settings work
 
 Governing ADRs: 013, 014, 015, and 016.
 
-Status: blocked pending explicit approval of ADRs 015–016.
+Status: authorized by Accepted ADRs 015–016; implementation and verification
+pending.
 
 1. Add the lightweight Viewer-owned contribution registry and deterministic
    MRO composition.
