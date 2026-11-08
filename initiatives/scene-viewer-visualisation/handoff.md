@@ -4,7 +4,7 @@ Last updated: 2026-11-08
 
 ## Resume here
 
-Current phase: `Phase 2 ADR 004 integration verification`
+Current phase: `Phase 3 ADR 005 annotations, measurements, and overlays`
 
 ADRs 013–014 are implemented and independently approved in core and Viewer.
 They replace the earlier adapter design with hierarchy-only nodes, stable
@@ -42,7 +42,8 @@ as one entry in a private Viewer-level undo/redo stack. Geometry, appearance,
 transform, and hierarchy refreshes have explicit public operations. Hidden and
 item-less groups now participate in runtime buffers so parent transforms remain
 valid. Local Viewer, documentation, core scene, and exact-source integration
-checks pass; refreshed hosted checks are pending.
+checks pass. The refreshed core and Viewer package matrices and exact framework
+candidate gate also pass.
 
 Architectural watchpoint: the user remains uncertain that the overall
 `Data`/scene-state/extension model is the final destination. The current
@@ -61,8 +62,8 @@ Read next:
 
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `89cfcd6` plus the current ADR 004 integration update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Local ADR 004 exact-source contract passed; refreshed hosted gate pending |
-| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `a4cc38a4f54d147f1ff45e19673b32f089576e2f` | [1540](https://github.com/compas-dev/compas/pull/1540) | Core transformation docs and local strict build passed; refreshed hosted matrix pending |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `16d017d` plus this evidence update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Contracts and exact source-installed candidates passed |
+| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `a4cc38a4f54d147f1ff45e19673b32f089576e2f` | [1540](https://github.com/compas-dev/compas/pull/1540) | Complete hosted matrix, coverage, NumPy, metadata, and documentation checks passed |
 | `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `a4fe52e51f7254c13df9659f9a61dc22ebbc1daa` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | ADR 004 local checks, review, build, distributions, coverage, policy, and all nine OS/Python quality jobs passed |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
@@ -71,8 +72,8 @@ Read next:
 | Layer | Status | Evidence |
 |---|---|---|
 | Local package checks | Passed with one local-policy exclusion | Viewer passed 289 tests with only the known ignored local `docs/examples/__temp` policy assertion deselected; Ruff, format, Pyright, strict docs, and independent review passed. Core scene tests and strict documentation passed. |
-| Framework integration | Local passed; hosted pending | The source gate pins core `a4cc38a4f54d147f1ff45e19673b32f089576e2f` and Viewer `a4fe52e51f7254c13df9659f9a61dc22ebbc1daa`. It verifies non-commuting parent/world conversion, undo/redo, history-preserving geometry/appearance refresh, and history-invalidating external transform refresh. Local source execution passed 6 public contract tests with the exact-install assertion skipped by design; Ruff, Pyright, and the direct pin assertion passed. |
-| Package CI | Viewer passed; core pending | Viewer passed build, distributions, coverage, policy, and all nine OS/Python quality jobs. The refreshed core matrix is still running. |
+| Framework integration | Passed | The source gate pins core `a4cc38a4f54d147f1ff45e19673b32f089576e2f` and Viewer `a4fe52e51f7254c13df9659f9a61dc22ebbc1daa`. It verifies non-commuting parent/world conversion, undo/redo, history-preserving geometry/appearance refresh, and history-invalidating external transform refresh. Local source execution passed 6 public contract tests with the exact-install assertion skipped by design; Ruff, Pyright, and the direct pin assertion passed. Hosted contracts and exact source-installed candidates passed. |
+| Package CI | Passed | Viewer passed build, distributions, coverage, policy, and all nine OS/Python quality jobs. Core passed its complete OS/Python matrix, coverage, NumPy, release metadata, and changelog checks. |
 | Candidate artifacts | Not run | Required before independently built artifact compatibility is claimed. |
 
 The broader `tests/test_package.py` run is locally unavailable because the
@@ -82,11 +83,8 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Complete refreshed core, Viewer, and exact framework-candidate hosted
-   verification for ADR 004.
-2. Begin accepted ADR 005 annotations, measurements, and overlays after the
-   ADR 004 integration gate is green.
-3. Run candidate-artifact verification before claiming independently built
+1. Begin accepted ADR 005 annotations, measurements, and overlays.
+2. Run candidate-artifact verification before claiming independently built
    artifact compatibility.
 
 ## Approval gates

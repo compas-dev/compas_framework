@@ -28,8 +28,8 @@ configured Viewer identity, and an explicit configuration lifecycle/field
 audit. Their implementation is verified locally and in hosted Viewer and
 framework CI. ADR 003 object selection is also fully verified. ADR 004
 transformations, categorized refresh, and Viewer-level transform history is
-implemented, locally verified, and independently approved; refreshed hosted
-verification is pending.
+implemented, independently approved, and verified locally and in hosted core,
+Viewer, and framework CI.
 
 ## New evidence requiring amendment
 
@@ -524,4 +524,5 @@ ADRs 017–020 are Accepted and were implemented in order ADR 019, ADR 020, ADR
 017, then ADR 018 so configuration and sidebar ownership were established
 first. Local verification, independent review, and hosted verification passed.
 ADR 003 is fully verified. ADR 004 is implemented, locally verified, and
-independently approved; refreshed hosted verification remains pending.
+independently approved; refreshed hosted core, Viewer, and framework
+verification passed.
