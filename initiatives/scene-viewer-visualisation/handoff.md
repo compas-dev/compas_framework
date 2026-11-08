@@ -24,8 +24,9 @@ ADRs 017–020 were explicitly approved on 2026-11-08 and implemented in the
 required order: ADR 019, ADR 020, ADR 017, then ADR 018. The configured Viewer
 identity, schema-2 configuration lifecycle/field cleanup, and lazy Mesh/Graph
 element-attribute tables with narrow editing semantics are locally verified
-and independently approved. Hosted verification of the refreshed Viewer and
-exact framework candidates remains pending.
+and independently approved. Their core and Viewer documentation audits are
+complete. Hosted final verification of the refreshed package and exact
+framework candidates remains pending.
 
 Architectural watchpoint: the user remains uncertain that the overall
 `Data`/scene-state/extension model is the final destination. The current
@@ -44,17 +45,17 @@ Read next:
 | Repository | Branch | Exact head | Pull request | Status |
 |---|---|---|---|---|
 | `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `8bdb6d6b16ad70c46138445ef3e16eb13882c1c3` plus this evidence update | [7](https://github.com/compas-dev/compas_framework/pull/7) | Refreshed local source gate passed; hosted checks pending |
-| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `314443976a056174ac755e4393059cb37795dda1` | [1540](https://github.com/compas-dev/compas/pull/1540) | Complete hosted matrix passed |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `594ed282692e5d5bda15064a3b791eb8bf8499c5` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | ADRs 017–020 locally verified and independently approved; hosted rerun pending for this refreshed head |
+| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `0b4555c23d570589bf9eab412cfa5a71312e1aa2` | [1540](https://github.com/compas-dev/compas/pull/1540) | Documentation audit completed; hosted final rerun pending for this refreshed head |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `fc0baac234cc652288d988ea63a5b2127111ee0a` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Documentation audit completed after locally approved ADRs 017–020; hosted final rerun pending for this refreshed head |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
 ## Verification evidence
 
 | Layer | Status | Evidence |
 |---|---|---|
-| Local package checks | Passed with one local-policy exclusion | Core passed 2,169 tests, Ruff, focused Pyright, strict docs, and independent review. The refreshed Viewer ADR 017–020 implementation passed its local package checks and independent review. Viewer’s ignored local `docs/examples/__temp` directory remains the recorded repository-policy exclusion. |
+| Local package checks | Passed with one local-policy exclusion | Core passed 2,169 tests, Ruff, focused Pyright, strict docs, and independent review. The refreshed Viewer ADR 017–020 implementation passed its local package checks and independent review. The documentation audits are complete at both refreshed heads. Viewer’s ignored local `docs/examples/__temp` directory remains the recorded repository-policy exclusion. |
 | Framework integration | Passed locally; hosted pending | The refreshed source gate pins the exact new heads and covers graphics-free discovery, stable scene identity, single-source editable `SceneStateField` declarations, contextual contribution/removal, data-only mutation, serialization exclusion, hierarchy and operation behavior, indexed-buffer round trips, schema-2 configuration, retired-field rejection, and datastructure-sidebar availability. Local source execution passed 5 public contract tests with the exact-install assertion skipped by design; hosted source-installed candidate checks remain pending. |
-| Package CI | Partially passed; refreshed Viewer pending | Core passed its full OS/Python matrix, coverage, patch/project coverage, NumPy, metadata, and changelog checks at the pinned head. The previously pinned Viewer head passed its hosted matrix; the refreshed Viewer head still requires hosted verification. |
+| Package CI | Previously passed; final rerun pending | Earlier core and Viewer heads passed their complete hosted matrices. The documentation-audit heads recorded above require a final hosted rerun. |
 | Candidate artifacts | Not run | Required before independently built artifact compatibility is claimed. |
 
 The broader `tests/test_package.py` run is locally unavailable because the
@@ -64,7 +65,7 @@ This is an environment provenance failure, not a scene-gate failure.
 
 ## Next tasks
 
-1. Run hosted package CI for the refreshed Viewer candidate.
+1. Run hosted package CI for the refreshed core and Viewer candidates.
 2. Run hosted exact-candidate framework integration at the recorded core and
    Viewer heads.
 3. Run candidate-artifact verification before claiming independently built

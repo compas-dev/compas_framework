@@ -22,8 +22,8 @@ from compas_viewer.scene import BufferGeometry
 from compas_viewer.scene import ViewerScene
 from compas_viewer.uidefinitions import default_sidebar_items
 
-CORE_COMMIT = "314443976a056174ac755e4393059cb37795dda1"
-VIEWER_COMMIT = "594ed282692e5d5bda15064a3b791eb8bf8499c5"
+CORE_COMMIT = "0b4555c23d570589bf9eab412cfa5a71312e1aa2"
+VIEWER_COMMIT = "fc0baac234cc652288d988ea63a5b2127111ee0a"
 
 
 def _installed_commit(distribution_name: str) -> str:
