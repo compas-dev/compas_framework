@@ -251,9 +251,10 @@ deletion without expanding history or cascading to annotations.
     `viewer.delete_selected` command in the default Edit menu while preserving
     subtree removal, independent data, transform-history invalidation, and
     unresolved associative dimensions.
-14. [Complete and verified] Replace the mixed stacked
-    sidebar with stable Scene, Annotations, and System domains; add explicit
-    annotation details and the approved global deselection behavior.
+14. [Regression fixes locally verified; hosted refresh pending] Replace the
+    mixed stacked sidebar with stable Scene, Annotations, and System domains;
+    add explicit annotation details and the approved global deselection
+    behavior.
 
 Exit gate: the ADR-029/031 candidate passed local Core, Viewer, documentation,
 independent review, refreshed package CI, and exact source-installed framework
@@ -269,7 +270,9 @@ invalidate those verified storage, rendering, or deletion contracts.
 
 ADR 032's replacement sidebar also passes its local package, documentation,
 direct-source integration, independent-review, hosted package, and exact
-source-installed integration gates.
+source-installed integration gates. Direct-use regressions in annotation
+visibility refresh and numeric field-type inference are fixed and locally
+verified; their hosted refresh is pending.
 
 ## Phase 4 — Public Viewer operations
 

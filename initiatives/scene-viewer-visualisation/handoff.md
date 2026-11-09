@@ -4,7 +4,7 @@ Last updated: 2026-11-09
 
 ## Resume here
 
-Current phase: `Phase 3 ADR 032 verified`
+Current phase: `Phase 3 ADR 032 regression fixes locally verified; hosted refresh pending`
 
 The scene foundation, contextual settings, Viewer configuration and tables,
 selection, and reversible transformations governed by Accepted ADRs 001–020
@@ -44,6 +44,13 @@ Ruff, Pyright, strict MkDocs, framework direct-source gate, and independent
 review pass. Hosted package and exact source-installed integration checks also
 pass.
 
+Direct use then exposed a Qt lifecycle crash when an annotation visibility
+checkbox rebuilt and deleted its own emitting tree item, plus repeated
+`vertexsize` errors caused by treating an `(int, float)` field as integer-only
+when its current value happened to be an integer. Both causes are fixed. The
+Viewer now passes 445 tests, Ruff, Pyright, strict MkDocs, and independent
+review at the revision below; hosted refreshes are pending.
+
 The Core and refreshed Viewer candidate and framework gate are green at the
 revisions below. Viewer restricts acquisition to visible discrete guides,
 uses an 18-logical-pixel snap radius, proves the 4 × 3 diagonal equals 5,
@@ -68,23 +75,26 @@ Read next:
 |---|---|---|---|---|
 | `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `3d2c9d177d4cace1f283b5d598db02306ec5c828` | [7](https://github.com/compas-dev/compas_framework/pull/7) | Local contracts, hosted contracts, and exact source-installed gate passed |
 | `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `70aeb1e408772f0a84213c280658d4d594bf12ea` | [1540](https://github.com/compas-dev/compas/pull/1540) | Local verification, independent review, and hosted package CI passed |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `a29d073c27987d501b0c343a388da643da3367a0` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Local verification, independent review, and complete hosted package CI passed |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `08f5b62c74d1db99d66b51a28e9974c34bf0a896` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Regression fixes locally verified and independently reviewed; hosted refresh pending |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
 ## Verification evidence
 
 | Layer | Status | Evidence |
 |---|---|---|
-| Local package checks | Passed | Core passed 2,225 tests, focused Scene Pyright, Ruff, format, strict MkDocs, and independent review. Viewer passed 441 tests, Pyright, Ruff, format, strict MkDocs, and independent review. The direct-source framework gate passed 14 tests with the exact-revision assertion skipped as designed. |
+| Local package checks | Passed | Core passed 2,225 tests, focused Scene Pyright, Ruff, format, strict MkDocs, and independent review. Viewer passed 445 tests, Pyright, Ruff, format, strict MkDocs, and independent review. The direct-source framework gate passed 14 tests with the exact-revision assertion skipped as designed. |
 | Native interactive probes | Partial | Earlier native macOS captures showed the point palette, winner, retained anchor, live line and label without a `QPainter` warning or crash. Direct confirmation of 18-pixel attraction, discrete-only acquisition, and the final persistent-dimension pass remains pending. |
-| Package CI | Passed | Core PR 1540 remains green. Viewer PR 233 passed build, coverage, distributions, policy, and the complete macOS, Ubuntu, and Windows quality matrix at the exact revision above. |
-| Framework integration | Passed | The direct-source gate passed 14 tests with one intentional exact-revision skip. Framework PR 7 passed contracts and the exact source-installed candidate gate. |
+| Package CI | Pending Viewer refresh | Core PR 1540 remains green. Viewer PR 233 passed locally at the exact revision above; its hosted matrix is pending. |
+| Framework integration | Pending hosted refresh | The direct-source gate passed 14 tests with one intentional exact-revision skip. Framework PR 7 must run the new exact Viewer pin. |
 | Candidate artifacts | Not run | No compatibility claim is made for independently built candidate artifacts. Run this layer before artifact admission or release if that claim is required. |
 
 ## Next tasks
 
-1. Confirm the three-domain sidebar and deselection behavior interactively.
-2. Confirm point attraction, exact diagonal, discrete-only acquisition, and
+1. Complete Viewer package CI and the framework exact source-installed gate at
+   the revisions above.
+2. Reconfirm annotation visibility, numeric object fields, and the
+   three-domain sidebar interactively.
+3. Confirm point attraction, exact diagonal, discrete-only acquisition, and
    persistent-dimension visibility interactively.
 
 ## Approval gates

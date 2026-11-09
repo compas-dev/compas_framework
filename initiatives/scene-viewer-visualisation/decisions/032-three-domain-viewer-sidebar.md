@@ -156,3 +156,12 @@ remain independent and survive tab changes; empty-background click and Escape
 clear both after measurement-cancel precedence. Annotation naming moves to an
 explicit detail form, and commands use the closed sidebar tab/section
 navigation boundary recorded above.
+
+Implementation evidence on 2026-11-09 exposed two regressions. Annotation
+graphics refresh synchronously rebuilt the annotation tree, deleting the
+checkbox item while its Qt signal was still active. Annotation graphics refresh
+now updates render resources and redraws without rebuilding sidebar domains.
+Numeric object editors also inferred integer-only behavior from the current
+value even when the authoritative `SceneStateField` accepted both integers and
+floats. Editors now use the declared field type, with current-value inference
+only for contextual non-state attributes.
