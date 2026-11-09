@@ -86,7 +86,9 @@ keep transient painting outside the OpenGL renderer. ADR 026 adds one
 prioritized screen-space snapping result and one-shot transient and persistent
 tool lifecycles. Its 2026-11-09 amendment exposes the hovered object's discrete
 point palette, a distinct click winner, the retained first anchor, and
-equal-depth persistent dimensions. Fixed mode accepts every initial snap kind;
-associative mode initially supports points, vertices, graph nodes, and
-parameterized line/edge locations without silent fallback. All Phase 3
-architecture decisions are Accepted.
+equal-depth persistent dimensions. Direct-use refinement adds bright square
+markers and same-object footprint depth qualification. Mesh edges do not
+compete with vertex acquisition; standalone Lines and Graph edges remain
+eligible. Associative mode supports points, vertices, graph nodes, and
+parameterized standalone-line/graph-edge locations without silent fallback.
+All Phase 3 architecture decisions are Accepted.

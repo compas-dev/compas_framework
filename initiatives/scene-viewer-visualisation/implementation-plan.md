@@ -196,10 +196,10 @@ must be brought back without inventing a replacement model speculatively.
 
 Governing ADRs: 001–005, 007, and 021–028.
 
-Status: implemented, independently approved, and green in package and exact
-source-installed integration CI, including the 2026-11-09 runtime-feedback
-corrections. ADR 023 provides the clean break with no aliases or legacy
-decoding. ADR 024 separates transient inspection from
+Status: implemented. The 2026-11-09 marker, receding-vertex, and Mesh-edge
+refinements pass local package verification and await refreshed hosted package
+and exact source-installed integration CI. ADR 023 provides the clean break
+with no aliases or legacy decoding. ADR 024 separates transient inspection from
 persistent dimensions. ADR 028 defines one dimension type with fixed and
 associative anchors, snapping in both UI modes, no silent fallback, and
 explicit unresolved references. ADRs 021–022 place narrow durable annotation
@@ -228,14 +228,15 @@ Units and Measurement UI.
 9. [Complete] Keep overlay dispatch outside the main scene render loop and
    remove the obsolete Viewer annotation implementations.
 
-Exit gate: source and package verification passed. Durable annotations
+Exit gate: refreshed hosted verification is pending. Durable annotations
 round-trip and resolve through fixed and associative anchors; transient
 inspection and overlays do not serialize; unsupported associative snaps do not
-fall back; Viewer offscreen/package checks and the refreshed exact
-source-installed framework gate pass. The Viewer distribution job passed, but
-independently built exact candidate artifacts were not installed together and
-remain a separate unrun layer. Stronger real-raster integration evidence is
-optional follow-up work rather than a blocker for the approved source contract.
+fall back; updated Viewer offscreen/package checks pass locally. The previous
+hosted Viewer and exact source-installed framework evidence predates these
+refinements and must not be applied to the updated candidate. Independently
+built exact candidate artifacts were not installed together and remain a
+separate unrun layer. Stronger real-raster integration evidence is optional
+follow-up work rather than a blocker for the approved source contract.
 
 ## Phase 4 — Public Viewer operations
 

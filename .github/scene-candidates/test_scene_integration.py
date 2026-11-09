@@ -51,7 +51,7 @@ from compas_viewer.uidefinitions import default_menu_items
 from compas_viewer.uidefinitions import default_sidebar_items
 
 CORE_COMMIT = "353cebfd21cd3623f7d950527d71f4770ff2a21c"
-VIEWER_COMMIT = "d8590d36f2cbd1403d2c40c1dc8cce880a54a229"
+VIEWER_COMMIT = "5a25154950be63548928da956ecaff1c2f7e4d3c"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -272,6 +272,16 @@ def test_measurement_hover_exposes_discrete_points_and_one_winner():
     assert query.winner.component == 0
     assert [snap.kind for snap in query.points] == [SnapKind.VERTEX] * 4
     assert [snap.component for snap in query.points] == [0, 1, 2, 3]
+
+    mesh_edge = query_snaps(
+        [sceneobject],
+        (2.0, 0.0),
+        radius=0.1,
+        project=lambda point: ProjectedPoint(point.x, point.y, 0.0),
+    )
+
+    assert mesh_edge.winner is None
+    assert len(mesh_edge.points) == 4
 
 
 def test_measure_menu_and_commands_have_one_stable_public_path():

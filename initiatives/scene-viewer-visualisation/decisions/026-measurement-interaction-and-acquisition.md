@@ -37,7 +37,7 @@ One narrow snapping query returns a `SnapResult` containing:
 The snap kinds in priority order are:
 
 1. point, mesh vertex, or graph node;
-2. line or edge location; and
+2. standalone line or graph-edge location; and
 3. face or surface location.
 
 Snapping uses a screen-space radius so its acquisition footprint remains
@@ -52,7 +52,8 @@ Associative mode initially accepts:
 - point objects;
 - mesh vertices;
 - graph nodes; and
-- locations on lines or edges, stored with a normalized parameter.
+- locations on standalone lines or graph edges, stored with a normalized
+  parameter.
 
 Face and surface hits are valid in Fixed mode but associative face/surface
 anchors are deferred. An unsupported associative result is rejected visibly
@@ -99,10 +100,23 @@ projected discrete point snap provided by that object:
 - the nodes of a Graph.
 
 The palette follows the hovered object and disappears when the pointer leaves
-it. Continuous line and edge snap visualization is deferred. Palette points
-are guidance and are not independently occlusion-tested. Only the distinct
-highlighted winner within the existing screen-radius and depth acceptance
-rules is click-eligible.
+it. Guidance points are larger, bright hollow squares; the winner and retained
+anchors are distinct filled squares. Continuous snap visualization is
+deferred. Palette points are guidance and are not independently
+occlusion-tested. Only the distinct highlighted winner within the existing
+screen-radius and depth acceptance rules is click-eligible.
+
+Mesh edges do not produce measurement candidates. Standalone Line objects and
+Graph edges remain eligible because their continuous geometry is the relevant
+measurement target rather than a competing secondary target on a surface
+mesh.
+
+Winner visibility searches a small instance-depth footprint around the
+projected point. Only pixels belonging to the hovered object and matching the
+candidate depth within the existing precision epsilon qualify. This avoids a
+steeply tilted Mesh edge overwriting the single center sample while neither
+loosening the global epsilon nor admitting background, another object, or a
+fully occluded component.
 
 After the first winner is accepted, that anchor remains visible while the
 palette follows the next hovered object. In Associative mode, a face or surface
@@ -146,10 +160,17 @@ camera input when no measurement tool is active.
 - Verify palette points are guidance only, the distinct depth-qualified winner
   is the only click-eligible result, and the first anchor remains visible while
   the palette follows the next object.
-- Verify Fixed mode accepts point/vertex/node, line/edge, and face/surface hits
-  but stores only a `PointAnchor`.
-- Verify Associative mode accepts point/vertex/node and parameterized line/edge
-  hits while rejecting face/surface association visibly.
+- Verify guidance points are bright hollow squares and the winner and retained
+  anchors are distinct filled squares.
+- Verify point-footprint visibility accepts a visible receding vertex while
+  rejecting background pixels, another object's pixels, depth-mismatched
+  same-object pixels, and fully occluded vertices.
+- Verify Mesh edges do not produce candidates.
+- Verify Fixed mode accepts point/vertex/node, standalone-line/graph-edge, and
+  face/surface hits but stores only a `PointAnchor`.
+- Verify Associative mode accepts point/vertex/node and parameterized
+  standalone-line/graph-edge hits while rejecting face/surface association
+  visibly.
 - Verify a face/surface rejection can coexist with the supported point palette.
 - Verify transient completion follows ADR 024 without scene mutation.
 - Verify fixed, associative, and any exposed mixed acquisition follow ADR 028,
@@ -172,10 +193,11 @@ camera input when no measurement tool is active.
 
 Approved on 2026-11-08. One screen-space snapping query returns a world point,
 scene-object GUID, snap kind, optional stable component reference, and optional
-normalized parameter. Priority is point/vertex/node, then line/edge, then
-face/surface. Fixed mode accepts all initial snap kinds and stores points.
-Associative mode initially supports point/vertex/node and parameterized
-line/edge anchors; unsupported association is rejected without fallback.
+normalized parameter. Priority is point/vertex/node, then standalone
+line/graph edge, then face/surface. Fixed mode accepts all available snap kinds
+and stores points. Associative mode initially supports point/vertex/node and
+parameterized standalone-line/graph-edge anchors; unsupported association is
+rejected without fallback.
 Active tools receive left-click input before selection, ignore background,
 preview on pointer movement, cancel on Escape, retain non-conflicting camera
 navigation, and complete as one-shot transient or persistent operations. The
@@ -184,6 +206,8 @@ sub-object editing framework. Amended on 2026-11-09 to expose projected
 Point/Mesh-vertex/Graph-node guidance for the hovered object, keep only the
 distinct depth-qualified winner click-eligible, retain the first anchor while
 the palette follows the next object, and keep completed dimensions visible at
-equal depth. The rationale is direct, unambiguous feedback without widening
-the accepted snapping contract.
+equal depth. Refined through direct use on 2026-11-09 with larger bright square
+markers, same-object point-footprint visibility, and Mesh-edge exclusion. The
+rationale is direct, reliable, unambiguous feedback without widening the
+accepted snapping contract or loosening occlusion rules.
 
