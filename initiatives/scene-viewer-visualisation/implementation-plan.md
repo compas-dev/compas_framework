@@ -196,11 +196,10 @@ must be brought back without inventing a replacement model speculatively.
 
 Governing ADRs: 001–005, 007, and 021–028.
 
-Status: implemented, independently approved, and green in package CI. The
-exact source-installed integration gate passed for the initial candidate and
-is being refreshed for the 2026-11-09 runtime-feedback corrections. ADR 023
-provides the clean break with no
-aliases or legacy decoding. ADR 024 separates transient inspection from
+Status: implemented, independently approved, and green in package and exact
+source-installed integration CI, including the 2026-11-09 runtime-feedback
+corrections. ADR 023 provides the clean break with no aliases or legacy
+decoding. ADR 024 separates transient inspection from
 persistent dimensions. ADR 028 defines one dimension type with fixed and
 associative anchors, snapping in both UI modes, no silent fallback, and
 explicit unresolved references. ADRs 021–022 place narrow durable annotation
@@ -229,17 +228,14 @@ Units and Measurement UI.
 9. [Complete] Keep overlay dispatch outside the main scene render loop and
    remove the obsolete Viewer annotation implementations.
 
-Exit gate: package verification passed; refreshed exact source verification is
-pending. Durable annotations
+Exit gate: source and package verification passed. Durable annotations
 round-trip and resolve through fixed and associative anchors; transient
 inspection and overlays do not serialize; unsupported associative snaps do not
-fall back; Viewer offscreen/package checks pass. The earlier exact
-source-installed framework gate passed before the runtime-feedback correction
-and must not be applied to the updated candidate. The Viewer distribution job
-passed, but independently
-built exact candidate artifacts were not installed together and remain a
-separate unrun layer. Stronger real-raster integration evidence is optional
-follow-up work rather than a blocker for the approved source contract.
+fall back; Viewer offscreen/package checks and the refreshed exact
+source-installed framework gate pass. The Viewer distribution job passed, but
+independently built exact candidate artifacts were not installed together and
+remain a separate unrun layer. Stronger real-raster integration evidence is
+optional follow-up work rather than a blocker for the approved source contract.
 
 ## Phase 4 — Public Viewer operations
 
@@ -276,10 +272,9 @@ Governing ADR: 007.
    gate independent.
 2. [Complete] Install exact candidate revisions and exercise the approved cross-package
    runtime and typing contracts.
-3. [In progress] Core and Viewer package CI and independent code/documentation
-   review passed. Refresh framework CI at the corrected Viewer revision. Exact
-   candidate-artifact verification has not run; decide whether it is applicable
-   before admission.
+3. [In progress] Core and Viewer package CI, refreshed framework CI, and
+   independent code/documentation review passed. Exact candidate-artifact
+   verification has not run; decide whether it is applicable before admission.
 4. [In progress] Findings are resolved and the handoff records evidence by
    layer. Explicit merge approval remains pending.
 
