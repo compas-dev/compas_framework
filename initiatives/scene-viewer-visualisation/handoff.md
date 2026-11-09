@@ -65,7 +65,7 @@ Read next:
 
 | Repository | Branch | Verified revision | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `871a568d84aab134d0aa6af048c93ea078d6be5e` | [7](https://github.com/compas-dev/compas_framework/pull/7) | Contracts and exact source-installed gate passed |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `3d2c9d177d4cace1f283b5d598db02306ec5c828` | [7](https://github.com/compas-dev/compas_framework/pull/7) | Local contracts and direct-source gate passed; hosted refresh pending |
 | `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `70aeb1e408772f0a84213c280658d4d594bf12ea` | [1540](https://github.com/compas-dev/compas/pull/1540) | Local verification, independent review, and hosted package CI passed |
 | `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `a29d073c27987d501b0c343a388da643da3367a0` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Local verification and independent review passed; hosted refresh pending |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
