@@ -3,8 +3,7 @@
 This initiative aligns backend-neutral scene infrastructure with Viewer
 rendering, interaction, state, and UI composition.
 
-Current phase: **Phase 3 follow-up locally verified; hosted refresh and ADR 029
-decision pending**.
+Current phase: **Phase 3 ADR 029/031 locally verified; hosted refresh pending**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -30,11 +29,13 @@ also implemented and fully verified. Accepted ADRs 021–028 and 030 are
 implemented for durable Core annotations, Viewer rendering and overlays,
 measurement snapping and interaction, unit/precision presentation,
 discrete-only point acquisition, and an always-visible persistent-dimension
-pass. The latest follow-up is locally verified; refreshed Viewer package CI
-and the framework exact source-installed gate are pending. ADR 029 remains
-Proposed and blocks annotation storage, flat Annotations UI, and durable style
-changes. Exact candidate-artifact compatibility has not been run and is not
-implied by the existing results.
+pass. The latest measurement follow-up is verified in Viewer package CI and the
+framework exact source-installed gate. Accepted ADRs 029 and 031 now authorize
+the separate annotation collection and UI, narrow durable dimension style, and
+discoverable spatial-object deletion. Their Core and Viewer implementations
+and refreshed direct-source framework integration pass locally; package and
+exact hosted integration refreshes are pending. Exact candidate-artifact
+compatibility has not been run and is not implied by the existing results.
 
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence

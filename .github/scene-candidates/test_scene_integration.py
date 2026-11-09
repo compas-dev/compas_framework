@@ -5,9 +5,11 @@ import sys
 from importlib import import_module
 from importlib.metadata import distribution
 from math import pi
+from unittest.mock import Mock
 from uuid import uuid4
 
 import pytest
+from compas.colors import Color
 from compas.data import json_dumps
 from compas.data import json_loads
 from compas.datastructures import Graph
@@ -20,9 +22,11 @@ from compas.geometry import Translation
 from compas.geometry import distance_point_point
 from compas.scene import ArrowAnnotation
 from compas.scene import ComponentAnchor
+from compas.scene import DimensionStyle
 from compas.scene import DistanceDimension
 from compas.scene import PointAnchor
 from compas.scene import Scene
+from compas.scene import SceneAnnotation
 from compas.scene import SceneItemNotBoundError
 from compas.scene import SceneObject
 from compas.scene import ShapeObject
@@ -52,8 +56,8 @@ from compas_viewer.snapping import query_snaps
 from compas_viewer.uidefinitions import default_menu_items
 from compas_viewer.uidefinitions import default_sidebar_items
 
-CORE_COMMIT = "353cebfd21cd3623f7d950527d71f4770ff2a21c"
-VIEWER_COMMIT = "68548b478b9c2642ec734495e0c3ae85f8d5f1fb"
+CORE_COMMIT = "70aeb1e408772f0a84213c280658d4d594bf12ea"
+VIEWER_COMMIT = "e6e81d5248f7ceea6b96ee992f9b83cf472563d0"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -83,6 +87,7 @@ from compas_viewer.uidefinitions import default_sidebar_items
 
 assert Config().schema_version == 3
 assert not any(item.get("type") == "DatastructureAttributes" for item in default_sidebar_items())
+assert any(item.get("type") == "AnnotationPanel" for item in default_sidebar_items())
 assert any(item.get("type") == "MeasurementSetting" for item in default_sidebar_items())
 modules = tuple(sys.modules)
 assert "compas_viewer.plugins" in modules
@@ -122,6 +127,7 @@ def test_viewer_configuration_and_sidebar_contracts():
     assert "sceneform" not in payload["ui"]["sidebar"]
     assert [item["type"] for item in default_sidebar_items()] == [
         "SceneTree",
+        "AnnotationPanel",
         "ObjectSetting",
         "CameraSetting",
         "DisplaySetting",
@@ -187,6 +193,44 @@ def test_core_annotations_serialize_and_resolve_without_fallbacks():
     assert missing_object.resolve(scene) is None
     assert missing_vertex.resolve(scene) is None
 
+    style = DimensionStyle(
+        color=Color.red(),
+        line_width=5,
+        text_size=18,
+        arrow_size=20,
+        label_offset=7,
+    )
+    text_entry = scene.add_annotation(text, name="Origin note")
+    arrow_entry = scene.add_annotation(arrow, name="Direction")
+    dimension_entry = scene.add_annotation(fixed, name="Span", style=style)
+
+    assert Scene.SCHEMA_VERSION == 3
+    assert scene.__data__["version"] == 3
+    assert scene.annotations == (text_entry, arrow_entry, dimension_entry)
+    assert text_entry not in scene.objects
+    assert set(scene.object_store) == {scene.root.guid, point_object.guid, line_object.guid, mesh_object.guid}
+    with pytest.raises(KeyError):
+        scene.node(text_entry.guid)
+    with pytest.raises(TypeError, match="Scene.add_annotation"):
+        scene.add(TextAnnotation("Wrong path", [0, 0, 0]))
+
+    payload = scene.to_jsonstring()
+    restored_scene = Scene.from_jsonstring(payload)
+    assert restored_scene.__data__["version"] == 3
+    assert len(restored_scene.objects) == 3
+    assert [entry.name for entry in restored_scene.annotations] == ["Origin note", "Direction", "Span"]
+    assert restored_scene.annotations[2].style == style
+    assert isinstance(restored_scene.annotations[2], SceneAnnotation)
+    assert restored_scene.item_store == {}
+    with pytest.raises(SceneItemNotBoundError, match=str(text.guid)):
+        _ = restored_scene.annotations[0].item
+
+    restored_scene.bind_many([text, arrow, fixed])
+    assert restored_scene.annotations[0].item is text
+    assert restored_scene.annotations[1].item is arrow
+    assert restored_scene.annotations[2].item is fixed
+    assert json_loads(json_dumps(style)) == style
+
 
 def test_viewer_dispatches_canonical_annotations_without_legacy_types():
     scene = ViewerScene()
@@ -200,10 +244,18 @@ def test_viewer_dispatches_canonical_annotations_without_legacy_types():
     )
 
     for annotation, render_type in annotations:
-        sceneobject = scene.add(annotation)
-        render_object = scene.render_object(sceneobject)
+        entry = scene.add_annotation(annotation)
+        render_object = scene.annotation_render_object(entry)
         assert isinstance(render_object, render_type)
         assert render_object.item is annotation
+
+    assert scene.objects == []
+    assert len(scene.annotations) == 3
+    assert scene.render_objects == {}
+    assert tuple(scene.annotation_render_objects) == tuple(entry.guid for entry in scene.annotations)
+
+    with pytest.raises(ModuleNotFoundError):
+        import_module("compas.scene.annotationobject")
 
     with pytest.raises(ModuleNotFoundError):
         import_module("compas_viewer.scene.tagobject")
@@ -252,6 +304,40 @@ def test_measurement_state_preserves_mode_semantics_and_dimension_settings():
     assert associative.end == ComponentAnchor(vertex_guid, "vertex", component=2)
     assert (associative.unit, associative.precision) == ("cm", 3)
     assert not state.active
+
+
+def test_viewer_measurement_creates_and_selects_a_nonspatial_annotation(monkeypatch):
+    viewer = Viewer()
+    viewer.scene.clear()
+    first = SnapResult(Point(0, 0, 0), uuid4(), SnapKind.POINT, 0.0)
+    second = SnapResult(Point(3, 4, 0), uuid4(), SnapKind.POINT, 0.0)
+    monkeypatch.setattr(
+        viewer.renderer,
+        "query_snap_context_at",
+        Mock(side_effect=[SnapQuery(first), SnapQuery(second)]),
+    )
+
+    viewer.start_distance_dimension("fixed")
+    viewer._accept_measurement_at((10.0, 10.0))
+    viewer._accept_measurement_at((20.0, 20.0))
+
+    assert len(viewer.scene.annotations) == 1
+    entry = viewer.scene.annotations[0]
+    assert isinstance(entry.item, DistanceDimension)
+    assert entry.item.distance() == 5.0
+    assert isinstance(entry.style, DimensionStyle)
+    assert viewer.scene.objects == []
+    assert viewer.state.annotation_selection.objects == (entry,)
+    assert not viewer.state.selection
+
+    spatial = viewer.scene.add(Box(1.0))
+    viewer.state.selection.add(spatial)
+    viewer.scene.remove_annotation(entry)
+    assert viewer.scene.annotations == ()
+    assert viewer.scene.objects == [spatial]
+    assert viewer.state.annotation_selection.objects == ()
+    assert viewer.state.selection.objects == (spatial,)
+    viewer.scene.clear()
 
 
 def test_measurement_hover_exposes_discrete_points_and_one_winner():
@@ -334,6 +420,11 @@ def test_measure_menu_and_commands_have_one_stable_public_path():
         "viewer.cancel_measurement",
     ]
     assert set(command_ids) <= builtin_commands().keys()
+
+    edit_menu = next(item for item in default_menu_items() if item.get("title") == "Edit")
+    edit_commands = [item["command"] for item in edit_menu["items"] if "command" in item]
+    assert edit_commands.count("viewer.delete_selected") == 1
+    assert builtin_commands()["viewer.delete_selected"].keybinding == "Delete"
 
 
 def test_viewer_overlays_remain_outside_serialized_scene_data():

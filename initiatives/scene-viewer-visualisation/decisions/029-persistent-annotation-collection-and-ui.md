@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -37,8 +37,8 @@ presentation state without embedding independently owned data.
 Semantic annotation data and presentation remain separate. A
 `DistanceDimension` continues to own anchors, unit, precision, and label. Its
 collection entry owns durable visibility and a narrow dimension style. The
-initial proposed style contains only color, line width, text size, arrow size,
-and label offset. It is not a generalized styling or theme framework.
+initial style contains only color, line width, text size, arrow size, and label
+offset. It is not a generalized styling or theme framework.
 
 Collection entries have no parent, child, or inherited transformation. Fixed
 dimension anchors are world-coordinate points. Associative anchors resolve
@@ -96,10 +96,16 @@ Core, Viewer, framework gates, examples, and documentation together.
 
 ## Dependencies
 
-- Amends Accepted ADRs 005, 013, and 021 if accepted.
+- Amends Accepted ADRs 005, 013, and 021.
 - Preserves ADR 010's independent-data binding boundary.
 - Rendering is independent and governed by Accepted ADR 030.
 
 ## Decision
 
-Pending explicit approval.
+Approved on 2026-11-09. Core Scene owns one ordered annotation collection
+outside the spatial hierarchy. Viewer presents it through a separate flat
+Annotations UI. Semantic annotation data remains independent from durable
+visibility and the narrow dimension style consisting of color, line width,
+text size, arrow size, and label offset. Annotations have no hierarchy or
+inherited-transform semantics, and Session remains only a possible future
+aggregate rather than the annotation owner.

@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -44,9 +44,9 @@ Associative dimensions that reference a removed object remain durable and
 become explicitly unresolved; deletion never converts them to fixed dimensions
 or removes them as a cascade.
 
-If ADR 029 is accepted, its flat Annotations UI owns annotation removal.
-Spatial deletion remains a Scene-tree operation and does not remove annotation
-entries merely because their referenced objects were deleted.
+ADR 029's flat Annotations UI owns annotation removal. Spatial deletion remains
+a Scene-tree operation and does not remove annotation entries merely because
+their referenced objects were deleted.
 
 ## Consequences
 
@@ -77,14 +77,18 @@ transform-only history contract.
 - Verify an associative dimension remains present and resolves as unresolved
   after deletion of its referenced object.
 - Verify a fixed dimension is unchanged by deletion of unrelated objects.
-- If ADR 029 is accepted, verify spatial deletion and annotation removal remain
-  separate operations.
+- Verify spatial deletion and annotation removal remain separate operations.
 
 ## Dependencies
 
 - Preserves Accepted ADRs 003, 004, 010, 013, and 028.
-- Annotation removal depends on Proposed ADR 029 and is not authorized here.
+- Annotation removal is governed separately by Accepted ADR 029.
 
 ## Decision
 
-Pending explicit approval.
+Approved on 2026-11-09. Viewer exposes the existing
+`viewer.delete_selected` command once through the default Edit menu. Spatial
+deletion preserves independently owned data, removes selected subtrees and
+their Viewer resources, clears transform-only history, and leaves dependent
+associative dimensions present but unresolved. Annotation removal remains a
+separate ADR 029 operation.

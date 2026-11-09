@@ -196,13 +196,15 @@ must be brought back without inventing a replacement model speculatively.
 
 ## Phase 3 — Annotations and overlays
 
-Governing ADRs: 001–005, 007, 021–028, and 030. Proposed ADR 029 governs a
-possible follow-up storage/UI redesign and blocks that work until approval.
+Governing ADRs: 001–005, 007, and 021–031.
 
-Status: the latest discrete-only acquisition, 18-pixel attraction,
-always-visible persistent-dimension pass, and default-sidebar refinement pass
-local package verification. Hosted package and exact source-installed
-integration refreshes are pending. Interactive confirmation remains pending.
+Status: the discrete-only acquisition, 18-pixel attraction, always-visible
+persistent-dimension pass, and default-sidebar refinement are verified locally
+and in hosted package and exact source-installed integration CI. ADRs 029 and
+031 are implemented, independently reviewed, and verified locally across Core,
+Viewer, and the direct-source framework gate. Refreshed package and exact
+hosted integration verification are pending. Interactive confirmation of the
+existing measurement refinement also remains pending.
 ADR 023 provides the clean break with no aliases or legacy decoding. ADR 024
 separates transient inspection from
 persistent dimensions. ADR 028 defines one dimension type with fixed and
@@ -213,8 +215,9 @@ implicit conversion. ADR 025 governs the ordered scale/legend overlay layer.
 ADR 026 governs nearest eligible discrete-point acquisition and the one-shot
 tool lifecycle. ADR 027 governs Viewer measurement presentation settings and the
 Units and Measurement UI. ADR 030 governs the always-visible persistent
-dimension pass. ADR 029's separate annotation collection, flat UI, and narrow
-dimension style remain Proposed and unimplemented.
+dimension pass. ADR 029 governs the approved separate annotation collection,
+flat UI, and narrow dimension style. ADR 031 governs discoverable spatial
+deletion without expanding history or cascading to annotations.
 
 1. [Complete] Inspect current `Tag`/`ArrowOverlay` serialized behavior and
    approve the clean-break migration in ADR 023.
@@ -238,15 +241,17 @@ dimension style remain Proposed and unimplemented.
     Mesh-vertex, and Graph-node guides with an 18-logical-pixel radius.
 11. [Complete] Render persistent distance dimensions in ADR 030's final pass
     without depth testing or depth writes.
-12. [Blocked by ADR 029] Move persistent annotations out of the spatial
-    hierarchy, add a flat Annotations UI, and expose the approved narrow style
-    only if ADR 029 is explicitly accepted.
-13. [Blocked by ADR 031] Expose the existing `viewer.delete_selected` command
-    in the default Edit menu while preserving subtree removal, independent data,
-    transform-history invalidation, and unresolved associative dimensions.
+12. [Complete locally; hosted refresh pending] Move persistent annotations out
+    of the spatial hierarchy, add a flat Annotations UI, and expose ADR 029's
+    narrow durable style.
+13. [Complete locally; hosted refresh pending] Expose the existing
+    `viewer.delete_selected` command in the default Edit menu while preserving
+    subtree removal, independent data, transform-history invalidation, and
+    unresolved associative dimensions.
 
-Exit gate: local automated source and package verification passed; hosted
-refresh is pending. Durable annotations
+Exit gate: the ADR-029/031 candidate passed local Core, Viewer, documentation,
+independent review, and direct-source framework integration verification.
+Refreshed package and exact hosted integration checks are pending. Durable annotations
 round-trip and resolve through fixed and associative anchors; transient
 inspection and overlays do not serialize; only visible discrete guides produce
 interactive anchors; fixed and associative acquisition do not fall back; and

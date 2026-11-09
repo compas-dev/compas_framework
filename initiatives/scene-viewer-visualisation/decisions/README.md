@@ -15,13 +15,11 @@ custom use. ADR 003 is implemented, locally
 verified, independently approved, and green in hosted Viewer and refreshed
 framework CI. ADR 004 is implemented, locally verified, and independently
 approved; refreshed hosted Viewer, core, and framework verification passed.
-ADRs 021–028 and 030 record the accepted Phase 3 durable annotation ownership, unit
+ADRs 021–31 record the accepted Phase 3 durable annotation ownership, unit
 snapshots, clean-break migration, transient/persistent outcomes, overlay
-contracts, snapping and acquisition, Viewer measurement presentation, and
-fixed/associative anchor model. ADR 029 proposes moving durable annotations to
-a separate scene-scoped collection and flat UI; it remains unapproved. ADR 031
-proposes exposing existing spatial-object deletion through the default Edit
-menu while preserving subtree, ownership, history, and association behavior.
+contracts, snapping and acquisition, Viewer measurement presentation,
+fixed/associative anchor model, separate annotation collection and UI,
+always-visible dimension rendering, and spatial-object deletion behavior.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -53,9 +51,9 @@ menu while preserving subtree, ownership, history, and association behavior.
 | 026 | [Measurement interaction and acquisition](026-measurement-interaction-and-acquisition.md) | Accepted; amended 2026-11-09 | 005; 024; 021–022; 003–004; 006; 027–028 |
 | 027 | [Viewer measurement settings and UI](027-viewer-measurement-settings.md) | Accepted | 005; 020; 022; 026 |
 | 028 | [Fixed and associative dimension anchors](028-dimension-anchor-modes.md) | Accepted | 005; 024; 021; 026 |
-| 029 | [Persistent annotation collection and UI](029-persistent-annotation-collection-and-ui.md) | Proposed | 005; 010; 013; 021; 030 |
+| 029 | [Persistent annotation collection and UI](029-persistent-annotation-collection-and-ui.md) | Accepted | 005; 010; 013; 021; 030 |
 | 030 | [Always-visible persistent dimension rendering](030-always-visible-dimension-rendering.md) | Accepted | 005; 021; 024; 026; independent of 029 |
-| 031 | [Spatial object deletion](031-spatial-object-deletion.md) | Proposed | 003–004; 010; 013; 028; independent of 029 |
+| 031 | [Spatial object deletion](031-spatial-object-deletion.md) | Accepted | 003–004; 010; 013; 028; annotation removal governed by 029 |
 
 ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A
@@ -98,6 +96,10 @@ Direct-use refinement adds bright square markers, an 18-logical-pixel radius,
 and same-object footprint depth qualification. Only visible Point,
 Mesh-vertex, and Graph-node guides are eligible; every invisible line, edge,
 face, and surface target is disabled. ADR 030 keeps persistent dimensions
-visible in a separate final render pass. ADR 029 separately proposes removing
-annotations from the spatial hierarchy and presenting them in a flat
-Annotations UI; it awaits explicit approval.
+visible in a separate final render pass. ADRs 029 and 031 were accepted on
+2026-11-09. ADR 029 moves durable annotations out of the spatial hierarchy,
+adds a flat Annotations UI, and separates semantic annotation data from a
+narrow durable dimension style. ADR 031 exposes existing spatial deletion
+through the default Edit menu while preserving subtree, independent-data,
+history-invalidation, and unresolved-association behavior. Their implementation
+and refreshed verification remain pending.
