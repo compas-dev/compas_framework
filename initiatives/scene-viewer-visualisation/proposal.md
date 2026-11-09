@@ -31,6 +31,41 @@ transformations, categorized refresh, and Viewer-level transform history is
 implemented, independently approved, and verified locally and in hosted core,
 Viewer, and framework CI.
 
+ADRs 029 and 031 are implemented and verified locally and in hosted package
+and exact source-installed integration CI. Direct use then exposed a sidebar
+composition problem: one stacked splitter presents spatial, annotation, and
+system contexts simultaneously, redistributes unrelated panels, and hides
+annotation naming and global deselection behavior. Accepted ADR 032 responds
+with three stable top-level domains while preserving separate spatial and
+annotation selection models. Its implementation and local verification pass;
+hosted refreshes are pending.
+
+## Proposed three-domain sidebar amendment
+
+Replace the shared vertical splitter with one full-height tab widget containing
+Scene, Annotations, and System. Scene owns the hierarchy and selected spatial
+object details. Annotations owns the ordered annotation list and an explicit
+selected-annotation detail form. System owns Camera, Display, and Units and
+Measurement sections. Ordinary layouts provide stable master/detail space;
+selection updates must not resize or rebuild unrelated domains.
+
+Spatial and annotation selections remain independent and can coexist. Tab
+changes preserve both. Spatial picking changes only spatial selection and the
+annotation list changes only annotation selection. An unmodified empty
+viewport click clears both. Escape cancels an active measurement first and
+otherwise clears both, while focused editors retain their local Escape
+behavior. Annotation and spatial deletion remain separate operations.
+
+The annotation detail form makes Name editing explicit and presents Type and
+the supported narrow dimension style without embedding those controls in the
+list. Commands navigate with `sidebar.set_current_tab`, accepting only Scene,
+Annotations, or System, and `sidebar.focus_system_section`, accepting only
+Camera, Display, or Units and Measurement. Unsupported identifiers raise
+`ValueError`; focusing a system section first activates System. The optional
+datastructure inspector remains absent by default and routes to Scene when
+explicitly configured. The existing Viewer configuration schema, Core Scene
+schema, and optional sidebar component types remain unchanged.
+
 ## New evidence requiring amendment
 
 - A Viewer Box/ShapeObject local translation `[2, 0, 0]` reloads as
@@ -515,6 +550,18 @@ speculative replacement model.
 18. [ADR 018 — Datastructure element-attribute editing](decisions/018-datastructure-attribute-editing.md)
 19. [ADR 019 — Configured Viewer identity](decisions/019-configured-viewer-identity.md)
 20. [ADR 020 — Viewer configuration lifecycle and field audit](decisions/020-viewer-config-lifecycle-and-audit.md)
+21. [ADR 021 — Durable annotation ownership and schema](decisions/021-durable-annotation-ownership.md)
+22. [ADR 022 — Distance-dimension unit semantics](decisions/022-distance-dimension-units.md)
+23. [ADR 023 — Clean break for legacy Viewer annotations](decisions/023-annotation-clean-break.md)
+24. [ADR 024 — Measurement outcomes and persistence](decisions/024-measurement-outcomes-and-persistence.md)
+25. [ADR 025 — Scale and legend overlay contracts](decisions/025-scale-and-legend-overlays.md)
+26. [ADR 026 — Measurement interaction and acquisition](decisions/026-measurement-interaction-and-acquisition.md)
+27. [ADR 027 — Viewer measurement settings and UI](decisions/027-viewer-measurement-settings.md)
+28. [ADR 028 — Fixed and associative dimension anchors](decisions/028-dimension-anchor-modes.md)
+29. [ADR 029 — Persistent annotation collection and UI](decisions/029-persistent-annotation-collection-and-ui.md)
+30. [ADR 030 — Always-visible persistent dimension rendering](decisions/030-always-visible-dimension-rendering.md)
+31. [ADR 031 — Spatial object deletion](decisions/031-spatial-object-deletion.md)
+32. [ADR 032 — Three-domain Viewer sidebar](decisions/032-three-domain-viewer-sidebar.md)
 
 ADRs 013–016 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
 in the decision index; ADR 010 remains Accepted with amended terminology.

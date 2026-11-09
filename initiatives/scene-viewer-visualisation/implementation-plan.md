@@ -196,15 +196,18 @@ must be brought back without inventing a replacement model speculatively.
 
 ## Phase 3 — Annotations and overlays
 
-Governing ADRs: 001–005, 007, and 021–031.
+Governing ADRs: 001–005, 007, and 021–032.
 
 Status: the discrete-only acquisition, 18-pixel attraction, always-visible
 persistent-dimension pass, and default-sidebar refinement are verified locally
 and in hosted package and exact source-installed integration CI. ADRs 029 and
 031 are implemented, independently reviewed, and verified locally across Core,
-Viewer, and the direct-source framework gate. Refreshed package and exact
-hosted integration verification are pending. Interactive confirmation of the
-existing measurement refinement also remains pending.
+Viewer, the direct-source framework gate, and refreshed hosted CI. Direct-use
+feedback identified a separate sidebar-composition defect; ADR 032 accepts
+the replacement. Its implementation, documentation, local verification,
+framework direct-source gate, and independent review pass; hosted refreshes
+are pending. Interactive confirmation of the existing measurement refinement
+also remains pending.
 ADR 023 provides the clean break with no aliases or legacy decoding. ADR 024
 separates transient inspection from
 persistent dimensions. ADR 028 defines one dimension type with fixed and
@@ -241,24 +244,32 @@ deletion without expanding history or cascading to annotations.
     Mesh-vertex, and Graph-node guides with an 18-logical-pixel radius.
 11. [Complete] Render persistent distance dimensions in ADR 030's final pass
     without depth testing or depth writes.
-12. [Complete locally; hosted refresh pending] Move persistent annotations out
+12. [Complete and verified] Move persistent annotations out
     of the spatial hierarchy, add a flat Annotations UI, and expose ADR 029's
     narrow durable style.
-13. [Complete locally; hosted refresh pending] Expose the existing
+13. [Complete and verified] Expose the existing
     `viewer.delete_selected` command in the default Edit menu while preserving
     subtree removal, independent data, transform-history invalidation, and
     unresolved associative dimensions.
+14. [Complete locally; hosted refresh pending] Replace the mixed stacked
+    sidebar with stable Scene, Annotations, and System domains; add explicit
+    annotation details and the approved global deselection behavior.
 
 Exit gate: the ADR-029/031 candidate passed local Core, Viewer, documentation,
-independent review, and direct-source framework integration verification.
-Refreshed package and exact hosted integration checks are pending. Durable annotations
-round-trip and resolve through fixed and associative anchors; transient
+independent review, refreshed package CI, and exact source-installed framework
+integration verification. Durable annotations round-trip and resolve through
+fixed and associative anchors; transient
 inspection and overlays do not serialize; only visible discrete guides produce
 interactive anchors; fixed and associative acquisition do not fall back; and
 persistent dimensions remain visible over scene geometry. Direct-use
 confirmation of the refined attraction and presentation remains pending.
 Independently built exact candidate artifacts were not installed together and
-remain a separate unrun layer.
+remain a separate unrun layer. The sidebar usability follow-up does not
+invalidate those verified storage, rendering, or deletion contracts.
+
+ADR 032's replacement sidebar also passes its local package, documentation,
+direct-source integration, and independent-review gates; its hosted refresh
+remains pending.
 
 ## Phase 4 — Public Viewer operations
 

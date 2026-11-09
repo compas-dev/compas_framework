@@ -15,11 +15,14 @@ custom use. ADR 003 is implemented, locally
 verified, independently approved, and green in hosted Viewer and refreshed
 framework CI. ADR 004 is implemented, locally verified, and independently
 approved; refreshed hosted Viewer, core, and framework verification passed.
-ADRs 021–31 record the accepted Phase 3 durable annotation ownership, unit
+ADRs 021–031 record the accepted Phase 3 durable annotation ownership, unit
 snapshots, clean-break migration, transient/persistent outcomes, overlay
 contracts, snapping and acquisition, Viewer measurement presentation,
 fixed/associative anchor model, separate annotation collection and UI,
 always-visible dimension rendering, and spatial-object deletion behavior.
+ADR 032 is Accepted in response to direct-use evidence that the current
+stacked sidebar does not provide stable or clearly separated Scene,
+Annotations, and System contexts.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -54,6 +57,7 @@ always-visible dimension rendering, and spatial-object deletion behavior.
 | 029 | [Persistent annotation collection and UI](029-persistent-annotation-collection-and-ui.md) | Accepted | 005; 010; 013; 021; 030 |
 | 030 | [Always-visible persistent dimension rendering](030-always-visible-dimension-rendering.md) | Accepted | 005; 021; 024; 026; independent of 029 |
 | 031 | [Spatial object deletion](031-spatial-object-deletion.md) | Accepted | 003–004; 010; 013; 028; annotation removal governed by 029 |
+| 032 | [Three-domain Viewer sidebar](032-three-domain-viewer-sidebar.md) | Accepted; implemented and locally verified | Refines 003, 027, 029, and 031 |
 
 ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A
@@ -102,4 +106,8 @@ adds a flat Annotations UI, and separates semantic annotation data from a
 narrow durable dimension style. ADR 031 exposes existing spatial deletion
 through the default Edit menu while preserving subtree, independent-data,
 history-invalidation, and unresolved-association behavior. Their implementation
-and refreshed verification remain pending.
+and refreshed hosted verification passed. Direct-use evidence subsequently
+showed that the shared splitter and mixed detail surfaces make the sidebar
+unstable and ambiguous. Accepted ADR 032 records the approved three-domain
+replacement. Its implementation, documentation, local verification, framework
+direct-source gate, and independent review pass; hosted refreshes are pending.

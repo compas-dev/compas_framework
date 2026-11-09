@@ -55,9 +55,10 @@ from compas_viewer.snapping import SnapResult
 from compas_viewer.snapping import query_snaps
 from compas_viewer.uidefinitions import default_menu_items
 from compas_viewer.uidefinitions import default_sidebar_items
+from PySide6.QtWidgets import QSplitter
 
 CORE_COMMIT = "70aeb1e408772f0a84213c280658d4d594bf12ea"
-VIEWER_COMMIT = "e6e81d5248f7ceea6b96ee992f9b83cf472563d0"
+VIEWER_COMMIT = "a29d073c27987d501b0c343a388da643da3367a0"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -140,6 +141,29 @@ def test_viewer_configuration_and_sidebar_contracts():
         Config.from_dict({"schema_version": 3, "window": {"icon": "relative.png"}})
     with pytest.raises(ValueError, match=r"window\.width"):
         Config.from_dict({"schema_version": 3, "window": {"width": 0}})
+
+
+def test_viewer_sidebar_separates_scene_annotation_and_system_domains():
+    viewer = Viewer()
+    sidebar = viewer.ui.sidebar
+
+    assert [sidebar.widget.tabText(index) for index in range(sidebar.widget.count())] == [
+        "Scene",
+        "Annotations",
+        "System",
+    ]
+    assert sidebar.widget.findChildren(QSplitter) == []
+
+    sidebar.set_current_tab("Annotations")
+    assert sidebar.widget.tabText(sidebar.widget.currentIndex()) == "Annotations"
+
+    sidebar.focus_system_section("Camera")
+    assert sidebar.widget.tabText(sidebar.widget.currentIndex()) == "System"
+
+    with pytest.raises(ValueError, match="Unsupported sidebar tab"):
+        sidebar.set_current_tab("Other")  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="Unsupported system section"):
+        sidebar.focus_system_section("Other")  # type: ignore[arg-type]
 
 
 def test_core_annotations_serialize_and_resolve_without_fallbacks():
