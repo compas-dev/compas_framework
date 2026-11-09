@@ -37,6 +37,23 @@ colormaps, and out-of-range behavior are deferred.
 Both overlay types are Viewer-owned, screen-space, unpicked, and absent from
 scene serialization.
 
+## Implementation note: one widget overlay canvas
+
+Recorded on 2026-11-09 after direct use of the measurement preview exposed
+missing transient graphics and an intermittent `QPainter` failure on macOS.
+
+Viewer renders scale, legend, and measurement feedback on one transparent,
+mouse-transparent `QWidget` canvas stacked above the OpenGL renderer. The
+renderer remains a pure OpenGL surface. `QPainter` is created, used, and ended
+only during the overlay widget's ordinary `paintEvent`. A completed renderer
+frame and a direct change to overlay or measurement state both schedule a
+canvas repaint.
+
+The canvas remains Viewer-owned, screen-space, unpicked, and absent from scene
+serialization. This mechanism implements the already approved overlay
+ownership and lifecycle; it does not introduce a general widget, snapping, or
+plugin framework.
+
 ## Consequences
 
 - The scale bar has precise, testable meaning in both projection modes.
@@ -46,6 +63,8 @@ scene serialization.
   normalization behavior.
 - One narrow ordered layer replaces concrete main-loop checks without becoming
   a framework-wide extension registry.
+- One ordinary widget paint lifecycle keeps transient UI painting separate
+  from the OpenGL renderer and its context lifecycle.
 
 ## Compatibility
 
@@ -60,6 +79,9 @@ These are new transient Viewer APIs. They do not preserve the obsolete durable
   `1–2–5 × 10ⁿ` choice.
 - Verify categorical legend order, title, and colors.
 - Verify overlays do not participate in scene selection or instance picking.
+- Verify the canvas is transparent to pointer input, is stacked above the
+  renderer, and repaints after frame swaps and direct transient-state changes.
+- Verify `QPainter` ownership begins and ends inside the canvas `paintEvent`.
 
 ## Dependencies
 

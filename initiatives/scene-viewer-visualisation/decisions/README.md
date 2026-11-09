@@ -44,8 +44,8 @@ fixed/associative anchor model.
 | 022 | [Distance-dimension unit semantics](022-distance-dimension-units.md) | Accepted | 021; 027; 005; 020 |
 | 023 | [Clean break for legacy Viewer annotations](023-annotation-clean-break.md) | Accepted | 021; 005 |
 | 024 | [Measurement outcomes and persistence](024-measurement-outcomes-and-persistence.md) | Accepted | 005; 021–022; 026 |
-| 025 | [Scale and legend overlay contracts](025-scale-and-legend-overlays.md) | Accepted | 005–006; 023 |
-| 026 | [Measurement interaction and acquisition](026-measurement-interaction-and-acquisition.md) | Accepted | 005; 024; 021–022; 003–004; 006; 027–028 |
+| 025 | [Scale and legend overlay contracts](025-scale-and-legend-overlays.md) | Accepted; implementation note added 2026-11-09 | 005–006; 023 |
+| 026 | [Measurement interaction and acquisition](026-measurement-interaction-and-acquisition.md) | Accepted; amended 2026-11-09 | 005; 024; 021–022; 003–004; 006; 027–028 |
 | 027 | [Viewer measurement settings and UI](027-viewer-measurement-settings.md) | Accepted | 005; 020; 022; 026 |
 | 028 | [Fixed and associative dimension anchors](028-dimension-anchor-modes.md) | Accepted | 005; 024; 021; 026 |
 
@@ -80,9 +80,13 @@ ADR 027 adds one Units and Measurement tab with editable Viewer unit and display
 precision plus read-only global COMPAS tolerance. It neither restores the old
 root unit nor mutates global tolerance; snapping governs correctness.
 ADR 025 adds one ordered Viewer overlay layer, a camera-target scale bar, and
-an ordered categorical legend without serialization or picking. Implementation
-ADR 026 adds one prioritized screen-space snapping result and one-shot transient
-and persistent tool lifecycles. Fixed mode accepts every initial snap kind;
+an ordered categorical legend without serialization or picking. Its
+2026-11-09 implementation note records the transparent widget canvas used to
+keep transient painting outside the OpenGL renderer. ADR 026 adds one
+prioritized screen-space snapping result and one-shot transient and persistent
+tool lifecycles. Its 2026-11-09 amendment exposes the hovered object's discrete
+point palette, a distinct click winner, the retained first anchor, and
+equal-depth persistent dimensions. Fixed mode accepts every initial snap kind;
 associative mode initially supports points, vertices, graph nodes, and
 parameterized line/edge locations without silent fallback. All Phase 3
-architecture decisions are Accepted and implementation may begin.
+architecture decisions are Accepted.

@@ -42,13 +42,16 @@ from compas_viewer.scene.annotationobject import ArrowAnnotationRenderObject
 from compas_viewer.scene.annotationobject import DistanceDimensionRenderObject
 from compas_viewer.scene.annotationobject import TextAnnotationRenderObject
 from compas_viewer.selection import Selection
+from compas_viewer.snapping import ProjectedPoint
 from compas_viewer.snapping import SnapKind
+from compas_viewer.snapping import SnapQuery
 from compas_viewer.snapping import SnapResult
+from compas_viewer.snapping import query_snaps
 from compas_viewer.uidefinitions import default_menu_items
 from compas_viewer.uidefinitions import default_sidebar_items
 
 CORE_COMMIT = "353cebfd21cd3623f7d950527d71f4770ff2a21c"
-VIEWER_COMMIT = "eb018d6ed2c8651a5294e2cd3d98c468cb3bd3e2"
+VIEWER_COMMIT = "d8590d36f2cbd1403d2c40c1dc8cce880a54a229"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -215,8 +218,8 @@ def test_measurement_state_preserves_mode_semantics_and_dimension_settings():
     second = SnapResult(Point(3, 4, 0), edge_guid, SnapKind.EDGE, 0.0, component=(1, 2), parameter=0.25)
 
     state.start("inspection")
-    assert state.accept(first, unit="m", precision=1) is None
-    inspection = state.accept(second, unit="m", precision=1)
+    assert state.accept(SnapQuery(first), unit="m", precision=1) is None
+    inspection = state.accept(SnapQuery(second), unit="m", precision=1)
     assert isinstance(inspection, DistanceInspection)
     assert inspection.distance == 5.0
     assert state.completed_inspection is inspection
@@ -230,24 +233,45 @@ def test_measurement_state_preserves_mode_semantics_and_dimension_settings():
         association_error="Surface snaps are not associative.",
     )
     state.start("fixed")
-    assert state.accept(first, unit="mm", precision=4) is None
-    fixed = state.accept(unsupported, unit="mm", precision=4)
+    assert state.accept(SnapQuery(first), unit="mm", precision=4) is None
+    fixed = state.accept(SnapQuery(unsupported), unit="mm", precision=4)
     assert isinstance(fixed, DistanceDimension)
     assert fixed.start == PointAnchor(first.point)
     assert fixed.end == PointAnchor(unsupported.point)
     assert (fixed.unit, fixed.precision) == ("mm", 4)
 
     state.start("associative")
-    assert state.accept(first, unit="cm", precision=3) is None
-    assert state.accept(unsupported, unit="cm", precision=3) is None
+    assert state.accept(SnapQuery(first), unit="cm", precision=3) is None
+    assert state.accept(SnapQuery(unsupported), unit="cm", precision=3) is None
     assert state.first_snap is first
     assert state.rejection == "Surface snaps are not associative."
-    associative = state.accept(second, unit="cm", precision=3)
+    associative = state.accept(SnapQuery(second), unit="cm", precision=3)
     assert isinstance(associative, DistanceDimension)
     assert associative.start == ComponentAnchor(point_guid, "point")
     assert associative.end == ComponentAnchor(edge_guid, "edge", component=(1, 2), parameter=0.25)
     assert (associative.unit, associative.precision) == ("cm", 3)
     assert not state.active
+
+
+def test_measurement_hover_exposes_discrete_points_and_one_winner():
+    mesh = Mesh.from_vertices_and_faces(
+        [[0, 0, 0], [4, 0, 0], [4, 3, 0], [0, 3, 0]],
+        [[0, 1, 2, 3]],
+    )
+    sceneobject = SceneObject(mesh)
+
+    query = query_snaps(
+        [sceneobject],
+        (0.1, 0.1),
+        radius=0.5,
+        project=lambda point: ProjectedPoint(point.x, point.y, 0.0),
+    )
+
+    assert query.winner is not None
+    assert query.winner.kind == SnapKind.VERTEX
+    assert query.winner.component == 0
+    assert [snap.kind for snap in query.points] == [SnapKind.VERTEX] * 4
+    assert [snap.component for snap in query.points] == [0, 1, 2, 3]
 
 
 def test_measure_menu_and_commands_have_one_stable_public_path():

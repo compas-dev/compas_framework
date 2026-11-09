@@ -85,6 +85,37 @@ active tool. Transient inspection and persistent dimension tools are both
 one-shot in the first version: the second valid anchor completes the operation
 and deactivates the tool.
 
+## Accepted amendment: visible discrete point acquisition
+
+Accepted on 2026-11-09 after direct use showed that a distance label alone did
+not communicate which object components were available, which result a click
+would accept, or whether the first anchor had been retained.
+
+While a measurement tool is active, hovering one object displays every
+projected discrete point snap provided by that object:
+
+- the point of a Point object;
+- the vertices of a Mesh; and
+- the nodes of a Graph.
+
+The palette follows the hovered object and disappears when the pointer leaves
+it. Continuous line and edge snap visualization is deferred. Palette points
+are guidance and are not independently occlusion-tested. Only the distinct
+highlighted winner within the existing screen-radius and depth acceptance
+rules is click-eligible.
+
+After the first winner is accepted, that anchor remains visible while the
+palette follows the next hovered object. In Associative mode, a face or surface
+winner remains fixed-only and produces the approved visible rejection. The
+supported point palette remains visible at the same time so the user can move
+to a valid point, vertex, or node.
+
+Transient measurement graphics use the single Viewer overlay canvas recorded
+in ADR 025's implementation note. Completed world annotations use an equal-depth
+comparison so a dimension coincident with measured geometry remains visible,
+while geometry closer to the camera still occludes it. These corrections do
+not add a general snapping or widget framework.
+
 ## Consequences
 
 - Measurement accuracy and association follow the explicitly supported snap
@@ -94,6 +125,8 @@ and deactivates the tool.
 - Input priority and background behavior are deterministic.
 - Both outcomes share acquisition and preview without sharing persistence.
 - A narrow one-shot lifecycle avoids a general tool framework promise.
+- Hover guidance makes the available discrete anchors, accepted winner, and
+  retained first anchor visible without changing snap eligibility.
 
 ## Compatibility
 
@@ -108,15 +141,22 @@ camera input when no measurement tool is active.
   update anchors.
 - Verify screen-space radius, snap priority, nearest-candidate choice, and
   every accepted `SnapResult` field.
+- Verify hovering a Point, Mesh, or Graph shows all projected discrete point
+  snaps for that one object and leaving it clears the palette.
+- Verify palette points are guidance only, the distinct depth-qualified winner
+  is the only click-eligible result, and the first anchor remains visible while
+  the palette follows the next object.
 - Verify Fixed mode accepts point/vertex/node, line/edge, and face/surface hits
   but stores only a `PointAnchor`.
 - Verify Associative mode accepts point/vertex/node and parameterized line/edge
   hits while rejecting face/surface association visibly.
+- Verify a face/surface rejection can coexist with the supported point palette.
 - Verify transient completion follows ADR 024 without scene mutation.
 - Verify fixed, associative, and any exposed mixed acquisition follow ADR 028,
   including no silent fallback.
 - Verify persistent completion creates and selects exactly one root-level
-  dimension.
+  dimension, remains visible at equal depth, and remains occluded by closer
+  geometry.
 - Verify Escape and explicit cancellation create nothing in both modes.
 
 ## Dependencies
@@ -140,5 +180,10 @@ Active tools receive left-click input before selection, ignore background,
 preview on pointer movement, cancel on Escape, retain non-conflicting camera
 navigation, and complete as one-shot transient or persistent operations. The
 rationale is precise, efficient initial snapping without a general snapping or
-sub-object editing framework.
+sub-object editing framework. Amended on 2026-11-09 to expose projected
+Point/Mesh-vertex/Graph-node guidance for the hovered object, keep only the
+distinct depth-qualified winner click-eligible, retain the first anchor while
+the palette follows the next object, and keep completed dimensions visible at
+equal depth. The rationale is direct, unambiguous feedback without widening
+the accepted snapping contract.
 
