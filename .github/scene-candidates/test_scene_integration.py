@@ -61,7 +61,7 @@ from compas_viewer.uidefinitions import default_toolbar_items
 from PySide6.QtWidgets import QSplitter
 
 CORE_COMMIT = "70aeb1e408772f0a84213c280658d4d594bf12ea"
-VIEWER_COMMIT = "506179a936e7db50ef2dfae5a0f1638078063249"
+VIEWER_COMMIT = "9fa279225a4eb52c3c43b5224c5ce60687e4151e"
 
 
 def _installed_commit(distribution_name: str) -> str:
