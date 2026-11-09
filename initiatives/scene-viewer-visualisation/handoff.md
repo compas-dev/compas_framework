@@ -89,7 +89,7 @@ Read next:
 |---|---|---|---|---|
 | `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `21ff56319dadcac91abedc1a19154ae48d212cd9` | [7](https://github.com/compas-dev/compas_framework/pull/7) | Previous hosted baseline; follow-up gate refresh pending |
 | `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `70aeb1e408772f0a84213c280658d4d594bf12ea` | [1540](https://github.com/compas-dev/compas/pull/1540) | Local verification, independent review, and hosted package CI passed |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `9fa279225a4eb52c3c43b5224c5ce60687e4151e` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Local verification and independent review passed; hosted refresh pending |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `efbb7991c9f60aef2e8225813c5050190b5cfb0b` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Local verification and independent review passed; hosted refresh pending |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
 ## Verification evidence
