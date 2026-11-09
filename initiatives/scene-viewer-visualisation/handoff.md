@@ -4,7 +4,7 @@ Last updated: 2026-11-09
 
 ## Resume here
 
-Current phase: `Phase 3 ADRs 036 and 040–042 locally verified; hosted refresh pending`
+Current phase: `Phase 3 ADRs 036 and 040–042 implemented and verified`
 
 The scene foundation, contextual settings, Viewer configuration and tables,
 selection, and reversible transformations governed by Accepted ADRs 001–020
@@ -60,9 +60,9 @@ hierarchy under Scene. ADR 036 is Accepted and implemented with a screen-pinned,
 non-persistent, programmatic-first contract. Accepted ADRs 040–042 add synchronized default-toolbar selectors, a
 Grid and Units System section with consistent two-column field alignment and no
 tolerance UI, and transient selected-object area and volume inspection. The
-four implementations pass 498 Viewer tests, Ruff, formatting, Pyright, strict
-MkDocs, independent review, and the 15-test direct-source framework gate. The
-Viewer candidate is pushed; hosted Viewer and framework refreshes are pending.
+four implementations pass 501 Viewer tests, Ruff, formatting, Pyright, strict
+MkDocs, independent review, the complete hosted Viewer matrix, and the exact
+source-installed framework gate.
 The other follow-ups remain Proposed and require explicit approval.
 
 The Core and refreshed Viewer candidate and framework gate are green at the
@@ -87,27 +87,26 @@ Read next:
 
 | Repository | Branch | Verified revision | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `21ff56319dadcac91abedc1a19154ae48d212cd9` | [7](https://github.com/compas-dev/compas_framework/pull/7) | Previous hosted baseline; follow-up gate refresh pending |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `f7ac4ce02a3d20f17a5c10246f0e905cc9b9232e` | [7](https://github.com/compas-dev/compas_framework/pull/7) | Hosted contracts and exact source-installed gate passed |
 | `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `70aeb1e408772f0a84213c280658d4d594bf12ea` | [1540](https://github.com/compas-dev/compas/pull/1540) | Local verification, independent review, and hosted package CI passed |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `efbb7991c9f60aef2e8225813c5050190b5cfb0b` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Local verification and independent review passed; hosted refresh pending |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `efbb7991c9f60aef2e8225813c5050190b5cfb0b` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Local and hosted package verification passed |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
 ## Verification evidence
 
 | Layer | Status | Evidence |
 |---|---|---|
-| Local package checks | Passed | Core remains at its verified candidate. Viewer passed 498 tests, Pyright, Ruff, format, strict MkDocs, and independent review. The updated direct-source framework gate passed 15 tests with the exact-revision assertion skipped as designed. |
+| Local package checks | Passed | Core remains at its verified candidate. Viewer passed 501 tests, Pyright, Ruff, format, strict MkDocs, and independent review. The updated direct-source framework gate passed 15 tests with the exact-revision assertion skipped as designed. |
 | Native interactive probes | Partial | Earlier native macOS captures showed the point palette, winner, retained anchor, live line and label without a `QPainter` warning or crash. Direct confirmation of 18-pixel attraction, discrete-only acquisition, and the final persistent-dimension pass remains pending. |
-| Package CI | Pending Viewer refresh | Core PR 1540 remains green. Viewer PR 233 must verify the new exact revision above. |
-| Framework integration | Pending hosted refresh | The updated direct-source gate passed locally. Framework PR 7 must install the new exact Viewer pin and rerun the hosted gate. |
+| Package CI | Passed | Core PR 1540 remains green. Viewer PR 233 passes build, coverage, policy, distributions, and all nine OS/Python quality jobs. |
+| Framework integration | Passed | Framework PR 7 passes contracts and the exact source-installed Viewer gate. |
 | Candidate artifacts | Not run | No compatibility claim is made for independently built candidate artifacts. Run this layer before artifact admission or release if that claim is required. |
 
 ## Next tasks
 
-1. Run Viewer PR 233 and framework PR 7 at the exact Viewer revision above.
-2. Reconfirm the new toolbar, Grid and Units layout, screen text, and scalar
+1. Reconfirm the new toolbar, Grid and Units layout, screen text, and scalar
    inspection interactively.
-3. Obtain explicit decisions on Proposed ADRs 033–035 and 037–039.
+2. Obtain explicit decisions on Proposed ADRs 033–035 and 037–039.
 
 ## Approval gates
 

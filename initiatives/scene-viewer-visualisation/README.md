@@ -3,7 +3,7 @@
 This initiative aligns backend-neutral scene infrastructure with Viewer
 rendering, interaction, state, and UI composition.
 
-Current phase: **Phase 3 ADRs 036 and 040–042 implemented and locally verified; hosted refresh pending**.
+Current phase: **Phase 3 ADRs 036 and 040–042 implemented and verified**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -48,9 +48,9 @@ screen-text overlay. Accepted ADRs 040–042 add synchronized toolbar selectors,
 a coherent Grid and Units System section with consistent field alignment, and
 transient selected-object area and volume inspection. The remaining ADRs are
 Proposed. ADRs 036 and 040–042 are implemented on the Viewer initiative branch
-and pass the complete local package and direct-source framework gates. Hosted
-Viewer and framework refreshes remain pending. Exact candidate-artifact
-compatibility has not been run and is not implied by the existing results.
+and pass the complete local and hosted Viewer gates plus the exact
+source-installed framework gate. Exact candidate-artifact compatibility has
+not been run and is not implied by the existing results.
 
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence

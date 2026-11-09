@@ -262,7 +262,7 @@ deletion without expanding history or cascading to annotations.
 17. [Blocked on ADR 035 approval] Add deterministic world-space dimension
     offsets from a captured plane normal, including extension lines and
     explicit unresolved layout behavior.
-18. [Complete and locally verified; hosted refresh pending] Add screen-pinned viewport text as a Viewer
+18. [Complete and verified] Add screen-pinned viewport text as a Viewer
     overlay through the existing programmatic overlay API; do not add an
     incomplete interactive management surface or persistence until their
     ownership is approved.
@@ -272,13 +272,13 @@ deletion without expanding history or cascading to annotations.
     or Annotations interaction domain without deleting both selections.
 21. [Blocked on ADR 039 approval] Move the existing geometry Add hierarchy
     under Scene while retaining measurement acquisition under Measure.
-22. [Complete and locally verified; hosted refresh pending] Establish Camera, Display, and Grid and Units
+22. [Complete and verified] Establish Camera, Display, and Grid and Units
     ownership; remove tolerance from Viewer UI; and align all System form
     fields on one two-column layout.
-23. [Complete and locally verified; hosted refresh pending] Add the
+23. [Complete and verified] Add the
     visible-by-default Render Mode and View toolbar selectors synchronized
     through existing state and commands.
-24. [Complete and locally verified; hosted refresh pending] Add transient selection-driven area and
+24. [Complete and verified] Add transient selection-driven area and
     volume inspection with exact supported transform scaling and explicit
     unsupported cases.
 
@@ -299,8 +299,8 @@ direct-source integration, independent-review, hosted package, and exact
 source-installed integration gates. Direct-use regressions in annotation
 visibility refresh and numeric field-type inference are fixed and verified in
 hosted Viewer and framework CI. ADRs 036 and 040–042 are implemented and pass
-the complete local Viewer and direct-source framework gates; hosted refreshes
-are pending. ADRs 033–035 and 037–039 remain Proposed and blocked.
+the complete local and hosted Viewer gates plus the exact source-installed
+framework gate. ADRs 033–035 and 037–039 remain Proposed and blocked.
 
 ## Phase 4 — Public Viewer operations
 
