@@ -9,14 +9,19 @@ narrowly declared non-state attributes. The earlier `FormField` implementation
 has been replaced and verified. ADRs 017–020 authorize lazy datastructure
 attribute tables, their editing semantics, configured Viewer identity, and a
 configuration lifecycle/field audit. Their implementation is verified locally
-and in hosted Viewer and framework CI. ADR 003 is implemented, locally
+and in hosted Viewer and framework CI. ADR 017 is amended to keep the
+datastructure inspector out of the default sidebar while preserving opt-in
+custom use. ADR 003 is implemented, locally
 verified, independently approved, and green in hosted Viewer and refreshed
 framework CI. ADR 004 is implemented, locally verified, and independently
 approved; refreshed hosted Viewer, core, and framework verification passed.
-ADRs 021–028 record the accepted Phase 3 durable annotation ownership, unit
+ADRs 021–028 and 030 record the accepted Phase 3 durable annotation ownership, unit
 snapshots, clean-break migration, transient/persistent outcomes, overlay
 contracts, snapping and acquisition, Viewer measurement presentation, and
-fixed/associative anchor model.
+fixed/associative anchor model. ADR 029 proposes moving durable annotations to
+a separate scene-scoped collection and flat UI; it remains unapproved. ADR 031
+proposes exposing existing spatial-object deletion through the default Edit
+menu while preserving subtree, ownership, history, and association behavior.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -36,7 +41,7 @@ fixed/associative anchor model.
 | 014 | [Context-keyed scene operation plugins](014-context-keyed-scene-operations.md) | Accepted | 013; replaces backend class registration |
 | 015 | [Editable scene-object attributes](015-contextual-scene-form-contributions.md) | Accepted, amended | 013; respects 014 |
 | 016 | [Contextual editable-attribute overrides and mutation](016-scene-form-field-bindings.md) | Accepted, amended | 015; respects 014 |
-| 017 | [Lazy datastructure element-attribute tables](017-lazy-datastructure-attribute-tables.md) | Accepted | 006; sidebar coordination |
+| 017 | [Lazy datastructure element-attribute tables](017-lazy-datastructure-attribute-tables.md) | Accepted; amended 2026-11-09 | 006; sidebar coordination |
 | 018 | [Datastructure element-attribute editing](018-datastructure-attribute-editing.md) | Accepted | 017; 006/016 refresh ownership |
 | 019 | [Configured Viewer identity](019-configured-viewer-identity.md) | Accepted | Independent |
 | 020 | [Viewer configuration lifecycle and field audit](020-viewer-config-lifecycle-and-audit.md) | Accepted | 019; sidebar coordination with 017–018 |
@@ -48,6 +53,9 @@ fixed/associative anchor model.
 | 026 | [Measurement interaction and acquisition](026-measurement-interaction-and-acquisition.md) | Accepted; amended 2026-11-09 | 005; 024; 021–022; 003–004; 006; 027–028 |
 | 027 | [Viewer measurement settings and UI](027-viewer-measurement-settings.md) | Accepted | 005; 020; 022; 026 |
 | 028 | [Fixed and associative dimension anchors](028-dimension-anchor-modes.md) | Accepted | 005; 024; 021; 026 |
+| 029 | [Persistent annotation collection and UI](029-persistent-annotation-collection-and-ui.md) | Proposed | 005; 010; 013; 021; 030 |
+| 030 | [Always-visible persistent dimension rendering](030-always-visible-dimension-rendering.md) | Accepted | 005; 021; 024; 026; independent of 029 |
+| 031 | [Spatial object deletion](031-spatial-object-deletion.md) | Proposed | 003–004; 010; 013; 028; independent of 029 |
 
 ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A
@@ -83,12 +91,13 @@ ADR 025 adds one ordered Viewer overlay layer, a camera-target scale bar, and
 an ordered categorical legend without serialization or picking. Its
 2026-11-09 implementation note records the transparent widget canvas used to
 keep transient painting outside the OpenGL renderer. ADR 026 adds one
-prioritized screen-space snapping result and one-shot transient and persistent
+nearest-eligible-discrete-point query and one-shot transient and persistent
 tool lifecycles. Its 2026-11-09 amendment exposes the hovered object's discrete
-point palette, a distinct click winner, the retained first anchor, and
-equal-depth persistent dimensions. Direct-use refinement adds bright square
-markers and same-object footprint depth qualification. Mesh edges do not
-compete with vertex acquisition; standalone Lines and Graph edges remain
-eligible. Associative mode supports points, vertices, graph nodes, and
-parameterized standalone-line/graph-edge locations without silent fallback.
-All Phase 3 architecture decisions are Accepted.
+point palette, a distinct click winner, and the retained first anchor.
+Direct-use refinement adds bright square markers, an 18-logical-pixel radius,
+and same-object footprint depth qualification. Only visible Point,
+Mesh-vertex, and Graph-node guides are eligible; every invisible line, edge,
+face, and surface target is disabled. ADR 030 keeps persistent dimensions
+visible in a separate final render pass. ADR 029 separately proposes removing
+annotations from the spatial hierarchy and presenting them in a flat
+Annotations UI; it awaits explicit approval.

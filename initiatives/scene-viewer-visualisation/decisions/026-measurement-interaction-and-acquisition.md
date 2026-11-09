@@ -32,32 +32,25 @@ One narrow snapping query returns a `SnapResult` containing:
 - the stable scene-object GUID;
 - the snap kind;
 - an optional stable component reference; and
-- an optional normalized component parameter.
+- an explicit association error when a visible discrete component cannot be
+  represented by a stable reference.
 
-The snap kinds in priority order are:
+Interactive acquisition initially produces only discrete point kinds:
 
-1. point, mesh vertex, or graph node;
-2. standalone line or graph-edge location; and
-3. face or surface location.
+1. a Point object;
+2. a Mesh vertex; or
+3. a Graph node.
 
-Snapping uses a screen-space radius so its acquisition footprint remains
-usable across zoom levels. Within the highest available priority group, the
-nearest screen-space candidate wins.
+Snapping uses an 18-logical-pixel screen-space radius so its acquisition
+footprint remains usable across zoom levels. The nearest eligible discrete
+point wins.
 
-Fixed mode accepts every supported snap kind and stores only the resolved world
-point in a `PointAnchor`.
+Fixed mode copies the resolved world point into a `PointAnchor`.
 
-Associative mode initially accepts:
-
-- point objects;
-- mesh vertices;
-- graph nodes; and
-- locations on standalone lines or graph edges, stored with a normalized
-  parameter.
-
-Face and surface hits are valid in Fixed mode but associative face/surface
-anchors are deferred. An unsupported associative result is rejected visibly
-and never converted silently to a fixed point.
+Associative mode accepts the same displayed point, vertex, and node targets and
+stores their stable component references. The two modes differ only in
+persistence. Lines, edges, faces, and surfaces do not produce interactive
+candidates until their eligible geometry has an explicit highlight overlay.
 
 ### Tool lifecycle
 
@@ -101,15 +94,14 @@ projected discrete point snap provided by that object:
 
 The palette follows the hovered object and disappears when the pointer leaves
 it. Guidance points are larger, bright hollow squares; the winner and retained
-anchors are distinct filled squares. Continuous snap visualization is
-deferred. Palette points are guidance and are not independently
-occlusion-tested. Only the distinct highlighted winner within the existing
-screen-radius and depth acceptance rules is click-eligible.
+anchors are distinct filled squares. Palette points are guidance and are not
+independently occlusion-tested. Only the distinct highlighted winner within
+the existing screen-radius and depth acceptance rules is click-eligible.
 
-Mesh edges do not produce measurement candidates. Standalone Line objects and
-Graph edges remain eligible because their continuous geometry is the relevant
-measurement target rather than a competing secondary target on a surface
-mesh.
+No invisible candidate is eligible. Standalone Lines, Mesh and Graph edges,
+faces, and surfaces do not produce candidates. Later support must first define
+and implement a visible candidate overlay for the corresponding segment,
+region, or surface.
 
 Winner visibility searches a small instance-depth footprint around the
 projected point. Only pixels belonging to the hovered object and matching the
@@ -119,16 +111,14 @@ loosening the global epsilon nor admitting background, another object, or a
 fully occluded component.
 
 After the first winner is accepted, that anchor remains visible while the
-palette follows the next hovered object. In Associative mode, a face or surface
-winner remains fixed-only and produces the approved visible rejection. The
-supported point palette remains visible at the same time so the user can move
-to a valid point, vertex, or node.
+palette follows the next hovered object. A missed point or background click
+creates no anchor. Fixed mode has no implicit construction-plane or camera-plane
+fallback because a background screen position does not define a unique world
+point.
 
 Transient measurement graphics use the single Viewer overlay canvas recorded
-in ADR 025's implementation note. Completed world annotations use an equal-depth
-comparison so a dimension coincident with measured geometry remains visible,
-while geometry closer to the camera still occludes it. These corrections do
-not add a general snapping or widget framework.
+in ADR 025's implementation note. Persistent dimension visibility follows ADR
+030. These corrections do not add a general snapping or widget framework.
 
 ## Consequences
 
@@ -153,7 +143,7 @@ camera input when no measurement tool is active.
   preview, second anchor, and cleanup.
 - Verify background clicks and pointer motion over background do not create or
   update anchors.
-- Verify screen-space radius, snap priority, nearest-candidate choice, and
+- Verify the 18-logical-pixel screen-space radius, nearest-candidate choice, and
   every accepted `SnapResult` field.
 - Verify hovering a Point, Mesh, or Graph shows all projected discrete point
   snaps for that one object and leaving it clears the palette.
@@ -165,19 +155,18 @@ camera input when no measurement tool is active.
 - Verify point-footprint visibility accepts a visible receding vertex while
   rejecting background pixels, another object's pixels, depth-mismatched
   same-object pixels, and fully occluded vertices.
-- Verify Mesh edges do not produce candidates.
-- Verify Fixed mode accepts point/vertex/node, standalone-line/graph-edge, and
-  face/surface hits but stores only a `PointAnchor`.
-- Verify Associative mode accepts point/vertex/node and parameterized
-  standalone-line/graph-edge hits while rejecting face/surface association
-  visibly.
-- Verify a face/surface rejection can coexist with the supported point palette.
+- Verify Lines, Mesh and Graph edges, faces, and surfaces do not produce
+  interactive candidates.
+- Verify Fixed mode stores an exact displayed point, vertex, or node coordinate
+  in a `PointAnchor`.
+- Verify Associative mode accepts the same target set and stores stable
+  component references without fallback.
+- Verify opposite vertices of the 4 × 3 example resolve to a distance of 5.
 - Verify transient completion follows ADR 024 without scene mutation.
 - Verify fixed, associative, and any exposed mixed acquisition follow ADR 028,
   including no silent fallback.
 - Verify persistent completion creates and selects exactly one root-level
-  dimension, remains visible at equal depth, and remains occluded by closer
-  geometry.
+  dimension and uses ADR 030's always-visible pass.
 - Verify Escape and explicit cancellation create nothing in both modes.
 
 ## Dependencies
@@ -192,12 +181,11 @@ camera input when no measurement tool is active.
 ## Decision
 
 Approved on 2026-11-08. One screen-space snapping query returns a world point,
-scene-object GUID, snap kind, optional stable component reference, and optional
-normalized parameter. Priority is point/vertex/node, then standalone
-line/graph edge, then face/surface. Fixed mode accepts all available snap kinds
-and stores points. Associative mode initially supports point/vertex/node and
-parameterized standalone-line/graph-edge anchors; unsupported association is
-rejected without fallback.
+scene-object GUID, snap kind, optional stable component reference, and explicit
+association error for an unstable discrete component reference. Interactive
+acquisition is restricted to Point objects, Mesh vertices, and Graph nodes with
+visible guides. Fixed mode stores their resolved coordinates; Associative mode
+stores their stable component references without fallback.
 Active tools receive left-click input before selection, ignore background,
 preview on pointer movement, cancel on Escape, retain non-conflicting camera
 navigation, and complete as one-shot transient or persistent operations. The
@@ -205,9 +193,12 @@ rationale is precise, efficient initial snapping without a general snapping or
 sub-object editing framework. Amended on 2026-11-09 to expose projected
 Point/Mesh-vertex/Graph-node guidance for the hovered object, keep only the
 distinct depth-qualified winner click-eligible, retain the first anchor while
-the palette follows the next object, and keep completed dimensions visible at
-equal depth. Refined through direct use on 2026-11-09 with larger bright square
-markers, same-object point-footprint visibility, and Mesh-edge exclusion. The
-rationale is direct, reliable, unambiguous feedback without widening the
-accepted snapping contract or loosening occlusion rules.
+the palette follows the next object, and keep transient graphics visible over
+scene geometry. Refined through direct use on 2026-11-09 with larger bright
+square markers, an 18-logical-pixel radius, same-object point-footprint
+visibility, removal of every invisible line, edge, face, and surface candidate,
+and ADR 030's always-visible final pass for persistent dimensions. The rationale
+is direct, reliable, unambiguous feedback without loosening occlusion rules.
+Continuous and regional targets can return only after their highlight overlays
+are defined.
 

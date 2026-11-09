@@ -46,6 +46,13 @@ declares at least one column. A declared domain with no elements may therefore
 show a zero-row table with its declared columns. A domain with no declared
 attribute columns is omitted.
 
+## Accepted amendment: opt-in sidebar placement
+
+Accepted on 2026-11-09 after direct use of the default sidebar. The
+`DatastructureAttributes` component remains available to explicitly configured
+custom sidebars, but it is not part of the built-in sidebar composition. The
+table model and editing contracts remain unchanged.
+
 This is a Viewer feature. It requires no changes to Mesh, Graph, or core
 datastructure APIs and does not make Qt a core dependency.
 
@@ -61,9 +68,9 @@ datastructure APIs and does not make Qt a core dependency.
 
 ## Compatibility
 
-The table is an additional Viewer sidebar surface. It does not change
-datastructure serialization, element attribute semantics, object settings, or
-the existing represented-item `ParameterForm`.
+The table is an opt-in Viewer sidebar surface. It does not change datastructure
+serialization, element attribute semantics, object settings, or the existing
+represented-item `ParameterForm`.
 
 ## Verification
 
@@ -76,6 +83,8 @@ the existing represented-item `ParameterForm`.
   zero-row table when such a domain has no elements.
 - Verify empty datastructures, large datastructures, and effective default
   values.
+- Verify the built-in sidebar omits the component and an explicitly configured
+  custom sidebar can still instantiate it.
 - Prove importing Viewer plugins remains graphics-free.
 
 ## Dependencies
@@ -92,4 +101,6 @@ Approved on 2026-11-08. Viewer owns lazy Mesh and Graph element-attribute table
 models whose domains and columns come from declared defaults and existing
 singular datastructure APIs. The rationale is to keep large tables scalable and
 their schema explicit without copying all values, scanning sparse dictionaries,
-adding per-cell components, or introducing a new core abstraction.
+adding per-cell components, or introducing a new core abstraction. Amended on
+2026-11-09 to keep the component opt-in rather than adding it to the default
+sidebar.

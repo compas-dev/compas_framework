@@ -184,7 +184,9 @@ Implementation record:
    atomic failure, and excluded first-version features.
 
 Local exit gate: passed. Tables are lazy, declared-domain-driven, Viewer-owned,
-and verified without core API changes.
+and verified without core API changes. The component is opt-in for custom
+sidebars after the 2026-11-09 amendment to ADR 017; it is not part of the
+built-in sidebar.
 
 The implementation order was ADR 019, ADR 020, ADR 017, then ADR 018.
 Configuration work established startup and sidebar visibility ownership before
@@ -194,11 +196,13 @@ must be brought back without inventing a replacement model speculatively.
 
 ## Phase 3 — Annotations and overlays
 
-Governing ADRs: 001–005, 007, and 021–028.
+Governing ADRs: 001–005, 007, 021–028, and 030. Proposed ADR 029 governs a
+possible follow-up storage/UI redesign and blocks that work until approval.
 
-Status: implemented and green in local package, hosted package, and exact
-source-installed integration verification. Interactive confirmation of the
-2026-11-09 marker, receding-vertex, and Mesh-edge refinements remains pending.
+Status: the latest discrete-only acquisition, 18-pixel attraction,
+always-visible persistent-dimension pass, and default-sidebar refinement pass
+local package verification. Hosted package and exact source-installed
+integration refreshes are pending. Interactive confirmation remains pending.
 ADR 023 provides the clean break with no aliases or legacy decoding. ADR 024
 separates transient inspection from
 persistent dimensions. ADR 028 defines one dimension type with fixed and
@@ -206,9 +210,11 @@ associative anchors, snapping in both UI modes, no silent fallback, and
 explicit unresolved references. ADRs 021–022 place narrow durable annotation
 data in `compas.scene` and define persistent unit/precision snapshots without
 implicit conversion. ADR 025 governs the ordered scale/legend overlay layer.
-ADR 026 governs the prioritized snap-result contract and one-shot tool
-lifecycle. ADR 027 governs Viewer measurement presentation settings and the
-Units and Measurement UI.
+ADR 026 governs nearest eligible discrete-point acquisition and the one-shot
+tool lifecycle. ADR 027 governs Viewer measurement presentation settings and the
+Units and Measurement UI. ADR 030 governs the always-visible persistent
+dimension pass. ADR 029's separate annotation collection, flat UI, and narrow
+dimension style remain Proposed and unimplemented.
 
 1. [Complete] Inspect current `Tag`/`ArrowOverlay` serialized behavior and
    approve the clean-break migration in ADR 023.
@@ -228,15 +234,26 @@ Units and Measurement UI.
    one Viewer overlay layer.
 9. [Complete] Keep overlay dispatch outside the main scene render loop and
    remove the obsolete Viewer annotation implementations.
+10. [Complete] Restrict interactive acquisition to visible Point,
+    Mesh-vertex, and Graph-node guides with an 18-logical-pixel radius.
+11. [Complete] Render persistent distance dimensions in ADR 030's final pass
+    without depth testing or depth writes.
+12. [Blocked by ADR 029] Move persistent annotations out of the spatial
+    hierarchy, add a flat Annotations UI, and expose the approved narrow style
+    only if ADR 029 is explicitly accepted.
+13. [Blocked by ADR 031] Expose the existing `viewer.delete_selected` command
+    in the default Edit menu while preserving subtree removal, independent data,
+    transform-history invalidation, and unresolved associative dimensions.
 
-Exit gate: automated source and package verification passed. Durable annotations
+Exit gate: local automated source and package verification passed; hosted
+refresh is pending. Durable annotations
 round-trip and resolve through fixed and associative anchors; transient
-inspection and overlays do not serialize; unsupported associative snaps do not
-fall back; updated Viewer offscreen/package checks and the exact
-source-installed framework gate pass at the recorded revisions. Direct-use
-confirmation of the refined visual presentation and receding-vertex behavior
-remains pending. Independently built exact candidate artifacts were not
-installed together and remain a separate unrun layer.
+inspection and overlays do not serialize; only visible discrete guides produce
+interactive anchors; fixed and associative acquisition do not fall back; and
+persistent dimensions remain visible over scene geometry. Direct-use
+confirmation of the refined attraction and presentation remains pending.
+Independently built exact candidate artifacts were not installed together and
+remain a separate unrun layer.
 
 ## Phase 4 — Public Viewer operations
 

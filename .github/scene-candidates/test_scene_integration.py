@@ -10,12 +10,14 @@ from uuid import uuid4
 import pytest
 from compas.data import json_dumps
 from compas.data import json_loads
+from compas.datastructures import Graph
 from compas.datastructures import Mesh
 from compas.geometry import Box
 from compas.geometry import Line
 from compas.geometry import Point
 from compas.geometry import Rotation
 from compas.geometry import Translation
+from compas.geometry import distance_point_point
 from compas.scene import ArrowAnnotation
 from compas.scene import ComponentAnchor
 from compas.scene import DistanceDimension
@@ -51,7 +53,7 @@ from compas_viewer.uidefinitions import default_menu_items
 from compas_viewer.uidefinitions import default_sidebar_items
 
 CORE_COMMIT = "353cebfd21cd3623f7d950527d71f4770ff2a21c"
-VIEWER_COMMIT = "5a25154950be63548928da956ecaff1c2f7e4d3c"
+VIEWER_COMMIT = "68548b478b9c2642ec734495e0c3ae85f8d5f1fb"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -80,7 +82,7 @@ from compas_viewer.config import Config
 from compas_viewer.uidefinitions import default_sidebar_items
 
 assert Config().schema_version == 3
-assert any(item.get("type") == "DatastructureAttributes" for item in default_sidebar_items())
+assert not any(item.get("type") == "DatastructureAttributes" for item in default_sidebar_items())
 assert any(item.get("type") == "MeasurementSetting" for item in default_sidebar_items())
 modules = tuple(sys.modules)
 assert "compas_viewer.plugins" in modules
@@ -121,7 +123,6 @@ def test_viewer_configuration_and_sidebar_contracts():
     assert [item["type"] for item in default_sidebar_items()] == [
         "SceneTree",
         "ObjectSetting",
-        "DatastructureAttributes",
         "CameraSetting",
         "DisplaySetting",
         "MeasurementSetting",
@@ -213,9 +214,9 @@ def test_viewer_dispatches_canonical_annotations_without_legacy_types():
 def test_measurement_state_preserves_mode_semantics_and_dimension_settings():
     state = MeasurementState()
     point_guid = uuid4()
-    edge_guid = uuid4()
+    vertex_guid = uuid4()
     first = SnapResult(Point(0, 0, 0), point_guid, SnapKind.POINT, 0.0)
-    second = SnapResult(Point(3, 4, 0), edge_guid, SnapKind.EDGE, 0.0, component=(1, 2), parameter=0.25)
+    second = SnapResult(Point(3, 4, 0), vertex_guid, SnapKind.VERTEX, 0.0, component=2)
 
     state.start("inspection")
     assert state.accept(SnapQuery(first), unit="m", precision=1) is None
@@ -228,9 +229,9 @@ def test_measurement_state_preserves_mode_semantics_and_dimension_settings():
     unsupported = SnapResult(
         Point(8, 8, 8),
         uuid4(),
-        SnapKind.SURFACE,
+        SnapKind.NODE,
         0.0,
-        association_error="Surface snaps are not associative.",
+        association_error="The snapped component does not have a stable serializable key.",
     )
     state.start("fixed")
     assert state.accept(SnapQuery(first), unit="mm", precision=4) is None
@@ -244,11 +245,11 @@ def test_measurement_state_preserves_mode_semantics_and_dimension_settings():
     assert state.accept(SnapQuery(first), unit="cm", precision=3) is None
     assert state.accept(SnapQuery(unsupported), unit="cm", precision=3) is None
     assert state.first_snap is first
-    assert state.rejection == "Surface snaps are not associative."
+    assert state.rejection == "The snapped component does not have a stable serializable key."
     associative = state.accept(SnapQuery(second), unit="cm", precision=3)
     assert isinstance(associative, DistanceDimension)
     assert associative.start == ComponentAnchor(point_guid, "point")
-    assert associative.end == ComponentAnchor(edge_guid, "edge", component=(1, 2), parameter=0.25)
+    assert associative.end == ComponentAnchor(vertex_guid, "vertex", component=2)
     assert (associative.unit, associative.precision) == ("cm", 3)
     assert not state.active
 
@@ -282,6 +283,44 @@ def test_measurement_hover_exposes_discrete_points_and_one_winner():
 
     assert mesh_edge.winner is None
     assert len(mesh_edge.points) == 4
+
+    opposite = query_snaps(
+        [sceneobject],
+        (4.0, 3.0),
+        radius=0.1,
+        project=lambda point: ProjectedPoint(point.x, point.y, 0.0),
+    )
+    state = MeasurementState()
+    state.start("fixed")
+    assert state.accept(query, unit="m", precision=2) is None
+    dimension = state.accept(opposite, unit="m", precision=2)
+    assert isinstance(dimension, DistanceDimension)
+    resolved = dimension.resolve()
+    assert resolved is not None
+    assert distance_point_point(*resolved) == 5.0
+
+    line = SceneObject(Line([0, 0, 0], [4, 0, 0]))
+    line_query = query_snaps(
+        [line],
+        (2.0, 0.0),
+        radius=0.1,
+        project=lambda point: ProjectedPoint(point.x, point.y, 0.0),
+    )
+    assert line_query.winner is None
+    assert line_query.points == ()
+
+    graph = Graph()
+    graph.add_node("a", x=0, y=0, z=0)
+    graph.add_node("b", x=4, y=0, z=0)
+    graph.add_edge("a", "b")
+    graph_query = query_snaps(
+        [SceneObject(graph)],
+        (2.0, 0.0),
+        radius=0.1,
+        project=lambda point: ProjectedPoint(point.x, point.y, 0.0),
+    )
+    assert graph_query.winner is None
+    assert [snap.kind for snap in graph_query.points] == [SnapKind.NODE, SnapKind.NODE]
 
 
 def test_measure_menu_and_commands_have_one_stable_public_path():
