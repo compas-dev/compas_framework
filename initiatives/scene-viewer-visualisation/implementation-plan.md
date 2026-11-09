@@ -14,8 +14,11 @@ selection is now implemented, locally verified, independently approved, and
 green in the hosted Viewer matrix and refreshed exact-candidate verification.
 ADR 004 transformations, refresh, and undo is implemented, locally verified,
 independently approved, and green in refreshed package and exact-candidate
-verification. ADRs 021–028 are Accepted. The current phase advances to Phase 3
-implementation planning and file ownership.
+verification. Accepted ADRs 021–028 are implemented, locally verified,
+independently approved, and green in Core and Viewer package CI and the
+framework exact source-installed gate. Phase 3 source implementation and
+integration are complete. Exact candidate-artifact compatibility remains a
+separate, unrun verification layer.
 
 ## Dependency graph
 
@@ -193,17 +196,17 @@ must be brought back without inventing a replacement model speculatively.
 
 Governing ADRs: 001–005, 007, and 021–028.
 
-Status: existing `Tag` and `ArrowOverlay` behavior and serialization were
-audited. ADR 023 approves a clean break with no aliases or legacy decoding.
-ADR 024 approves distinct transient inspection and persistent dimension
-outcomes. ADR 028 approves one dimension type with fixed and associative
-anchors, snapping in both UI modes, no silent fallback, and explicit unresolved
-references. ADRs 021–022 place narrow durable annotation data in `compas.scene`
-and define persistent unit/precision snapshots without implicit conversion.
-ADR 025 approves the ordered scale/legend overlay layer. ADR 026 approves the
-initial prioritized snap-result contract and one-shot tool lifecycle. ADR 027
-approves nested Viewer measurement presentation settings and the Units and
-Measurement UI. Phase 3 implementation may begin.
+Status: implemented, independently approved, and green in package and exact
+source-installed integration CI. ADR 023 provides the clean break with no
+aliases or legacy decoding. ADR 024 separates transient inspection from
+persistent dimensions. ADR 028 defines one dimension type with fixed and
+associative anchors, snapping in both UI modes, no silent fallback, and
+explicit unresolved references. ADRs 021–022 place narrow durable annotation
+data in `compas.scene` and define persistent unit/precision snapshots without
+implicit conversion. ADR 025 governs the ordered scale/legend overlay layer.
+ADR 026 governs the prioritized snap-result contract and one-shot tool
+lifecycle. ADR 027 governs Viewer measurement presentation settings and the
+Units and Measurement UI.
 
 1. [Complete] Inspect current `Tag`/`ArrowOverlay` serialized behavior and
    approve the clean-break migration in ADR 023.
@@ -215,19 +218,31 @@ Measurement UI. Phase 3 implementation may begin.
    snapshots in ADRs 021–022.
 5. [Complete] Approve Viewer unit/precision presentation and read-only global
    tolerance UI in ADR 027.
-6. Implement world text, arrow, and distance annotation scene items/adapters.
-7. Implement the approved transient inspection plus fixed/associative
+6. [Complete] Implement world text, arrow, and distance annotation scene
+   items and Viewer render objects.
+7. [Complete] Implement the approved transient inspection plus fixed/associative
    persistent dimension snapping, preview, cancel, and completion.
-8. Implement the approved scale and legend screen overlays through one Viewer
-   overlay layer.
-9. Remove concrete approved-type checks from the main render loop.
+8. [Complete] Implement the approved scale and legend screen overlays through
+   one Viewer overlay layer.
+9. [Complete] Keep overlay dispatch outside the main scene render loop and
+   remove the obsolete Viewer annotation implementations.
 
-Exit gate: durable annotation round trips, transient overlays do not serialize,
-and visual behavior passes offscreen and package artifact tests.
+Exit gate: passed for source and package verification. Durable annotations
+round-trip and resolve through fixed and associative anchors; transient
+inspection and overlays do not serialize; unsupported associative snaps do not
+fall back; Viewer offscreen/package checks and the exact source-installed
+framework gate pass. The Viewer distribution job passed, but independently
+built exact candidate artifacts were not installed together and remain a
+separate unrun layer. Stronger real-raster integration evidence is optional
+follow-up work rather than a blocker for the approved source contract.
 
 ## Phase 4 — Public Viewer operations
 
 Governing ADRs: 001, 003–007.
+
+Status: partially satisfied by the implemented selection, transform,
+measurement, annotation, overlay, menu, and documentation work. Audit the
+remaining example and custom-dock scope before adding more API.
 
 1. Add public refresh, history, command/menu, dock, annotation, and overlay
    operations required by approved Viewer-owned features.
@@ -251,14 +266,16 @@ new demonstrated requirements.
 
 Governing ADR: 007.
 
-1. Verify installed core Scene and Viewer behavior at exact candidates; keep
-   the separate plugin initiative's model/viewer lifecycle gate independent.
-2. Install exact candidate revisions and exercise the approved cross-package
+1. [Complete] Verify installed core Scene and Viewer behavior at exact
+   candidates; keep the separate plugin initiative's model/viewer lifecycle
+   gate independent.
+2. [Complete] Install exact candidate revisions and exercise the approved cross-package
    runtime and typing contracts.
-3. Run package and framework CI, candidate-artifact verification where
-   applicable, and independent code/documentation review.
-4. Resolve findings, update the handoff with evidence by layer, and request
-   explicit merge approval.
+3. [In progress] Core and Viewer package CI, framework CI, and independent
+   code/documentation review passed. Exact candidate-artifact verification has
+   not run; decide whether it is applicable before admission.
+4. [In progress] Findings are resolved and the handoff records evidence by
+   layer. Explicit merge approval remains pending.
 
 Exit gate: all applicable verification layers pass at recorded exact heads;
 required unavailable evidence remains an explicit blocker.

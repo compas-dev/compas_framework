@@ -3,7 +3,8 @@
 This initiative aligns backend-neutral scene infrastructure with Viewer
 rendering, interaction, state, and UI composition.
 
-Current phase: **Phase 3 annotations, measurements, and overlays**.
+Current phase: **Phase 3 source implementation and integration complete;
+Phase 4 scope audit next**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -25,8 +26,12 @@ editing semantics, configured Viewer identity, and configuration lifecycle.
 They are implemented, locally verified, and independently approved. Hosted
 Viewer and framework checks passed. ADR 003 object selection and ADR 004
 transformations, categorized refresh, and Viewer-level transform history are
-also implemented and fully verified. Candidate-artifact verification remains
-pending.
+also implemented and fully verified. Accepted ADRs 021–028 are implemented and
+verified for durable Core annotations, Viewer rendering and overlays,
+measurement snapping and interaction, and unit/precision presentation. Core
+and Viewer package CI and the framework exact source-installed gate pass.
+Exact candidate-artifact compatibility has not been run and is not implied by
+those results.
 
 The refined initial package scope is `compas`, `compas_viewer`, and
 `compas_framework`. The current `compas_model.ModelViewer` is draft evidence
