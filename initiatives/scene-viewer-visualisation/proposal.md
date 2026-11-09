@@ -40,6 +40,53 @@ with three stable top-level domains while preserving separate spatial and
 annotation selection models. Its implementation and local verification pass;
 hosted package and exact source-installed integration verification also pass.
 
+## Direct-use follow-ups
+
+Direct use after ADR 032 identifies seven independent refinements. ADR 036 is
+Accepted; ADRs 033–035 and 037–039 remain Proposed:
+
+- keep the three-domain root and introduce one stable Scene-local splitter;
+  remove the inline description textbox and expose its information through a
+  modal Details dialog;
+- separate normal Mesh vertex glyph visibility from measurement acquisition by
+  rendering an invisible measurement-only vertex footprint;
+- store a distance dimension's signed world-space offset and captured plane
+  normal as durable scene presentation, without storing a full construction
+  plane or changing the measured value;
+- treat text pinned to a viewport location as a Viewer overlay in normalized
+  screen coordinates; initially expose only programmatic add/remove and keep
+  it outside Scene serialization unless a future Session/view-state decision
+  and management surface explicitly provide persistence and interactive
+  authoring;
+- add only optional background color and logical-pixel padding to labels,
+  without introducing a typography or theme abstraction;
+- make Delete Selected dispatch to the selection owned by the current
+  interaction domain, never to both spatial and annotation selections; and
+- move the existing geometry creation hierarchy from top-level Add to
+  **Scene → Add**, while keeping measurement acquisition tools under Measure.
+
+The spatial dimension offset records only the plane normal needed for stable
+layout. A reusable construction plane is an authoring aid and should be
+designed separately rather than embedded in each dimension. Viewport text
+persistence is likewise deferred to the separately proposed Session/view-state
+boundary; configuration and Scene are not suitable owners.
+
+Further UI and measurement feedback produces three additional independent
+proposals:
+
+- populate and show the default toolbar with synchronized Render Mode and View
+  selectors using the existing commands and Viewer state;
+- replace Units and Measurement with Grid and Units, remove tolerance from the
+  Viewer UI without changing global COMPAS tolerance, and align every System
+  form on one two-column field layout; and
+- add transient selection-driven area and volume inspection using represented
+  items' public scalar APIs and exact supported world-transformation rules,
+  without tessellation fallback or persistent annotations.
+
+If accepted together, establish the final System ownership and layout first,
+then add the synchronized toolbar selectors, then add the independent area and
+volume inspections.
+
 ## Proposed three-domain sidebar amendment
 
 Replace the shared vertical splitter with one full-height tab widget containing
@@ -562,6 +609,16 @@ speculative replacement model.
 30. [ADR 030 — Always-visible persistent dimension rendering](decisions/030-always-visible-dimension-rendering.md)
 31. [ADR 031 — Spatial object deletion](decisions/031-spatial-object-deletion.md)
 32. [ADR 032 — Three-domain Viewer sidebar](decisions/032-three-domain-viewer-sidebar.md)
+33. [ADR 033 — Resizable Scene inspector and Details dialog](decisions/033-scene-inspector-details.md)
+34. [ADR 034 — Mesh-vertex snapping independent of vertex glyphs](decisions/034-hidden-vertex-snapping.md)
+35. [ADR 035 — Distance-dimension spatial layout](decisions/035-distance-dimension-spatial-layout.md)
+36. [ADR 036 — Viewport text ownership and persistence](decisions/036-viewport-text-ownership-and-persistence.md)
+37. [ADR 037 — Optional annotation label backgrounds](decisions/037-annotation-label-backgrounds.md)
+38. [ADR 038 — Contextual Delete Selected](decisions/038-contextual-delete-selected.md)
+39. [ADR 039 — Scene-owned Add menu](decisions/039-scene-add-menu.md)
+40. [ADR 040 — Default toolbar view shortcuts](decisions/040-default-toolbar-view-shortcuts.md)
+41. [ADR 041 — Grid and Units System section](decisions/041-grid-and-units-system-section.md)
+42. [ADR 042 — Selected area and volume inspection](decisions/042-selected-area-and-volume-inspection.md)
 
 ADRs 013–016 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
 in the decision index; ADR 010 remains Accepted with amended terminology.
@@ -573,3 +630,8 @@ first. Local verification, independent review, and hosted verification passed.
 ADR 003 is fully verified. ADR 004 is implemented, locally verified, and
 independently approved; refreshed hosted core, Viewer, and framework
 verification passed.
+
+ADRs 033–039 respond to direct-use feedback. ADR 036 is Accepted with a
+screen-pinned, non-persistent, programmatic-first contract. ADRs 040–042 are
+also Accepted. ADRs 033–035 and 037–039 remain Proposed and do not authorize
+source changes.

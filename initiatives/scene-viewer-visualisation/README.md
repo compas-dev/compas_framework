@@ -3,7 +3,7 @@
 This initiative aligns backend-neutral scene infrastructure with Viewer
 rendering, interaction, state, and UI composition.
 
-Current phase: **Phase 3 ADR 032 regression fixes locally verified; hosted refresh pending**.
+Current phase: **Phase 3 ADRs 036 and 040–042 implemented and locally verified; hosted refresh pending**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -39,7 +39,17 @@ Direct-use evidence exposed an unstable and ambiguous stacked sidebar, so ADR
 implementation, documentation, local verification, independent review,
 hosted package CI, and the exact source-installed framework gate pass. Two
 direct-use regressions in annotation visibility refresh and numeric field
-editing are fixed and locally verified; their hosted refresh is pending. Exact candidate-artifact
+editing are fixed and verified in hosted Viewer and framework CI. Further
+direct use has produced ADRs 033–039 for a resizable Scene inspector,
+hidden-glyph vertex snapping, spatial dimension layout, viewport text,
+annotation label backgrounds, contextual deletion, and moving the existing
+geometry Add hierarchy under Scene. ADR 036 accepts the programmatic-first
+screen-text overlay. Accepted ADRs 040–042 add synchronized toolbar selectors,
+a coherent Grid and Units System section with consistent field alignment, and
+transient selected-object area and volume inspection. The remaining ADRs are
+Proposed. ADRs 036 and 040–042 are implemented on the Viewer initiative branch
+and pass the complete local package and direct-source framework gates. Hosted
+Viewer and framework refreshes remain pending. Exact candidate-artifact
 compatibility has not been run and is not implied by the existing results.
 
 The refined initial package scope is `compas`, `compas_viewer`, and

@@ -196,7 +196,7 @@ must be brought back without inventing a replacement model speculatively.
 
 ## Phase 3 — Annotations and overlays
 
-Governing ADRs: 001–005, 007, and 021–032.
+Governing ADRs: 001–005, 007, and 021–042.
 
 Status: the discrete-only acquisition, 18-pixel attraction, always-visible
 persistent-dimension pass, and default-sidebar refinement are verified locally
@@ -251,10 +251,36 @@ deletion without expanding history or cascading to annotations.
     `viewer.delete_selected` command in the default Edit menu while preserving
     subtree removal, independent data, transform-history invalidation, and
     unresolved associative dimensions.
-14. [Regression fixes locally verified; hosted refresh pending] Replace the
+14. [Complete and verified] Replace the
     mixed stacked sidebar with stable Scene, Annotations, and System domains;
     add explicit annotation details and the approved global deselection
     behavior.
+15. [Blocked on ADR 033 approval] Add the Scene-local resizable hierarchy/detail
+    boundary and modal Details dialog; remove the inline description textbox.
+16. [Blocked on ADR 034 approval] Make Mesh vertices measurable independently
+    of ordinary vertex-glyph visibility without adding edge or face snapping.
+17. [Blocked on ADR 035 approval] Add deterministic world-space dimension
+    offsets from a captured plane normal, including extension lines and
+    explicit unresolved layout behavior.
+18. [Complete and locally verified; hosted refresh pending] Add screen-pinned viewport text as a Viewer
+    overlay through the existing programmatic overlay API; do not add an
+    incomplete interactive management surface or persistence until their
+    ownership is approved.
+19. [Blocked on ADR 037 approval] Add the narrow optional label background and
+    padding presentation fields.
+20. [Blocked on ADR 038 approval] Dispatch Delete Selected to the active Scene
+    or Annotations interaction domain without deleting both selections.
+21. [Blocked on ADR 039 approval] Move the existing geometry Add hierarchy
+    under Scene while retaining measurement acquisition under Measure.
+22. [Complete and locally verified; hosted refresh pending] Establish Camera, Display, and Grid and Units
+    ownership; remove tolerance from Viewer UI; and align all System form
+    fields on one two-column layout.
+23. [Complete and locally verified; hosted refresh pending] Add the
+    visible-by-default Render Mode and View toolbar selectors synchronized
+    through existing state and commands.
+24. [Complete and locally verified; hosted refresh pending] Add transient selection-driven area and
+    volume inspection with exact supported transform scaling and explicit
+    unsupported cases.
 
 Exit gate: the ADR-029/031 candidate passed local Core, Viewer, documentation,
 independent review, refreshed package CI, and exact source-installed framework
@@ -271,8 +297,10 @@ invalidate those verified storage, rendering, or deletion contracts.
 ADR 032's replacement sidebar also passes its local package, documentation,
 direct-source integration, independent-review, hosted package, and exact
 source-installed integration gates. Direct-use regressions in annotation
-visibility refresh and numeric field-type inference are fixed and locally
-verified; their hosted refresh is pending.
+visibility refresh and numeric field-type inference are fixed and verified in
+hosted Viewer and framework CI. ADRs 036 and 040–042 are implemented and pass
+the complete local Viewer and direct-source framework gates; hosted refreshes
+are pending. ADRs 033–035 and 037–039 remain Proposed and blocked.
 
 ## Phase 4 — Public Viewer operations
 

@@ -18,6 +18,7 @@ from compas.geometry import Box
 from compas.geometry import Line
 from compas.geometry import Point
 from compas.geometry import Rotation
+from compas.geometry import Scale
 from compas.geometry import Translation
 from compas.geometry import distance_point_point
 from compas.scene import ArrowAnnotation
@@ -33,6 +34,7 @@ from compas.scene import ShapeObject
 from compas.scene import TextAnnotation
 from compas.scene import register_scene_operation
 from compas_viewer import ScaleBarOverlay
+from compas_viewer import ScreenTextOverlay
 from compas_viewer import Viewer
 from compas_viewer.commands import builtin_commands
 from compas_viewer.config import Config
@@ -55,10 +57,11 @@ from compas_viewer.snapping import SnapResult
 from compas_viewer.snapping import query_snaps
 from compas_viewer.uidefinitions import default_menu_items
 from compas_viewer.uidefinitions import default_sidebar_items
+from compas_viewer.uidefinitions import default_toolbar_items
 from PySide6.QtWidgets import QSplitter
 
 CORE_COMMIT = "70aeb1e408772f0a84213c280658d4d594bf12ea"
-VIEWER_COMMIT = "08f5b62c74d1db99d66b51a28e9974c34bf0a896"
+VIEWER_COMMIT = "506179a936e7db50ef2dfae5a0f1638078063249"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -84,12 +87,14 @@ from compas.plugins import PluginManager
 manager = PluginManager()
 manager.load_plugins()
 from compas_viewer.config import Config
-from compas_viewer.uidefinitions import default_sidebar_items
+from compas_viewer.uidefinitions import default_sidebar_items, default_toolbar_items
 
 assert Config().schema_version == 3
 assert not any(item.get("type") == "DatastructureAttributes" for item in default_sidebar_items())
 assert any(item.get("type") == "AnnotationPanel" for item in default_sidebar_items())
-assert any(item.get("type") == "MeasurementSetting" for item in default_sidebar_items())
+assert any(item.get("type") == "GridUnitSetting" for item in default_sidebar_items())
+assert not any(item.get("type") == "MeasurementSetting" for item in default_sidebar_items())
+assert [item.get("type") for item in default_toolbar_items()] == ["select", "select"]
 modules = tuple(sys.modules)
 assert "compas_viewer.plugins" in modules
 assert not any(name == "PySide6" or name.startswith("PySide6.") for name in modules)
@@ -115,6 +120,7 @@ def test_viewer_configuration_and_sidebar_contracts():
 
     assert defaults.window.title == "COMPAS Viewer"
     assert defaults.window.icon is None
+    assert defaults.ui.toolbar.show is True
     assert config.schema_version == 3
     assert config.window.title == "Framework Viewer"
     assert config.window.icon is None
@@ -132,7 +138,25 @@ def test_viewer_configuration_and_sidebar_contracts():
         "ObjectSetting",
         "CameraSetting",
         "DisplaySetting",
-        "MeasurementSetting",
+        "GridUnitSetting",
+    ]
+    toolbar_items = default_toolbar_items()
+    assert [(item["title"], item["state"]) for item in toolbar_items] == [
+        ("Render Mode", "renderer.rendermode"),
+        ("View", "renderer.view"),
+    ]
+    assert [option["value"] for option in toolbar_items[0]["items"]] == [
+        "shaded",
+        "ghosted",
+        "lighted",
+        "wireframe",
+    ]
+    assert [option["value"] for option in toolbar_items[1]["items"]] == [
+        "perspective",
+        "top",
+        "front",
+        "right",
+        "ortho",
     ]
 
     with pytest.raises(ValueError, match=r"window\.about"):
@@ -159,11 +183,15 @@ def test_viewer_sidebar_separates_scene_annotation_and_system_domains():
 
     sidebar.focus_system_section("Camera")
     assert sidebar.widget.tabText(sidebar.widget.currentIndex()) == "System"
+    sidebar.focus_system_section("Grid and Units")
+    assert sidebar.widget.tabText(sidebar.widget.currentIndex()) == "System"
 
     with pytest.raises(ValueError, match="Unsupported sidebar tab"):
         sidebar.set_current_tab("Other")  # type: ignore[arg-type]
     with pytest.raises(ValueError, match="Unsupported system section"):
         sidebar.focus_system_section("Other")  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="Unsupported system section"):
+        sidebar.focus_system_section("Units and Measurement")  # type: ignore[arg-type]
 
 
 def test_core_annotations_serialize_and_resolve_without_fallbacks():
@@ -439,6 +467,8 @@ def test_measure_menu_and_commands_have_one_stable_public_path():
     command_ids = [item["command"] for item in measure_menus[0]["items"] if "command" in item]
     assert command_ids == [
         "viewer.inspect_distance",
+        "viewer.inspect_selected_area",
+        "viewer.inspect_selected_volume",
         "viewer.add_fixed_distance_dimension",
         "viewer.add_associative_distance_dimension",
         "viewer.cancel_measurement",
@@ -451,20 +481,76 @@ def test_measure_menu_and_commands_have_one_stable_public_path():
     assert builtin_commands()["viewer.delete_selected"].keybinding == "Delete"
 
 
+def test_selected_scalar_measurements_use_exact_world_scale_and_declared_units(monkeypatch):
+    viewer = Viewer()
+    previous_unit = viewer.config.measurement.unit
+    previous_precision = viewer.config.measurement.precision
+    dialogs = []
+
+    def record_dialog(_parent, title, text):
+        dialogs.append((title, text))
+
+    monkeypatch.setattr("compas_viewer.commands.QMessageBox.information", record_dialog)
+
+    viewer.state.selection.clear()
+    viewer.state.annotation_selection.clear()
+    viewer.scene.clear()
+    try:
+        sceneobject = viewer.scene.add(
+            Box(1.0),
+            transformation=Scale.from_factors([2.0, 2.0, 2.0]),
+        )
+        viewer.state.selection.replace((sceneobject,))
+        viewer.state.set_measurement_unit("mm")
+        viewer.state.set_measurement_precision(2)
+
+        viewer.start_distance_inspection()
+        assert viewer.inspect_selected_area() == pytest.approx(24.0)
+        assert not viewer.state.measurement.has_transient_state
+        assert viewer.inspect_selected_volume() == pytest.approx(8.0)
+
+        commands = builtin_commands()
+        assert commands["viewer.inspect_selected_area"].callback(viewer) == pytest.approx(24.0)
+        assert commands["viewer.inspect_selected_volume"].callback(viewer) == pytest.approx(8.0)
+        assert dialogs == [
+            ("Selected Area", "Area: 24.00 mm²"),
+            ("Selected Volume", "Volume: 8.00 mm³"),
+        ]
+        assert viewer.scene.objects == [sceneobject]
+        assert viewer.state.selection.objects == (sceneobject,)
+        assert viewer.scene.annotations == ()
+    finally:
+        viewer.cancel_measurement()
+        viewer.state.selection.clear()
+        viewer.state.annotation_selection.clear()
+        viewer.scene.clear()
+        viewer.state.set_measurement_unit(previous_unit)
+        viewer.state.set_measurement_precision(previous_precision)
+
+
 def test_viewer_overlays_remain_outside_serialized_scene_data():
     viewer = object.__new__(Viewer)
     viewer._overlay_layer = _OverlayLayer()
     viewer._scene = ViewerScene()
     viewer.running = False
-    overlay = ScaleBarOverlay()
+    overlays = (
+        ScaleBarOverlay(),
+        ScreenTextOverlay(
+            "Viewport status",
+            (0.5, 0.25),
+            horizontal_alignment="center",
+        ),
+    )
     before = viewer.scene.__data__
 
-    viewer.add_overlay(overlay)
+    for overlay in overlays:
+        viewer.add_overlay(overlay)
 
-    assert viewer.overlays == (overlay,)
+    assert viewer.overlays == overlays
     assert viewer.scene.__data__ == before
     assert viewer.scene.objects == []
-    assert viewer.remove_overlay(overlay)
+    assert viewer.remove_overlay(overlays[0])
+    assert viewer.remove_overlay(overlays[1])
     assert viewer.overlays == ()
 
 

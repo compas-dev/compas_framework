@@ -23,6 +23,16 @@ always-visible dimension rendering, and spatial-object deletion behavior.
 ADR 032 is Accepted in response to direct-use evidence that the current
 stacked sidebar does not provide stable or clearly separated Scene,
 Annotations, and System contexts.
+ADRs 033–035 and 037–039 are Proposed follow-ups from further direct use. They
+cover a Scene-local resizable inspector, vertex snapping independent of normal
+glyph visibility, deterministic dimension layout, label backgrounds,
+contextual deletion, and moving the existing geometry Add menu under Scene.
+ADR 036 accepts programmatic, non-persistent screen-pinned text overlays. Only
+ADRs 036 and 040–042 authorize source implementation among these follow-ups.
+ADRs 040–042 accept synchronized default-toolbar selectors, a Grid and Units
+System section with consistent field alignment and no tolerance UI, and
+transient selected-object area and volume inspection. Their implementations
+remain pending.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -57,7 +67,17 @@ Annotations, and System contexts.
 | 029 | [Persistent annotation collection and UI](029-persistent-annotation-collection-and-ui.md) | Accepted | 005; 010; 013; 021; 030 |
 | 030 | [Always-visible persistent dimension rendering](030-always-visible-dimension-rendering.md) | Accepted | 005; 021; 024; 026; independent of 029 |
 | 031 | [Spatial object deletion](031-spatial-object-deletion.md) | Accepted | 003–004; 010; 013; 028; annotation removal governed by 029 |
-| 032 | [Three-domain Viewer sidebar](032-three-domain-viewer-sidebar.md) | Accepted; regression fixes locally verified | Refines 003, 027, 029, and 031 |
+| 032 | [Three-domain Viewer sidebar](032-three-domain-viewer-sidebar.md) | Accepted; implemented and verified | Refines 003, 027, 029, and 031 |
+| 033 | [Resizable Scene inspector and Details dialog](033-scene-inspector-details.md) | Proposed | Narrowly amends 032 |
+| 034 | [Mesh-vertex snapping independent of vertex glyphs](034-hidden-vertex-snapping.md) | Proposed | Amends 026; preserves 028 |
+| 035 | [Distance-dimension spatial layout](035-distance-dimension-spatial-layout.md) | Proposed | Extends 021, 028–030; preserves 022 |
+| 036 | [Viewport text ownership and persistence](036-viewport-text-ownership-and-persistence.md) | Accepted; programmatic, non-persistent initial scope | Extends 005 and 025; optional use of 037 |
+| 037 | [Optional annotation label backgrounds](037-annotation-label-backgrounds.md) | Proposed | Extends 021 and 029 |
+| 038 | [Contextual Delete Selected](038-contextual-delete-selected.md) | Proposed | Amends 032; preserves 029 and 031 primitives |
+| 039 | [Scene-owned Add menu](039-scene-add-menu.md) | Proposed | Consistent with 001, 013, 024, and 026 |
+| 040 | [Default toolbar view shortcuts](040-default-toolbar-view-shortcuts.md) | Accepted; implementation pending | Extends 006; amends 020 default visibility |
+| 041 | [Grid and Units System section](041-grid-and-units-system-section.md) | Accepted; implementation pending | Amends 027 and 032; preserves 020 |
+| 042 | [Selected area and volume inspection](042-selected-area-and-volume-inspection.md) | Accepted; implementation pending | Uses 003–004; extends 006 and 024; coordinates with 027/041 |
 
 ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A

@@ -4,7 +4,7 @@ Last updated: 2026-11-09
 
 ## Resume here
 
-Current phase: `Phase 3 ADR 032 regression fixes locally verified; hosted refresh pending`
+Current phase: `Phase 3 ADRs 036 and 040–042 locally verified; hosted refresh pending`
 
 The scene foundation, contextual settings, Viewer configuration and tables,
 selection, and reversible transformations governed by Accepted ADRs 001–020
@@ -48,8 +48,22 @@ Direct use then exposed a Qt lifecycle crash when an annotation visibility
 checkbox rebuilt and deleted its own emitting tree item, plus repeated
 `vertexsize` errors caused by treating an `(int, float)` field as integer-only
 when its current value happened to be an integer. Both causes are fixed. The
-Viewer now passes 445 tests, Ruff, Pyright, strict MkDocs, and independent
-review at the revision below; hosted refreshes are pending.
+Viewer now passes 445 tests, Ruff, Pyright, strict MkDocs, independent review,
+hosted package CI, and the refreshed framework exact source-installed gate at
+the revision below.
+
+Further direct use produced ADRs 033–039. They cover the resizable
+Scene inspector and Details dialog, vertex snapping with ordinary glyphs
+hidden, deterministic spatial dimension offsets, screen-pinned viewport text,
+label backgrounds, contextual deletion, and moving the existing geometry Add
+hierarchy under Scene. ADR 036 is Accepted and implemented with a screen-pinned,
+non-persistent, programmatic-first contract. Accepted ADRs 040–042 add synchronized default-toolbar selectors, a
+Grid and Units System section with consistent two-column field alignment and no
+tolerance UI, and transient selected-object area and volume inspection. The
+four implementations pass 498 Viewer tests, Ruff, formatting, Pyright, strict
+MkDocs, independent review, and the 15-test direct-source framework gate. The
+Viewer candidate is pushed; hosted Viewer and framework refreshes are pending.
+The other follow-ups remain Proposed and require explicit approval.
 
 The Core and refreshed Viewer candidate and framework gate are green at the
 revisions below. Viewer restricts acquisition to visible discrete guides,
@@ -73,29 +87,27 @@ Read next:
 
 | Repository | Branch | Verified revision | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `3d2c9d177d4cace1f283b5d598db02306ec5c828` | [7](https://github.com/compas-dev/compas_framework/pull/7) | Local contracts, hosted contracts, and exact source-installed gate passed |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `21ff56319dadcac91abedc1a19154ae48d212cd9` | [7](https://github.com/compas-dev/compas_framework/pull/7) | Previous hosted baseline; follow-up gate refresh pending |
 | `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `70aeb1e408772f0a84213c280658d4d594bf12ea` | [1540](https://github.com/compas-dev/compas/pull/1540) | Local verification, independent review, and hosted package CI passed |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `08f5b62c74d1db99d66b51a28e9974c34bf0a896` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Regression fixes locally verified and independently reviewed; hosted refresh pending |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `506179a936e7db50ef2dfae5a0f1638078063249` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Local verification and independent review passed; hosted refresh pending |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
 
 ## Verification evidence
 
 | Layer | Status | Evidence |
 |---|---|---|
-| Local package checks | Passed | Core passed 2,225 tests, focused Scene Pyright, Ruff, format, strict MkDocs, and independent review. Viewer passed 445 tests, Pyright, Ruff, format, strict MkDocs, and independent review. The direct-source framework gate passed 14 tests with the exact-revision assertion skipped as designed. |
+| Local package checks | Passed | Core remains at its verified candidate. Viewer passed 498 tests, Pyright, Ruff, format, strict MkDocs, and independent review. The updated direct-source framework gate passed 15 tests with the exact-revision assertion skipped as designed. |
 | Native interactive probes | Partial | Earlier native macOS captures showed the point palette, winner, retained anchor, live line and label without a `QPainter` warning or crash. Direct confirmation of 18-pixel attraction, discrete-only acquisition, and the final persistent-dimension pass remains pending. |
-| Package CI | Pending Viewer refresh | Core PR 1540 remains green. Viewer PR 233 passed locally at the exact revision above; its hosted matrix is pending. |
-| Framework integration | Pending hosted refresh | The direct-source gate passed 14 tests with one intentional exact-revision skip. Framework PR 7 must run the new exact Viewer pin. |
+| Package CI | Pending Viewer refresh | Core PR 1540 remains green. Viewer PR 233 must verify the new exact revision above. |
+| Framework integration | Pending hosted refresh | The updated direct-source gate passed locally. Framework PR 7 must install the new exact Viewer pin and rerun the hosted gate. |
 | Candidate artifacts | Not run | No compatibility claim is made for independently built candidate artifacts. Run this layer before artifact admission or release if that claim is required. |
 
 ## Next tasks
 
-1. Complete Viewer package CI and the framework exact source-installed gate at
-   the revisions above.
-2. Reconfirm annotation visibility, numeric object fields, and the
-   three-domain sidebar interactively.
-3. Confirm point attraction, exact diagonal, discrete-only acquisition, and
-   persistent-dimension visibility interactively.
+1. Run Viewer PR 233 and framework PR 7 at the exact Viewer revision above.
+2. Reconfirm the new toolbar, Grid and Units layout, screen text, and scalar
+   inspection interactively.
+3. Obtain explicit decisions on Proposed ADRs 033–035 and 037–039.
 
 ## Approval gates
 
