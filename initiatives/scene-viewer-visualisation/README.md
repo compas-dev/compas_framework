@@ -3,7 +3,7 @@
 This initiative aligns backend-neutral scene infrastructure with Viewer
 rendering, interaction, state, and UI composition.
 
-Current phase: **Phase 3 ADR 032 locally verified; hosted refresh pending**.
+Current phase: **Phase 3 ADR 032 verified**.
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -36,9 +36,8 @@ discoverable spatial-object deletion. Their Core and Viewer implementations
 and refreshed package and exact source-installed framework integration pass.
 Direct-use evidence exposed an unstable and ambiguous stacked sidebar, so ADR
 032 accepts a three-domain Scene, Annotations, and System replacement. Its
-implementation, documentation, local verification, framework direct-source
-gate, and independent review pass; hosted package and exact integration
-refreshes are pending. Exact candidate-artifact
+implementation, documentation, local verification, independent review,
+hosted package CI, and the exact source-installed framework gate pass. Exact candidate-artifact
 compatibility has not been run and is not implied by the existing results.
 
 The refined initial package scope is `compas`, `compas_viewer`, and

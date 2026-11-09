@@ -38,7 +38,7 @@ system contexts simultaneously, redistributes unrelated panels, and hides
 annotation naming and global deselection behavior. Accepted ADR 032 responds
 with three stable top-level domains while preserving separate spatial and
 annotation selection models. Its implementation and local verification pass;
-hosted refreshes are pending.
+hosted package and exact source-installed integration verification also pass.
 
 ## Proposed three-domain sidebar amendment
 

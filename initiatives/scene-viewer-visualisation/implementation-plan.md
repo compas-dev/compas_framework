@@ -206,8 +206,8 @@ Viewer, the direct-source framework gate, and refreshed hosted CI. Direct-use
 feedback identified a separate sidebar-composition defect; ADR 032 accepts
 the replacement. Its implementation, documentation, local verification,
 framework direct-source gate, and independent review pass; hosted refreshes
-are pending. Interactive confirmation of the existing measurement refinement
-also remains pending.
+also pass. Interactive confirmation of the existing measurement refinement
+remains pending.
 ADR 023 provides the clean break with no aliases or legacy decoding. ADR 024
 separates transient inspection from
 persistent dimensions. ADR 028 defines one dimension type with fixed and
@@ -251,7 +251,7 @@ deletion without expanding history or cascading to annotations.
     `viewer.delete_selected` command in the default Edit menu while preserving
     subtree removal, independent data, transform-history invalidation, and
     unresolved associative dimensions.
-14. [Complete locally; hosted refresh pending] Replace the mixed stacked
+14. [Complete and verified] Replace the mixed stacked
     sidebar with stable Scene, Annotations, and System domains; add explicit
     annotation details and the approved global deselection behavior.
 
@@ -268,8 +268,8 @@ remain a separate unrun layer. The sidebar usability follow-up does not
 invalidate those verified storage, rendering, or deletion contracts.
 
 ADR 032's replacement sidebar also passes its local package, documentation,
-direct-source integration, and independent-review gates; its hosted refresh
-remains pending.
+direct-source integration, independent-review, hosted package, and exact
+source-installed integration gates.
 
 ## Phase 4 — Public Viewer operations
 
