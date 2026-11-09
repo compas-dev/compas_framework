@@ -2,32 +2,53 @@ import json
 import os
 import subprocess
 import sys
+from importlib import import_module
 from importlib.metadata import distribution
 from math import pi
+from uuid import uuid4
 
 import pytest
 from compas.data import json_dumps
 from compas.data import json_loads
+from compas.datastructures import Mesh
 from compas.geometry import Box
+from compas.geometry import Line
+from compas.geometry import Point
 from compas.geometry import Rotation
 from compas.geometry import Translation
+from compas.scene import ArrowAnnotation
+from compas.scene import ComponentAnchor
+from compas.scene import DistanceDimension
+from compas.scene import PointAnchor
 from compas.scene import Scene
 from compas.scene import SceneItemNotBoundError
 from compas.scene import SceneObject
 from compas.scene import ShapeObject
+from compas.scene import TextAnnotation
 from compas.scene import register_scene_operation
+from compas_viewer import ScaleBarOverlay
 from compas_viewer import Viewer
+from compas_viewer.commands import builtin_commands
 from compas_viewer.config import Config
 from compas_viewer.forms import REMOVE_EDITABLE_ATTRIBUTE
 from compas_viewer.forms import register_scene_attribute_contribution
 from compas_viewer.forms import scene_editable_attributes
+from compas_viewer.measurement import DistanceInspection
+from compas_viewer.measurement import MeasurementState
+from compas_viewer.overlays import _OverlayLayer
 from compas_viewer.scene import BufferGeometry
 from compas_viewer.scene import ViewerScene
+from compas_viewer.scene.annotationobject import ArrowAnnotationRenderObject
+from compas_viewer.scene.annotationobject import DistanceDimensionRenderObject
+from compas_viewer.scene.annotationobject import TextAnnotationRenderObject
 from compas_viewer.selection import Selection
+from compas_viewer.snapping import SnapKind
+from compas_viewer.snapping import SnapResult
+from compas_viewer.uidefinitions import default_menu_items
 from compas_viewer.uidefinitions import default_sidebar_items
 
-CORE_COMMIT = "a4cc38a4f54d147f1ff45e19673b32f089576e2f"
-VIEWER_COMMIT = "a4fe52e51f7254c13df9659f9a61dc22ebbc1daa"
+CORE_COMMIT = "353cebfd21cd3623f7d950527d71f4770ff2a21c"
+VIEWER_COMMIT = "eb018d6ed2c8651a5294e2cd3d98c468cb3bd3e2"
 
 
 def _installed_commit(distribution_name: str) -> str:
@@ -55,8 +76,9 @@ manager.load_plugins()
 from compas_viewer.config import Config
 from compas_viewer.uidefinitions import default_sidebar_items
 
-assert Config().schema_version == 2
+assert Config().schema_version == 3
 assert any(item.get("type") == "DatastructureAttributes" for item in default_sidebar_items())
+assert any(item.get("type") == "MeasurementSetting" for item in default_sidebar_items())
 modules = tuple(sys.modules)
 assert "compas_viewer.plugins" in modules
 assert not any(name == "PySide6" or name.startswith("PySide6.") for name in modules)
@@ -72,20 +94,23 @@ def test_viewer_configuration_and_sidebar_contracts():
     defaults = Config()
     config = Config.from_dict(
         {
-            "schema_version": 2,
+            "schema_version": 3,
             "window": {"title": "Framework Viewer"},
             "renderer": {"view": "ortho"},
+            "measurement": {"unit": "mm", "precision": 2},
         }
     )
     payload = config.to_dict()
 
     assert defaults.window.title == "COMPAS Viewer"
     assert defaults.window.icon is None
-    assert config.schema_version == 2
+    assert config.schema_version == 3
     assert config.window.title == "Framework Viewer"
     assert config.window.icon is None
     assert config.renderer.view == "ortho"
-    assert set(payload) == {"schema_version", "vectorsize", "ui", "window", "renderer", "camera"}
+    assert config.measurement.unit == "mm"
+    assert config.measurement.precision == 2
+    assert set(payload) == {"schema_version", "vectorsize", "ui", "window", "renderer", "camera", "measurement"}
     assert "about" not in payload["window"]
     assert "opacity" not in payload["renderer"]
     assert "show_widgets" not in payload["ui"]["sidebar"]
@@ -96,14 +121,163 @@ def test_viewer_configuration_and_sidebar_contracts():
         "DatastructureAttributes",
         "CameraSetting",
         "DisplaySetting",
+        "MeasurementSetting",
     ]
 
     with pytest.raises(ValueError, match=r"window\.about"):
-        Config.from_dict({"schema_version": 2, "window": {"about": "retired"}})
+        Config.from_dict({"schema_version": 3, "window": {"about": "retired"}})
     with pytest.raises(ValueError, match=r"window\.icon"):
-        Config.from_dict({"schema_version": 2, "window": {"icon": "relative.png"}})
+        Config.from_dict({"schema_version": 3, "window": {"icon": "relative.png"}})
     with pytest.raises(ValueError, match=r"window\.width"):
-        Config.from_dict({"schema_version": 2, "window": {"width": 0}})
+        Config.from_dict({"schema_version": 3, "window": {"width": 0}})
+
+
+def test_core_annotations_serialize_and_resolve_without_fallbacks():
+    scene = ViewerScene()
+    point_object = scene.add(Point(1, 2, 3), transformation=Translation.from_vector([10, 0, 0]))
+    line_object = scene.add(Line([0, 0, 0], [4, 0, 0]), transformation=Translation.from_vector([0, 5, 0]))
+    mesh = Mesh.from_vertices_and_faces(
+        [[0, 0, 0], [4, 0, 0], [0, 4, 0]],
+        [[0, 1, 2]],
+    )
+    mesh_object = scene.add(mesh, transformation=Translation.from_vector([0, 0, 2]))
+
+    point_anchor = PointAnchor([1, 2, 3])
+    component_anchor = ComponentAnchor(point_object.guid, "point")
+    line_anchor = ComponentAnchor(line_object.guid, "line", parameter=0.25)
+    vertex_anchor = ComponentAnchor(mesh_object.guid, "vertex", component=1)
+    edge_anchor = ComponentAnchor(mesh_object.guid, "edge", component=(0, 1), parameter=0.5)
+    text = TextAnnotation("Origin", [0, 0, 0])
+    arrow = ArrowAnnotation([0, 0, 0], [1, 0, 0])
+    fixed = DistanceDimension(point_anchor, PointAnchor([4, 6, 3]), unit="mm", precision=2)
+    mixed = DistanceDimension(PointAnchor([0, 0, 0]), component_anchor)
+    associative = DistanceDimension(line_anchor, edge_anchor)
+
+    for value in (
+        point_anchor,
+        component_anchor,
+        text,
+        arrow,
+        fixed,
+        mixed,
+        associative,
+    ):
+        assert json_loads(json_dumps(value)) == value
+
+    assert fixed.resolve(scene, Translation.from_vector([2, 0, 0])) == (
+        Point(3, 2, 3),
+        Point(6, 6, 3),
+    )
+    assert mixed.resolve(scene, Translation.from_vector([2, 0, 0])) == (
+        Point(2, 0, 0),
+        Point(11, 2, 3),
+    )
+    assert associative.resolve(scene) == (
+        Point(1, 5, 0),
+        Point(2, 0, 2),
+    )
+    assert vertex_anchor.resolve(scene) == Point(4, 0, 2)
+
+    missing_object = DistanceDimension(PointAnchor([0, 0, 0]), ComponentAnchor(uuid4(), "point"))
+    missing_vertex = DistanceDimension(PointAnchor([0, 0, 0]), ComponentAnchor(mesh_object.guid, "vertex", component=99))
+    assert missing_object.resolve(scene) is None
+    assert missing_vertex.resolve(scene) is None
+
+
+def test_viewer_dispatches_canonical_annotations_without_legacy_types():
+    scene = ViewerScene()
+    annotations = (
+        (TextAnnotation("Note", [0, 0, 0]), TextAnnotationRenderObject),
+        (ArrowAnnotation([0, 0, 0], [1, 0, 0]), ArrowAnnotationRenderObject),
+        (
+            DistanceDimension(PointAnchor([0, 0, 0]), PointAnchor([1, 0, 0])),
+            DistanceDimensionRenderObject,
+        ),
+    )
+
+    for annotation, render_type in annotations:
+        sceneobject = scene.add(annotation)
+        render_object = scene.render_object(sceneobject)
+        assert isinstance(render_object, render_type)
+        assert render_object.item is annotation
+
+    with pytest.raises(ModuleNotFoundError):
+        import_module("compas_viewer.scene.tagobject")
+    with pytest.raises(ModuleNotFoundError):
+        import_module("compas_viewer.scene.arrowoverlayobject")
+
+
+def test_measurement_state_preserves_mode_semantics_and_dimension_settings():
+    state = MeasurementState()
+    point_guid = uuid4()
+    edge_guid = uuid4()
+    first = SnapResult(Point(0, 0, 0), point_guid, SnapKind.POINT, 0.0)
+    second = SnapResult(Point(3, 4, 0), edge_guid, SnapKind.EDGE, 0.0, component=(1, 2), parameter=0.25)
+
+    state.start("inspection")
+    assert state.accept(first, unit="m", precision=1) is None
+    inspection = state.accept(second, unit="m", precision=1)
+    assert isinstance(inspection, DistanceInspection)
+    assert inspection.distance == 5.0
+    assert state.completed_inspection is inspection
+    assert not state.active
+
+    unsupported = SnapResult(
+        Point(8, 8, 8),
+        uuid4(),
+        SnapKind.SURFACE,
+        0.0,
+        association_error="Surface snaps are not associative.",
+    )
+    state.start("fixed")
+    assert state.accept(first, unit="mm", precision=4) is None
+    fixed = state.accept(unsupported, unit="mm", precision=4)
+    assert isinstance(fixed, DistanceDimension)
+    assert fixed.start == PointAnchor(first.point)
+    assert fixed.end == PointAnchor(unsupported.point)
+    assert (fixed.unit, fixed.precision) == ("mm", 4)
+
+    state.start("associative")
+    assert state.accept(first, unit="cm", precision=3) is None
+    assert state.accept(unsupported, unit="cm", precision=3) is None
+    assert state.first_snap is first
+    assert state.rejection == "Surface snaps are not associative."
+    associative = state.accept(second, unit="cm", precision=3)
+    assert isinstance(associative, DistanceDimension)
+    assert associative.start == ComponentAnchor(point_guid, "point")
+    assert associative.end == ComponentAnchor(edge_guid, "edge", component=(1, 2), parameter=0.25)
+    assert (associative.unit, associative.precision) == ("cm", 3)
+    assert not state.active
+
+
+def test_measure_menu_and_commands_have_one_stable_public_path():
+    measure_menus = [item for item in default_menu_items() if item.get("title") == "Measure"]
+    assert len(measure_menus) == 1
+    command_ids = [item["command"] for item in measure_menus[0]["items"] if "command" in item]
+    assert command_ids == [
+        "viewer.inspect_distance",
+        "viewer.add_fixed_distance_dimension",
+        "viewer.add_associative_distance_dimension",
+        "viewer.cancel_measurement",
+    ]
+    assert set(command_ids) <= builtin_commands().keys()
+
+
+def test_viewer_overlays_remain_outside_serialized_scene_data():
+    viewer = object.__new__(Viewer)
+    viewer._overlay_layer = _OverlayLayer()
+    viewer._scene = ViewerScene()
+    viewer.running = False
+    overlay = ScaleBarOverlay()
+    before = viewer.scene.__data__
+
+    viewer.add_overlay(overlay)
+
+    assert viewer.overlays == (overlay,)
+    assert viewer.scene.__data__ == before
+    assert viewer.scene.objects == []
+    assert viewer.remove_overlay(overlay)
+    assert viewer.overlays == ()
 
 
 def test_indexed_buffer_geometry_stays_indexed_and_roundtrips():
