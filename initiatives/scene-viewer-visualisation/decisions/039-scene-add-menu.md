@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted; implemented, locally verified, and independently reviewed.
 
 ## Context
 
@@ -82,4 +82,9 @@ evidence and decision.
 
 ## Decision
 
-Pending explicit approval.
+Approved on 2026-11-10. Move only the existing Primitives, Curves, Surfaces,
+and Shapes hierarchy from the top-level **Add** menu to **Scene > Add**.
+Preserve command identities, callbacks, preset parameters, and Scene insertion
+behavior. Measurement acquisition remains under **Measure**, and no new
+creation commands, compatibility alias, or arbitrary menu-extension mechanism
+is authorized.

@@ -2,7 +2,9 @@
 
 ## Status
 
-Proposed.
+Accepted; implemented, locally verified, independently re-reviewed, and
+confirmed through user direct use. The default-background amendment was
+accepted on 2026-11-11; implemented and locally verified.
 
 ## Context
 
@@ -80,4 +82,60 @@ does not use scene-annotation storage.
 
 ## Decision
 
-Pending explicit approval.
+Approved on 2026-11-10. Durable annotation labels gain only the optional
+`label_background` color and nonnegative logical-pixel
+`label_background_padding` described above. Viewer renders the background
+immediately behind label text, including over a dimension line. No border,
+corner radius, shadow, font, theme, generalized style object, or arrow-label
+semantics are authorized.
+
+## Annotations-details amendment
+
+Direct use confirms that the stored and rendered background has no editing
+surface in the Annotations details panel. Add controls only for a selected
+text-bearing annotation:
+
+- **Enable Background**, mapping disabled to `label_background=None`;
+- a background color control, used only while enabled; and
+- nonnegative logical-pixel padding.
+
+The existing transparent construction default remains unchanged. These
+controls edit the existing fields atomically and refresh only the affected
+annotation layer. Arrow annotations and unsupported selection states do not
+show the controls. This amendment adds no field, schema version, generalized
+style object, or theme dependency.
+
+Verification must cover enable/disable, opaque/translucent color, zero and
+positive padding, rejection of negative padding without partial mutation,
+serialization, selection changes, Escape/cancel behavior, and immediate
+render refresh.
+
+This amendment was approved on 2026-11-10. It authorizes the controls and
+verification described above without changing the accepted storage contract.
+
+## Amendment implementation verification
+
+The selected-annotation controls are implemented and covered by the focused
+corrected-contract tests and full Viewer suite recorded in the initiative
+handoff. The user confirms the corrected Viewer works well through direct use.
+The accepted default-background amendment is implemented and locally verified.
+
+## Accepted default-background amendment
+
+New distance dimensions completed through Viewer's interactive measurement
+tools should start with their label background enabled. Resolve the background
+from the effective Viewer scheme at creation time:
+
+- light: `#FAFAFAE6`;
+- dark: `#10161BE6`;
+- padding: `2.0` logical pixels.
+
+This changes only Viewer-created persistent distance dimensions. Existing and
+deserialized dimensions, explicit `None` or color values, text annotations,
+and Core programmatic construction retain their current behavior. A later
+appearance change does not recolor an already created dimension.
+
+This amendment was approved on 2026-11-11 with the exact scheme colors and
+creation-time semantics above. Implementation and local verification pass as
+recorded in the initiative handoff; native direct use and hosted verification
+remain pending.

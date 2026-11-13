@@ -2,7 +2,8 @@
 
 ## Status
 
-Accepted.
+Accepted; amended 2026-11-10 and 2026-11-11. The independent
+extension-line-width amendment is implemented and locally verified.
 
 ## Context
 
@@ -109,3 +110,43 @@ visibility and the narrow dimension style consisting of color, line width,
 text size, arrow size, and label offset. Annotations have no hierarchy or
 inherited-transform semantics, and Session remains only a possible future
 aggregate rather than the annotation owner.
+
+Amended on 2026-11-10: a newly constructed default `DimensionStyle` uses
+`Color.magenta()` rather than `Color.white()` for its line and label. Explicit
+colors remain authoritative, and deserialization preserves the stored color.
+This changes no serialized field or schema version and does not rewrite
+existing data. Magenta is a visible starting point, not a universal contrast
+guarantee for every viewport background. No adaptive contrast, theme coupling,
+outline, or automatic recoloring is added.
+
+## Accepted extension-line-width amendment
+
+Extend the durable narrow style with one independent positive finite width:
+
+```python
+DimensionStyle(
+    line_width=3.0,
+    extension_line_width=1.0,
+    ...,
+)
+```
+
+`line_width` continues to control the main dimension line and its arrowheads.
+`extension_line_width` controls only the two lines from the measured anchors
+to the displaced endpoints. Both are logical-pixel values. The Viewer form
+labels them **Dimension Line Width** and **Extension Line Width**. Extension
+lines retain the dimension color and selection behavior; no separate color,
+dash pattern, opacity, or arrow style is added. A zero-offset dimension draws
+no extension lines.
+
+New styles keep the existing `line_width=3.0` default and use
+`extension_line_width=1.0`. Preserve legacy appearance through a closed
+schema transition: advance Scene schema 5 to 6, annotation-entry schema 2 to
+3, and add `DimensionStyle.STYLE_SCHEMA_VERSION = 2`. Current versioned style
+payloads require `extension_line_width`. A genuine unversioned schema-5 style
+migrates with `extension_line_width=line_width`; a schema-6 scene rejects a
+legacy or malformed style. Explicit current values round-trip unchanged.
+
+Approved on 2026-11-11. The schema migration and Viewer behavior are implemented
+and locally verified; native user retesting and hosted verification remain
+pending.

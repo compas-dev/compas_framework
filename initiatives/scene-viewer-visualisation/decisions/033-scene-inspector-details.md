@@ -2,7 +2,8 @@
 
 ## Status
 
-Proposed.
+Accepted on 2026-11-11; implemented and locally verified, including the scroll
+correction. Native user retesting and hosted verification remain pending.
 
 ## Context
 
@@ -35,6 +36,12 @@ Object or Object/Attributes detail surface. Initial stretch is 3:2, neither
 child is collapsible, and selection or form updates never reset the user's
 dragged allocation. Splitter position is transient UI state.
 
+Apply the same domain-local rule to Annotations: its annotation list and
+selected-annotation/dimension details use one independent vertical splitter.
+Resizing Scene never resizes Annotations and vice versa. Annotation selection,
+visibility, and form refreshes do not reset the dragged allocation. No
+splitter is added to System or around the root domains.
+
 Remove the inline read-only object-description textbox. Keep editable controls
 in the selected-object panel and add a fixed **Details** button at its bottom:
 
@@ -51,8 +58,8 @@ count, types, and names. It does not track later selection changes.
 ## Consequences
 
 - Sidebar space is used for editable controls rather than duplicated prose.
-- Users control the Scene hierarchy/detail allocation without destabilizing
-  Annotations or System.
+- Users control Scene and Annotations allocations independently without
+  destabilizing another domain or System.
 - No configuration, serialization, selection, or Core change is required.
 - A live modeless inspector and persisted splitter position remain outside
   scope.
@@ -60,8 +67,11 @@ count, types, and names. It does not track later selection changes.
 ## Verification
 
 - Verify the root remains the three-domain tab widget.
-- Verify exactly one Scene-local splitter when both panes exist and none in
-  Annotations or System.
+- Verify exactly one Scene-local splitter and one independent
+  Annotations-local splitter when their panes exist, and none in System or at
+  the root.
+- Verify resizing or rebuilding one domain never changes the other domain's
+  allocation.
 - Verify user-set sizes survive zero, one, and multiple selection updates.
 - Verify the inline description textbox is absent.
 - Verify Details enablement and one/multiple-selection dialog content.
@@ -75,4 +85,36 @@ count, types, and names. It does not track later selection changes.
 
 ## Decision
 
-Pending explicit approval.
+Approved on 2026-11-11. The approval covers the Details dialog, the Scene-local
+hierarchy/details splitter, and the independent Annotations-local
+list/dimension-details splitter described above. Splitter positions remain
+transient and domain-local. Implementation and local verification pass as
+recorded in the initiative handoff; native direct use and hosted verification
+remain pending.
+
+## Approved scroll correction
+
+Direct use showed that the Annotations details surface is compressed when its
+splitter allocation is smaller than the form's natural height. This is an
+implementation defect in the accepted domain-local splitter, not a new
+ownership decision.
+
+The Annotations splitter's second child is a vertical `QScrollArea`. It owns
+the complete existing details surface, uses `widgetResizable=True`, disables
+horizontal scrolling, and enforces the details layout's natural minimum size.
+Shrinking the splitter therefore reduces only the scroll viewport: groups,
+fields, buttons, and spacing retain their natural geometry and remain keyboard
+reachable through vertical scrolling. Expanding the pane removes scrolling
+when the complete content fits. Annotation refreshes preserve the user-set
+splitter allocation, and the Scene and Annotations allocations remain
+independent.
+
+The user approved this correction on 2026-11-11. It is implemented and locally
+verified; native user retesting remains pending.
+
+## Approval history
+
+The Details dialog was initially separated from the Scene-local splitter as an
+independent proposal. The user subsequently approved the Details dialog and
+both domain-local splitters on 2026-11-11. No root or System splitter is
+authorized.

@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted; implemented, locally verified, and independently reviewed.
 
 ## Context
 
@@ -81,4 +81,8 @@ control remains annotation-only.
 
 ## Decision
 
-Pending explicit approval.
+Approved on 2026-11-10. **Delete Selected** dispatches only to the selection
+owned by the active interaction context, using the precedence defined above.
+It never removes both coexisting selections, preserves editor-local Delete
+behavior, and remains a no-op in the System context. The spatial and
+annotation removal primitives remain separate.

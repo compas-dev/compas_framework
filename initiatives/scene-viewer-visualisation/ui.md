@@ -46,6 +46,7 @@
     * Object: Properties of selected object(s)
     * Camera
     * Display
+    * Units
 
 In the scene tree, every node provides a link to a form with two tabs: one for the scene object, one for the data item.
 

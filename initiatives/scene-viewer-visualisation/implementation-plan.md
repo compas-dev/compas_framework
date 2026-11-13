@@ -255,29 +255,43 @@ deletion without expanding history or cascading to annotations.
     mixed stacked sidebar with stable Scene, Annotations, and System domains;
     add explicit annotation details and the approved global deselection
     behavior.
-15. [Blocked on ADR 033 approval] Add the Scene-local resizable hierarchy/detail
-    boundary and modal Details dialog; remove the inline description textbox.
-16. [Blocked on ADR 034 approval] Make Mesh vertices measurable independently
-    of ordinary vertex-glyph visibility without adding edge or face snapping.
-17. [Blocked on ADR 035 approval] Add deterministic world-space dimension
-    offsets from a captured plane normal, including extension lines and
-    explicit unresolved layout behavior.
+15. [Complete; locally verified and user-confirmed] Remove the inline
+    description textbox, add the modal Details dialog, and add independent
+    resizable Scene hierarchy/details and Annotations list/dimension-details
+    boundaries. [Complete; locally verified] Wrap the Annotations details
+    surface in a vertical scroll viewport so shrinking its splitter allocation
+    does not compress the form below its natural height.
+16. [Complete and verified] Make Mesh vertices measurable
+    independently of ordinary vertex-glyph visibility without adding edge or
+    face snapping. Broader object-type acquisition follows only after this
+    contract is stable and separately approved.
+17. [Complete; locally verified and independently reviewed] Add deterministic world-space
+    dimension offsets from a captured plane normal, including extension lines,
+    explicit unresolved layout behavior, schema-5/entry-schema-2 migration,
+    and the atomic single-dimension Spatial Layout details form with an
+    explicit Apply boundary. Dragging, construction-plane tools, collision
+    avoidance, and multi-edit remain excluded. [Complete; locally verified] Add an
+    independently durable extension-line width,
+    defaulting new styles to dimension/extension widths `3.0/1.0`, with the
+    schema-6 migration that preserves legacy appearance.
 18. [Complete and verified] Add screen-pinned viewport text as a Viewer
     overlay through the existing programmatic overlay API; do not add an
     incomplete interactive management surface or persistence until their
     ownership is approved.
-19. [Blocked on ADR 037 approval] Add the narrow optional label background and
-    padding presentation fields.
-20. [Blocked on ADR 038 approval] Dispatch Delete Selected to the active Scene
-    or Annotations interaction domain without deleting both selections.
-21. [Blocked on ADR 039 approval] Move the existing geometry Add hierarchy
-    under Scene while retaining measurement acquisition under Measure.
+19. [Complete; local verification passed] Add the narrow optional label
+    background and padding presentation fields.
+20. [Complete; local verification passed] Dispatch Delete Selected to the active
+    Scene or Annotations interaction domain without deleting both selections.
+21. [Complete; local verification passed] Move the existing geometry Add
+    hierarchy under Scene while retaining measurement acquisition under
+    Measure.
 22. [Complete and verified] Establish Camera, Display, and Grid and Units
     ownership; remove tolerance from Viewer UI; and align all System form
     fields on one two-column layout.
-23. [Complete and verified] Add the
-    visible-by-default Render Mode and View toolbar selectors synchronized
-    through existing state and commands.
+23. [Complete and verified; amended 2026-11-10] Add the visible-by-default
+    Render Mode dropdown and exclusive icon-only Perspective, Top, Front,
+    Right, and Ortho buttons synchronized through existing state and commands;
+    restore focus through observable window and popup readiness.
 24. [Complete and verified] Add transient selection-driven area and
     volume inspection with exact supported transform scaling and explicit
     unsupported cases.
@@ -300,7 +314,95 @@ source-installed integration gates. Direct-use regressions in annotation
 visibility refresh and numeric field-type inference are fixed and verified in
 hosted Viewer and framework CI. ADRs 036 and 040–042 are implemented and pass
 the complete local and hosted Viewer gates plus the exact source-installed
-framework gate. ADRs 033–035 and 037–039 remain Proposed and blocked.
+framework gate. ADRs 037–039 are implemented and locally verified. ADR 037
+advances Core Scene serialization to schema 4 for durable annotation-label
+backgrounds and padding. ADR 034 is implemented, locally verified, and
+independently reviewed. ADR 033 was accepted on 2026-11-11, implemented,
+locally verified, and user-confirmed. ADR 035 was accepted on 2026-11-11 and
+is implemented, locally verified, and independently reviewed. Native direct
+use and hosted verification remain pending.
+
+The settled pre-ADR-034 working tree passes 2,251 Core tests, 545 Viewer tests,
+package
+Ruff and formatting, Viewer Pyright, focused Core source Pyright, strict Core
+and Viewer MkDocs, and the framework direct-source gate with 15 passes and one
+expected exact-revision skip. Full Core Pyright remains blocked by two
+unrelated existing documentation-example errors. Independent review passes.
+Native confirmation, refreshed hosted CI, and candidate-artifact verification
+remain pending for the pre-ADR-034 changes at this checkpoint.
+
+The completed ADR 044 tree passes 2,264 Core tests and 575 Viewer tests plus one
+expected structured OpenGL skip before the final toolbar follow-up. The final
+combined Viewer tree passes 587 plus the same expected skip. Independent focused
+review passes 92 Core and 83 Viewer tests with no remaining findings.
+The actual-widget toolbar/theme focus suite passes 47 tests, initialization
+smoke passes 61 tests, and five native macOS toolbar/Camera probes pass. Package
+Ruff, formatting, Viewer Pyright, strict Core and Viewer MkDocs, and diff checks pass.
+The framework direct-source gate passes 15 tests with one expected
+exact-revision skip. The user confirms ADR 034 Mesh snapping works properly and
+confirmed that button interaction had no focus problem before the icon-only
+presentation was added. Later native direct use confirmed the corrected
+render/view controls and Camera population; the grouped-menu amendment then
+superseded that interim composition and also passed direct use. Hosted CI and
+candidate-artifact verification have not run for these working trees. Broader
+object types remain a separate follow-up.
+
+The accepted 2026-11-10 ADR 029 amendment changes only newly constructed
+default dimension styles from white to magenta. Explicit and serialized colors
+remain unchanged, Scene stays at schema 4, and no universal contrast guarantee
+or adaptive recoloring is added. ADR 034's later verification is recorded
+separately from this settled baseline.
+
+## Built-in COMPAS Viewer theme
+
+Governing ADR: 043.
+
+Status: structural contract and exact Viewer-specific accessible token table
+accepted. Implementation, local package verification, independent review, and
+the framework direct-source gate pass. Hosted package, native cross-platform,
+and candidate-artifact verification remain pending.
+
+1. [Approved] Use ADR 043's COMPAS Viewer-specific palette rather than claim an
+   authoritative organization-wide brand standard.
+2. [Approved] Adopt ADR 043's semantic light/dark tokens and contrast criteria.
+3. [Complete] Implement a private Viewer theme module while preserving the existing
+   `system`, `light`, and `dark` configuration values and schema 3.
+4. [Complete] Remove appearance-driven renderer-background mutation and verify that all
+   renderer and content colors retain their existing ownership.
+5. [Complete] Reconcile component-local presentation, including the System-section
+   heading refinement, without adding a public theme framework.
+6. [Partial] Offscreen behavior, package quality, documentation, independent
+   review, and exact-source framework integration pass. Native rendering on
+   macOS, Windows, and Linux remains pending.
+
+Exit gate: the approved palette and contrast evidence are recorded; runtime
+switching and system-following behavior pass; explicit viewport/content colors
+survive appearance changes; native captures cover both variants on supported
+platforms; and all applicable verification layers are reported without
+inference.
+
+## Persistent-dimension format editing
+
+Governing ADR: 044.
+
+Status: accepted; implemented, locally verified, and independently reviewed.
+
+1. [Complete] Add atomic validated `DistanceDimension.unit` and `.precision`
+   properties with one 0–15 precision domain and without changing serialized
+   fields or Scene schema.
+2. [Complete] Apply the same 0–15 domain to Viewer configuration and
+   selected-dimension Measurement Format controls, keeping them separate from
+   entry style and hidden for unsupported selection states.
+3. [Complete] Refresh only the affected annotation while preserving identity, anchors,
+   style, selections, Viewer defaults, hierarchy, and spatial buffers.
+4. [Complete] Verify 0 and 15 boundaries, rejection without clamping at -1
+   and 16, explicit-label precedence without relaxed validation, editor Escape,
+   default snapshot behavior, existing-data/config rejection, package quality,
+   documentation, and framework integration.
+
+Exit gate: existing dimensions are safely editable without retroactive default
+propagation or unit conversion, and all applicable verification layers are
+recorded.
 
 ## Phase 4 — Public Viewer operations
 
@@ -345,6 +447,141 @@ Governing ADR: 007.
 
 Exit gate: all applicable verification layers pass at recorded exact heads;
 required unavailable evidence remains an explicit blocker.
+
+## Approved direct-use presentation correction
+
+Governing decisions: approved amendments to ADRs 037 and 040, plus Accepted
+ADR 045.
+
+Status: implementation, local verification, direct-source framework
+integration, independent re-review, and user direct-use confirmation pass.
+Hosted CI and candidate-artifact verification remain pending.
+
+1. [Complete; locally verified] Add selected-annotation controls for
+   enabling, coloring, and padding the already supported optional label
+   background.
+2. [Complete; locally verified] Replace the failing default Render
+   Mode popup with four exclusive semantic cube-icon buttons; replace the
+   P/T/F/R/O toolbar group with a private fixed viewport control for
+   Perspective, Top, Front, Right, and Ortho; and add command-backed Zoom
+   Selected, Zoom Extents, and Capture View toolbar buttons.
+3. [Complete; locally verified] Resolve the default white-surface/white-viewport contrast by
+   changing Viewer's fixed default viewport background to `#D8DDE2`. Core's
+   default surface color remains white.
+
+Exit gate: native interaction confirms immediate viewport orbit, pan, and zoom
+after every render/view choice; toolbar, viewport control, menu, System panel,
+and public API stay synchronized without recursive commands; label-background
+edits persist and refresh only the affected annotation; icons pass light/dark,
+high-DPI, accessibility, and provenance checks; and all applicable package,
+documentation, integration, native-platform, and candidate-artifact layers are
+reported separately.
+
+Local evidence: the full Viewer suite passes 596 tests with one expected
+offscreen OpenGL skip; six focused corrected-contract tests and independent
+re-review pass; Ruff, formatting, configured Pyright, strict MkDocs, and
+`git diff --check` pass. The direct-source framework gate passes 15 tests with
+one expected exact-VCS-metadata skip. User direct use passes; hosted CI and
+candidate artifacts remain unverified.
+
+## Approved compact controls, splitters, and scheme-aware content follow-up
+
+Governing decisions: Accepted ADR 033, accepted ADR 037 and ADR 040
+amendments, accepted ADR 043 amendment, and Accepted ADR 046 superseding ADR
+045.
+
+Status: implemented, locally verified, independently reviewed, and confirmed
+through native direct use. Native confirmation of the later
+Annotations-details scroll correction and hosted verification remain pending.
+
+1. [Complete; locally verified] Replace current viewport and toolbar view/render controls with one
+   private grouped viewport menu, and add one default measurement menu button
+   using existing commands.
+2. [Complete; locally verified] Remove the inline object description, add the modal Details
+   snapshot, and add independent resizable Scene hierarchy/details and
+   Annotations list/dimension-details splitters.
+3. [Complete; locally verified] Apply the approved exact light/dark Viewer content tokens at
+   creation time and enable matching backgrounds for Viewer-created distance
+   dimensions, without changing Core defaults or explicit/serialized colors.
+   Advance Viewer configuration to schema 4 with
+   `RendererConfig.backgroundcolor: Color | None`; migrate every schema-3
+   concrete background as explicit and use `None` only for the new automatic
+   viewport.
+
+Exit gate: native interaction proves grouped-menu focus and synchronization;
+measurement start/cancel paths and Details snapshots pass; exact light/dark
+captures match the approved palette; explicit and serialized presentation is
+unchanged; existing objects are not recolored on scheme switches; and all
+applicable package, documentation, framework, hosted, and artifact layers are
+reported separately.
+
+## Approved editable parametric-shape resolution
+
+Governing decision: Accepted ADR 047.
+
+1. [Complete; locally verified] Expose existing durable `u` and `v`
+   scene-state fields only for Shape and Surface producers that consume them.
+2. [Complete; locally verified] Validate whole integers atomically with producer-specific minima
+   and Capsule's even-V requirement; reject invalid edits without refresh.
+3. [Complete; locally verified] Rebuild only the affected object's tessellation, buffers, bounds,
+   renderer, and Scene details; verify persistence and unchanged analytic
+   geometry, selection, and unrelated objects.
+4. [Complete; locally verified] Route `show`, `show_points`, `show_lines`,
+   `show_surfaces`, opacity, point size, and line width through one selected
+   object settings-texture update and one redraw. Verify that unchanged tree
+   content causes no tessellation, global buffer rebuild, or Scene tree rebuild.
+5. [Complete; locally verified] Use **Show wireframe**, **Wireframe color**, and
+   **Wireframe width** for ShapeObject and SurfaceObject forms. Keep MeshObject
+   and GraphObject edge wording and retain every durable field/API name.
+
+Color edits remain on the current appearance-data refresh path. Optimizing
+that path is not part of this amendment. `u` and `v` remain topology edits and
+retain the approved rebuild path.
+
+No new resolution field, alias, schema version, adaptive LOD, global default,
+or backend tessellation contract is authorized by this proposal.
+
+Core passes 2,306 tests. Viewer passes 656 tests with two expected offscreen
+native-OpenGL skips for renderer snapping and shape resolution. Ruff,
+formatting, Pyright, strict documentation builds, framework integration (15
+passes and one exact-VCS skip), diff checks, and independent review pass. An
+exact native macOS Torus U 16-to-64 subprocess passed with valid OpenGL. Native
+direct use confirms the Qt emitter-lifetime crash fix, responsive off/on
+wireframe toggling at Torus U resolution 64, and the wireframe wording. The
+scroll and extension-style paths still require native direct user retesting;
+hosted CI and candidate artifacts remain pending. The settings-only refresh
+and wireframe wording amendment also passes independent review.
+
+## Accepted referenced Data domain
+
+Governing decision: ADR 048, accepted on 2026-11-11. Implementation, local
+verification, and independent review pass.
+
+1. [Complete] Add a fourth read-only Data sidebar domain
+   projecting one row per distinct Scene-referenced item GUID in deterministic
+   first-reference order.
+2. [Complete] Keep Data selection local; show bound/unresolved status and all
+   referring objects/annotations without implicit resolution or ownership.
+3. [Complete] Add a modal read-only Data Details snapshot and reuse lazy
+   Mesh/Graph tables read-only; verify refresh without data or buffer mutation.
+
+No unattached storage, Session aggregate, loading/resolution, editing,
+deletion, search, persisted selection, or modeless inspector is authorized.
+The active Scene is the initial inventory source. Replacing or extending it
+with an unattached or multi-scene Session aggregate requires a separate ADR;
+Viewer must not become the aggregate owner.
+
+The final sidebar order is Scene, Data, Annotations, System. Review confirms
+that direct `add_object` and `add_reference` calls cause one immediate Data
+refresh and no renderer refresh, selection is preserved while its GUID remains
+referenced, generic inspection does not use arbitrary `__data__`, and an
+individual attribute exception is isolated. Final review also verifies exactly
+one Data refresh after selected and unselected spatial or annotation removals,
+scene clearing, and batched spatial deletion, without extra renderer work.
+Viewer passes 672 tests with two expected offscreen OpenGL skips; the framework
+direct-source gate passes 16 tests with one expected exact-VCS skip. Ruff,
+formatting, Pyright, strict MkDocs, and diff checks pass. Native direct use,
+hosted CI, and candidate artifacts remain pending.
 
 ## Deferred work requiring new approval
 

@@ -42,12 +42,13 @@ hosted package and exact source-installed integration verification also pass.
 
 ## Direct-use follow-ups
 
-Direct use after ADR 032 identifies seven independent refinements. ADR 036 is
-Accepted; ADRs 033–035 and 037–039 remain Proposed:
+Direct use after ADR 032 identifies seven independent refinements. ADRs 033–034
+and 036–039 are Accepted and implemented. ADR 035 is implemented, locally
+verified, and independently reviewed:
 
-- keep the three-domain root and introduce one stable Scene-local splitter;
-  remove the inline description textbox and expose its information through a
-  modal Details dialog;
+- keep the three-domain root; introduce independent Scene and Annotations
+  splitters; remove the inline description textbox and expose its information
+  through a modal Details dialog;
 - separate normal Mesh vertex glyph visibility from measurement acquisition by
   rendering an invisible measurement-only vertex footprint;
 - store a distance dimension's signed world-space offset and captured plane
@@ -74,8 +75,9 @@ boundary; configuration and Scene are not suitable owners.
 Further UI and measurement feedback produces three additional independent
 proposals:
 
-- populate and show the default toolbar with synchronized Render Mode and View
-  selectors using the existing commands and Viewer state;
+- populate and show the default toolbar with a synchronized Render Mode
+  selector and five exclusive standard-view buttons using the existing
+  commands and Viewer state;
 - replace Units and Measurement with Grid and Units, remove tolerance from the
   Viewer UI without changing global COMPAS tolerance, and align every System
   form on one two-column field layout; and
@@ -84,8 +86,62 @@ proposals:
   without tessellation fallback or persistent annotations.
 
 If accepted together, establish the final System ownership and layout first,
-then add the synchronized toolbar selectors, then add the independent area and
+then add the synchronized toolbar controls, then add the independent area and
 volume inspections.
+
+## Accepted COMPAS Viewer theme structure
+
+Treat COMPAS as Viewer's one built-in visual theme and retain `system`,
+`light`, and `dark` as color-scheme choices. `system` continues to follow the
+operating system; the other values force the corresponding COMPAS theme
+variant. Do not add a fourth appearance value, a separate public theme field,
+arbitrary stylesheet loading, or a theme registry while no second selectable
+theme is required. The configuration shape and schema version remain
+unchanged.
+
+The initial theme owns Qt application chrome only. A private semantic token
+module supplies complete light and dark palettes and, only where palette roles
+are insufficient, one narrow application stylesheet. Renderer background,
+selection, and grid colors and all scene, annotation, measurement, legend, and
+overlay presentation retain their existing owners. Appearance switching stops
+overwriting the renderer background, so explicit viewport choices survive
+theme changes.
+
+Retain the platform UI font, packaged COMPAS application icon, configurable
+icon override, and existing monochrome icons. A new font or icon family is a
+separate asset, licensing, fallback, and accessibility decision. Reconcile the
+current System-section heading refinement with the private theme without
+creating a public typography or spacing framework.
+
+The inspected repositories do not define an authoritative COMPAS brand token
+table. The approved implementation therefore uses ADR 043's Viewer-specific
+palette without claiming organization-wide brand authority. Its exact tokens
+and contrast requirements were approved on 2026-11-10. Native macOS, Windows,
+and Linux visual verification remains part of rollout. ADR 043 records the full
+alternatives, compatibility implication, and verification contract.
+
+## Accepted persistent-dimension format editing
+
+Keep **Grid and Units** as the presentation default for transient measurements
+and dimensions created afterward. Do not retroactively rewrite existing
+dimensions. Instead, expose **Coordinate Unit** and **Display Precision** in a
+separate **Measurement Format** group when exactly one resolved
+`DistanceDimension` is selected in Annotations.
+
+Core gains validated mutable properties for the already serialized unit and
+precision fields. Viewer mutates only the selected dimension and refreshes only
+its annotation render layer. Precision uses one shared Core and Viewer domain
+of 0–15 inclusive; values outside it raise `ValueError` and are never clamped
+or truncated. Units remain declaration-only and perform no conversion.
+Explicit labels remain verbatim overrides without bypassing validation.
+Existing data or configuration above 15 is rejected without migration or a
+schema change. No bulk editor, unit registry, or generic property abstraction
+is introduced.
+ADR 044 records the complete ownership, validation, and verification contract.
+Implementation is present in the Core and Viewer working trees: validated
+property assignment and selected-entry Measurement Format controls preserve
+the separate ownership of durable snapshots and Viewer defaults. Local
+verification and independent review pass.
 
 ## Proposed three-domain sidebar amendment
 
@@ -619,6 +675,12 @@ speculative replacement model.
 40. [ADR 040 — Default toolbar view shortcuts](decisions/040-default-toolbar-view-shortcuts.md)
 41. [ADR 041 — Grid and Units System section](decisions/041-grid-and-units-system-section.md)
 42. [ADR 042 — Selected area and volume inspection](decisions/042-selected-area-and-volume-inspection.md)
+43. [ADR 043 — Built-in COMPAS Viewer theme](decisions/043-built-in-compas-viewer-theme.md)
+44. [ADR 044 — Editing persistent distance-dimension format](decisions/044-editing-persistent-dimension-format.md)
+45. [ADR 045 — Default viewport and content contrast](decisions/045-default-viewport-content-contrast.md)
+46. [ADR 046 — Viewer scheme-aware content palette](decisions/046-viewer-content-palette.md)
+47. [ADR 047 — Editable parametric shape resolution](decisions/047-editable-parametric-shape-resolution.md)
+48. [ADR 048 — Referenced Data domain](decisions/048-referenced-data-domain.md)
 
 ADRs 013–016 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
 in the decision index; ADR 010 remains Accepted with amended terminology.
@@ -632,6 +694,268 @@ independently approved; refreshed hosted core, Viewer, and framework
 verification passed.
 
 ADRs 033–039 respond to direct-use feedback. ADR 036 is Accepted with a
-screen-pinned, non-persistent, programmatic-first contract. ADRs 040–042 are
-also Accepted. ADRs 033–035 and 037–039 remain Proposed and do not authorize
-source changes.
+screen-pinned, non-persistent, programmatic-first contract. ADRs 037–039 are
+implemented, locally verified, and independently reviewed. ADRs 040–042 are
+also Accepted. ADR 034 is implemented, locally verified, and independently
+reviewed. Its measurement-only Mesh-vertex footprints do not enter ordinary
+rendering or add edge, face, or broader object-type acquisition. ADR 033 is
+implemented and user-confirmed. ADR 035 was accepted on 2026-11-11,
+implemented, locally verified, and independently reviewed; native direct use
+and hosted verification remain pending.
+
+The 2026-11-10 amendment to ADR 040 keeps the compact Render Mode dropdown but
+replaces the native View combo popup with exclusive icon-only Perspective, Top,
+Front, Right, and Ortho buttons. They use the existing palette-aware P, T, F,
+and R assets plus a matching O asset; semantic titles remain tooltips and
+accessible names. Native direct use showed that combo-popup teardown could
+still disrupt viewport focus. One pending event-driven restoration now waits
+for `focusWindowChanged` or a queued readiness check to observe the main window
+focused and active with the popup cycle complete. It uses no arbitrary delay or
+retry loop. The amendment narrowly extends an existing toolbar `button` item
+with `state`, `value`, and optional `icon_only`, preserves custom text-only,
+text-plus-icon, and unbound buttons, and does not authorize a general widget
+registry.
+
+The narrow 2026-11-10 amendment to ADR 029 changes only the color used by a
+new default `DimensionStyle` from white to magenta. Explicit and serialized
+colors remain authoritative, the Scene schema remains version 4, and no
+adaptive or universal contrast guarantee is introduced.
+
+## Approved direct-use presentation follow-up
+
+The latest native retest accepts the standard-view button behavior, Camera
+population, and general presentation, but rejects the remaining Render Mode
+combo focus behavior. It also identifies missing label-background editing,
+non-semantic letter icons, useful existing command candidates for the toolbar,
+and insufficient contrast between the default white surface and white
+viewport.
+
+The proposed response is split by ownership:
+
+1. Amend ADR 037 to expose the implemented optional label background and
+   logical-pixel padding in the selected annotation's details. Disabling the
+   background writes `None`; enabling it uses an explicit selected color. This
+   changes no Core schema or serialization contract.
+2. Amend ADR 040 again to remove the unreliable default Render Mode popup.
+   Use four exclusive semantic buttons with original monochrome SVGs: a filled
+   cube for Shaded, face-shaded cube for Lighted, translucent or dashed cube
+   for Ghosted, and outline cube for Wireframe. Move Perspective, Top, Front,
+   Right, and Ortho into one private fixed viewport control synchronized
+   through the existing command and state path. This interprets the requested
+   fixed view list as those five standard views. Add the existing Zoom
+   Selected, Zoom Extents, and Capture View commands to the default toolbar
+   with semantic magnifier/selection, framing, and camera assets.
+3. Apply Accepted ADR 045 by changing Viewer's fixed default viewport
+   background to `#D8DDE2` while preserving Core defaults and ADR 043's theme
+   separation.
+
+The fixed viewport control is private Viewer chrome, not a new public
+interactive-overlay type or general widget registry. All icon titles remain
+tooltips and accessible names. Asset provenance, licensing, palette behavior,
+high-DPI rendering, checked state, and disabled state require verification.
+
+These changes were approved on 2026-11-10, including the standard-view
+interpretation and ADR 045's Viewer-owned `#D8DDE2` background. Package source
+implementation, local verification, direct-source framework integration, and
+independent re-review pass, and user direct use confirms the correction works
+well. Hosted CI and candidate-artifact verification remain pending.
+
+## Accepted grouped controls, Details, splitters, and content palette follow-up
+
+The next direct-use checkpoint accepts the corrected implementation and asks
+for a more compact composition:
+
+1. Amend ADR 040 to replace the viewport's fixed view list and the toolbar's
+   four render buttons with one private viewport menu. Its titled exclusive
+   groups are **View** (Perspective, Top, Front, Right, Ortho) and **View
+   Mode** (Shaded, Lighted, Ghosted, Wireframe). Add one default measurement
+   menu button for Inspect Distance, Add Fixed, Add Associative, and Cancel;
+   retain Zoom Selected, Zoom Extents, and Capture View.
+2. Apply ADR 033's removal of the inline description and modal Details
+   snapshot. Add independent resizable splitters for Scene hierarchy/details
+   and Annotations list/dimension-details; neither domain resizes the other.
+3. Amend ADR 037 so newly completed Viewer distance dimensions start with a
+   two-pixel label background: `#FAFAFAE6` in light and `#10161BE6` in dark.
+   Existing, explicit, serialized, text-annotation, and Core programmatic
+   behavior remains unchanged.
+4. Adopt ADR 046's exact Viewer defaults:
+
+   | Role | Light | Dark |
+   |---|---:|---:|
+   | Viewport | `#FAFAFA` | `#10161B` |
+   | Surface and face | `#D8DEE4` | `#3A4650` |
+   | Line and edge | `#4B5563` | `#B8C2CC` |
+   | Point and vertex | `#111827` | `#F2F6F8` |
+
+Viewer resolves omitted geometry and dimension presentation when content is
+created. Explicit and serialized values remain authoritative, Core defaults do
+not change, and existing objects are not recolored on a live scheme switch.
+The automatic viewport does follow the scheme unless explicitly configured.
+Full live content inversion is deferred because it requires durable
+automatic-versus-explicit provenance in Core rather than color-value guessing.
+
+Viewer configuration advances to schema 4 with
+`RendererConfig.backgroundcolor: Color | None`; `None` is automatic. Every
+schema-3 concrete background, including `#D8DDE2`, migrates as explicit.
+For Geometry, Mesh, Graph, and VolMesh, an explicit specialized color wins; an
+omitted specialized channel continues to derive from an explicit base color;
+scheme tokens apply only when both base and specialized channel are omitted.
+Collections and buffer-backed objects keep existing explicit/per-element
+semantics and receive tokens only through an already supported omitted uniform
+channel.
+
+These changes, including both domain-local splitters, were approved on
+2026-11-11. Implementation, local verification, independent review, and native
+direct use pass; hosted verification remains pending.
+
+## Accepted ADR 035 initial editing surface
+
+The preferred first authoring path for deterministic spatial dimension layout
+is a **Spatial Layout** group in Annotations details for one selected, bound
+distance dimension. It exposes a finite signed world-space Offset, optional
+Plane Normal X/Y/Z components, derived read-only resolution Status, and Reset
+Layout. All normal fields blank means no normal; otherwise all three finite
+components are required.
+
+Field edits remain a local draft, and tabbing preserves partial input.
+**Apply Layout** replaces the complete layout atomically; invalid Apply and
+Escape restore durable values without refresh. **Reset Layout** immediately
+restores the default layout. A changed Apply or Reset refreshes only the
+selected annotation once. Offset zero is resolved without a normal, regardless
+of normal or anchor layout inputs. For nonzero offsets,
+status precedence is unresolved anchor, coincident anchors, missing normal,
+zero normal, parallel normal, then resolved. Missing, zero, or parallel layout
+direction falls back to the current zero-offset line only when both anchors
+resolve. An unresolved anchor preserves ADR 028 behavior and produces no
+cached, stale, synthesized, or fallback dimension line. Viewer never falls
+back to the camera.
+
+Core gains the validated immutable-value-style layout data, while Scene
+serialization advances from schema 4 to schema 5 and annotation-entry schema
+version 2. Because `DataDecoder` reconstructs nested entries before the parent
+Scene version is visible, current versioned entries require `layout` and reject
+missing or unsupported versions. Only legacy unversioned schema-4 entries may
+omit it; they retain `None` until binding normalizes distance entries and
+preserves or validates text/arrow entries.
+Viewer adds extension lines, displaced bounds, derived statuses, and the
+single-selection form. Viewport dragging, construction-plane tools, collision
+avoidance, and multi-dimension editing remain excluded. This amended ADR 035
+was explicitly approved on 2026-11-11. Implementation, local verification,
+and independent review pass. Native direct
+use and hosted verification remain pending.
+
+## Approved dimension-details and extension-line refinement
+
+The accepted Annotations splitter must scroll rather than compress its details
+form when the lower allocation is smaller than the content's natural height.
+Use a vertical `QScrollArea` as the splitter child, retain natural group and
+field spacing through a minimum-size layout constraint, disable horizontal
+scrolling, and preserve transient splitter allocation across refreshes. This
+is an approved correction to ADR 033 and is implemented and locally verified.
+
+The independent line-weight request is a durable style change. Amend ADRs 029
+and 035 with `extension_line_width`, a positive finite logical-pixel value.
+The existing main-line default remains `3.0`; new extension lines default to
+`1.0`. Viewer exposes **Dimension Line Width** and **Extension Line Width** and
+uses the latter only for anchor-to-displaced-endpoint lines. A zero-offset
+dimension has no extension lines.
+
+Preserve existing serialized appearance through Scene schema 6,
+annotation-entry schema 3, and dimension-style schema 2. Genuine schema-5
+styles migrate `extension_line_width=line_width`; schema-6 requires the
+versioned field. Explicit values remain authoritative. No extension color,
+dash, opacity, or arrow-style surface is proposed. This style amendment
+was approved on 2026-11-11. Implementation and local verification pass.
+
+## Approved editable parametric-shape resolution
+
+Core already owns durable `ShapeObject.u`, `ShapeObject.v`,
+`SurfaceObject.u`, and `SurfaceObject.v` values with default `16`; Viewer
+already consumes them when generating polygonal representations. ADR 047
+approves exposing those fields without adding a second resolution API or
+changing serialization.
+
+Viewer shows **U Resolution** for Cone and Cylinder; **U Resolution** and
+**V Resolution** for Sphere and Torus; U plus an even V for Capsule; and both
+axes for parametric Surface objects. Box and unknown Shape producers expose no
+ineffective controls. Values are whole integers with producer-specific minima.
+Invalid edits roll back atomically without refresh. A valid edit rebuilds only
+the affected object's representation, buffers, and bounds while preserving the
+analytic shape, selection, unrelated objects, and scene round-trip.
+
+Circle/Ellipse discretization, BRep/backend tolerances, adaptive level of
+detail, global defaults, and a speculative maximum cap remain outside scope.
+ADR 047 was accepted on 2026-11-11. Implementation, local verification, and
+independent review pass. An exact native macOS Torus U-resolution change from
+16 to 64 passed with a valid OpenGL context. The later interactive crash was
+traced to Qt emitter lifetime and fixed. Native direct use on 2026-11-11
+confirmed the resolution crash remains fixed at Torus U resolution 64.
+
+Direct use at higher resolution also exposed an avoidable full rebuild for
+ordinary display toggles. The accepted ADR 047 amendment routes `show`,
+`show_points`, `show_lines`, `show_surfaces`, opacity, point size, and line
+width through one selected-object settings-texture update and one redraw. These
+edits do not tessellate, rebuild global buffers, or rebuild the Scene tree
+unless displayed tree content changed. Resolution fields `u` and `v` remain
+topology edits. Colors remain on the current appearance-data path for now.
+
+ShapeObject and SurfaceObject forms label the existing line controls **Show
+wireframe**, **Wireframe color**, and **Wireframe width**. MeshObject and
+GraphObject retain edge terminology. The wording introduces no durable alias,
+API, or serialization change. This amendment is accepted and implementation is
+locally verified and independently reviewed. Native direct use confirms that a
+Torus at U resolution 64 toggles **Show wireframe** off and on responsively and
+accepts the wireframe wording.
+
+## Accepted referenced Data domain
+
+Scene already exposes a non-owning runtime binding map for item GUIDs referred
+to by spatial objects and annotations. Accepted ADR 048 adds a fourth top-level
+Viewer **Data** domain as a flat projection of those references, not a second
+store. One row per distinct GUID is ordered by first spatial-hierarchy then
+annotation reference and shows name, type, bound/unresolved status, and
+reference count. Shared items are deduplicated; unresolved GUIDs remain visible
+without implicit resolution.
+
+Data selection is transient and independent from Scene, Annotations, viewport,
+and element-table selection. A read-only modal Data Details snapshot shows
+identity/reference metadata and safe inspected parameters. Mesh and Graph
+reuse ADR 017's lazy tables in read-only mode with declared columns only.
+
+The projection refreshes after scene replacement, reference add/remove, item
+binding, and Data-domain activation while preserving selection by GUID where
+possible. It neither mutates data nor rebuilds render buffers. Unattached data,
+Session aggregation, files and resolvers, loading, editing, deletion, search,
+persisted selection, and modeless inspectors remain outside scope. The user
+approved this narrow first step on 2026-11-11. Implementation, local
+verification, and independent review pass, with the final sidebar order Scene,
+Data, Annotations, System. Direct object/reference additions refresh Data once
+without renderer work, selection survives refresh while still referenced, and
+safe shared inspection isolates attribute failures without reading arbitrary
+`__data__`. The active Scene is the initial inventory source. A future Session
+ADR may replace or extend it with unattached or multi-scene data, but Viewer
+must remain a read-only consumer rather than the aggregate owner.
+
+## Proposed Viewer Settings surface
+
+Direct use identifies a category mismatch in the resulting four-tab sidebar:
+Scene, Data, and Annotations are content domains, while System is a collection
+of Viewer settings. Proposed ADR 049 would leave exactly the three content
+domains in the right sidebar and move the existing Camera, Display, and Grid
+and Units sections into one per-Viewer modeless **Viewer Settings** window.
+
+The proposed window is opened from **View → Viewer Settings…**, refreshed and
+raised on reuse, hidden rather than destroyed on close, and owned by the main
+Viewer lifecycle. Its visibility, geometry, and focused section remain
+transient. Window-level Escape hides only Viewer Settings; it does not cancel
+measurement or clear content selection. Existing renderer, measurement, state,
+and configuration paths stay unchanged.
+
+The proposal replaces the System sidebar identifier and
+`focus_system_section` with one settings-window API and moves the three
+components from `viewer.sidebar_items` to `viewer.settings_items`, without
+aliases or overlapping supported paths. A modal dialog would block live
+viewport tuning; a dock would introduce layout and persistence decisions; and
+a popover or drawer would be too small and focus-sensitive for the existing
+forms. ADR 049 remains Proposed and no implementation is authorized before
+explicit approval.

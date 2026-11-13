@@ -19,12 +19,15 @@ from compas.geometry import Line
 from compas.geometry import Point
 from compas.geometry import Rotation
 from compas.geometry import Scale
+from compas.geometry import Sphere
 from compas.geometry import Translation
+from compas.geometry import Vector
 from compas.geometry import distance_point_point
 from compas.scene import ArrowAnnotation
 from compas.scene import ComponentAnchor
 from compas.scene import DimensionStyle
 from compas.scene import DistanceDimension
+from compas.scene import DistanceDimensionLayout
 from compas.scene import PointAnchor
 from compas.scene import Scene
 from compas.scene import SceneAnnotation
@@ -37,6 +40,8 @@ from compas_viewer import ScaleBarOverlay
 from compas_viewer import ScreenTextOverlay
 from compas_viewer import Viewer
 from compas_viewer.commands import builtin_commands
+from compas_viewer.components.datapanel import DataDetailsDialog
+from compas_viewer.components.datastructureattributes import _ElementAttributesModel
 from compas_viewer.config import Config
 from compas_viewer.forms import REMOVE_EDITABLE_ATTRIBUTE
 from compas_viewer.forms import register_scene_attribute_contribution
@@ -58,17 +63,27 @@ from compas_viewer.snapping import query_snaps
 from compas_viewer.uidefinitions import default_menu_items
 from compas_viewer.uidefinitions import default_sidebar_items
 from compas_viewer.uidefinitions import default_toolbar_items
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QAbstractItemView
+from PySide6.QtWidgets import QPlainTextEdit
+from PySide6.QtWidgets import QScrollArea
 from PySide6.QtWidgets import QSplitter
+from PySide6.QtWidgets import QTableView
+from PySide6.QtWidgets import QToolButton
 
-CORE_COMMIT = "70aeb1e408772f0a84213c280658d4d594bf12ea"
-VIEWER_COMMIT = "efbb7991c9f60aef2e8225813c5050190b5cfb0b"
+CORE_COMMIT = "9f4db763d2de0dd9bcddabd29e63bb047ac20385"
+VIEWER_COMMIT = "0f263f15899b85633d5de038bec59ed8504b1142"
 
 
 def _installed_commit(distribution_name: str) -> str:
     direct_url = distribution(distribution_name).read_text("direct_url.json")
-    assert direct_url is not None
+    if direct_url is None:
+        pytest.skip(f"{distribution_name} has no direct_url.json revision metadata")
     metadata = json.loads(direct_url)
-    return metadata["vcs_info"]["commit_id"]
+    vcs_info = metadata.get("vcs_info")
+    if vcs_info is None or "commit_id" not in vcs_info:
+        pytest.skip(f"{distribution_name} is installed without exact VCS revision metadata")
+    return vcs_info["commit_id"]
 
 
 def test_exact_source_candidates_are_installed():
@@ -89,12 +104,31 @@ manager.load_plugins()
 from compas_viewer.config import Config
 from compas_viewer.uidefinitions import default_sidebar_items, default_toolbar_items
 
-assert Config().schema_version == 3
+assert Config().schema_version == 4
 assert not any(item.get("type") == "DatastructureAttributes" for item in default_sidebar_items())
 assert any(item.get("type") == "AnnotationPanel" for item in default_sidebar_items())
+assert any(item.get("type") == "DataPanel" for item in default_sidebar_items())
 assert any(item.get("type") == "GridUnitSetting" for item in default_sidebar_items())
 assert not any(item.get("type") == "MeasurementSetting" for item in default_sidebar_items())
-assert [item.get("type") for item in default_toolbar_items()] == ["select", "select"]
+toolbar_items = default_toolbar_items()
+assert [item.get("type") for item in toolbar_items] == ["button", "button", "button", "menu_button"]
+assert [item.get("title") for item in toolbar_items] == [
+    "Zoom Selected",
+    "Zoom Extents",
+    "Capture View",
+    "Measurement",
+]
+assert [item.get("command") for item in toolbar_items[:3]] == [
+    "viewer.zoom_selected",
+    "viewer.zoom_extents",
+    "viewer.capture_view",
+]
+assert [item.get("command") for item in toolbar_items[3]["items"]] == [
+    "viewer.inspect_distance",
+    "viewer.add_fixed_distance_dimension",
+    "viewer.add_associative_distance_dimension",
+    "viewer.cancel_measurement",
+]
 modules = tuple(sys.modules)
 assert "compas_viewer.plugins" in modules
 assert not any(name == "PySide6" or name.startswith("PySide6.") for name in modules)
@@ -120,11 +154,14 @@ def test_viewer_configuration_and_sidebar_contracts():
 
     assert defaults.window.title == "COMPAS Viewer"
     assert defaults.window.icon is None
+    assert defaults.schema_version == 4
+    assert defaults.renderer.backgroundcolor is None
     assert defaults.ui.toolbar.show is True
-    assert config.schema_version == 3
+    assert config.schema_version == 4
     assert config.window.title == "Framework Viewer"
     assert config.window.icon is None
     assert config.renderer.view == "ortho"
+    assert config.renderer.backgroundcolor == Color.from_hex("#D8DDE2")
     assert config.measurement.unit == "mm"
     assert config.measurement.precision == 2
     assert set(payload) == {"schema_version", "vectorsize", "ui", "window", "renderer", "camera", "measurement"}
@@ -134,6 +171,7 @@ def test_viewer_configuration_and_sidebar_contracts():
     assert "sceneform" not in payload["ui"]["sidebar"]
     assert [item["type"] for item in default_sidebar_items()] == [
         "SceneTree",
+        "DataPanel",
         "AnnotationPanel",
         "ObjectSetting",
         "CameraSetting",
@@ -141,23 +179,36 @@ def test_viewer_configuration_and_sidebar_contracts():
         "GridUnitSetting",
     ]
     toolbar_items = default_toolbar_items()
-    assert [(item["title"], item["state"]) for item in toolbar_items] == [
-        ("Render Mode", "renderer.rendermode"),
-        ("View", "renderer.view"),
+    assert [(item["title"], item["type"]) for item in toolbar_items] == [
+        ("Zoom Selected", "button"),
+        ("Zoom Extents", "button"),
+        ("Capture View", "button"),
+        ("Measurement", "menu_button"),
     ]
-    assert [option["value"] for option in toolbar_items[0]["items"]] == [
-        "shaded",
-        "ghosted",
-        "lighted",
-        "wireframe",
+    assert [item["command"] for item in toolbar_items[:3]] == [
+        "viewer.zoom_selected",
+        "viewer.zoom_extents",
+        "viewer.capture_view",
     ]
-    assert [option["value"] for option in toolbar_items[1]["items"]] == [
-        "perspective",
-        "top",
-        "front",
-        "right",
-        "ortho",
+    assert [item["icon"] for item in toolbar_items] == [
+        "zoom_selected.svg",
+        "zoom_extents.svg",
+        "capture_view.svg",
+        "measurement.svg",
     ]
+    assert all(item["icon_only"] is True for item in toolbar_items)
+    assert [item["command"] for item in toolbar_items[3]["items"]] == [
+        "viewer.inspect_distance",
+        "viewer.add_fixed_distance_dimension",
+        "viewer.add_associative_distance_dimension",
+        "viewer.cancel_measurement",
+    ]
+    menus = default_menu_items()
+    assert [menu["title"] for menu in menus] == ["View", "Edit", "Select", "Measure", "Scene", "Help"]
+    scene_menu = next(menu for menu in menus if menu["title"] == "Scene")
+    add_menu = next(item for item in scene_menu["items"] if item.get("title") == "Add")
+    assert [category["title"] for category in add_menu["items"]] == ["Primitives", "Curves", "Surfaces", "Shapes"]
+    assert not any(menu["title"] == "Add" for menu in menus)
 
     with pytest.raises(ValueError, match=r"window\.about"):
         Config.from_dict({"schema_version": 3, "window": {"about": "retired"}})
@@ -171,12 +222,66 @@ def test_viewer_sidebar_separates_scene_annotation_and_system_domains():
     viewer = Viewer()
     sidebar = viewer.ui.sidebar
 
+    view_control = viewer.ui.viewport._view_control
+    view_button = view_control.findChild(QToolButton, "viewport_view_menu_button")
+    assert view_button.accessibleName() == "View and View Mode"
+    assert [(action.text(), action.isEnabled()) for action in view_button.menu().actions() if not action.isSeparator()] == [
+        ("View", False),
+        ("Perspective", True),
+        ("Top", True),
+        ("Front", True),
+        ("Right", True),
+        ("Ortho", True),
+        ("View Mode", False),
+        ("Shaded", True),
+        ("Lighted", True),
+        ("Ghosted", True),
+        ("Wireframe", True),
+    ]
+    assert view_control._actions["renderer.view"]["perspective"].isChecked()
+    assert view_control._actions["renderer.rendermode"]["shaded"].isChecked()
+
+    viewer.set_appearance("light")
+    assert viewer.backgroundcolor == Color.from_hex("#FAFAFA")
+    viewer.set_appearance("dark")
+    assert viewer.backgroundcolor == Color.from_hex("#10161B")
+
     assert [sidebar.widget.tabText(index) for index in range(sidebar.widget.count())] == [
         "Scene",
+        "Data",
         "Annotations",
         "System",
     ]
-    assert sidebar.widget.findChildren(QSplitter) == []
+    splitters = {splitter.objectName(): splitter for splitter in sidebar.widget.findChildren(QSplitter)}
+    assert set(splitters) == {"sceneInspectorSplitter", "annotationInspectorSplitter"}
+    assert all(splitter.count() == 2 for splitter in splitters.values())
+    assert all(not splitter.childrenCollapsible() for splitter in splitters.values())
+    sidebar.object_setting.update()
+    assert sidebar.object_setting.details_button.text() == "Details"
+    assert not sidebar.object_setting.details_button.isEnabled()
+    assert sidebar.object_setting.widget.findChild(QPlainTextEdit, "objectInfo") is None
+    assert sidebar.annotation_panel.layout_group.title() == "Spatial Layout"
+    assert sidebar.annotation_panel.layout_apply.text() == "Apply Layout"
+    assert sidebar.annotation_panel.layout_reset.text() == "Reset Layout"
+    assert isinstance(sidebar.annotation_panel.details_scroll, QScrollArea)
+    assert sidebar.annotation_panel.details_scroll.widgetResizable()
+    assert sidebar.annotation_panel.splitter.widget(1) is sidebar.annotation_panel.details_scroll
+    assert sidebar.annotation_panel.style_layout.labelForField(sidebar.annotation_panel.line_width).text() == "Dimension Line Width"
+    assert sidebar.annotation_panel.style_layout.labelForField(sidebar.annotation_panel.extension_line_width).text() == "Extension Line Width"
+    assert "u" not in sidebar.object_setting._editable_attributes(ShapeObject(item=Box(1.0)))
+    assert {"u", "v"} <= sidebar.object_setting._editable_attributes(ShapeObject(item=Sphere(1.0))).keys()
+    shape_object = ShapeObject(item=Sphere(1.0))
+    sidebar.object_setting.populate(shape_object)
+    shape_labels = [control.label.text() for control in sidebar.object_setting.children]
+    assert [label for label in shape_labels if label in {"Show wireframe", "Wireframe color", "Wireframe width"}] == [
+        "Show wireframe",
+        "Wireframe color",
+        "Wireframe width",
+    ]
+    mesh_object = viewer.scene.add(Mesh.from_vertices_and_faces([[0, 0, 0], [1, 0, 0], [0, 1, 0]], [[0, 1, 2]]))
+    sidebar.object_setting.populate(mesh_object)
+    mesh_labels = [control.label.text() for control in sidebar.object_setting.children]
+    assert [label for label in mesh_labels if label in {"Show edges", "Edgecolor", "Edgewidth"}] == ["Show edges", "Edgecolor", "Edgewidth"]
 
     sidebar.set_current_tab("Annotations")
     assert sidebar.widget.tabText(sidebar.widget.currentIndex()) == "Annotations"
@@ -192,6 +297,56 @@ def test_viewer_sidebar_separates_scene_annotation_and_system_domains():
         sidebar.focus_system_section("Other")  # type: ignore[arg-type]
     with pytest.raises(ValueError, match="Unsupported system section"):
         sidebar.focus_system_section("Units and Measurement")  # type: ignore[arg-type]
+
+
+def test_data_domain_projects_distinct_references_without_owning_selection():
+    viewer = Viewer()
+    shared = Sphere(1.0, name="Shared sphere")
+    first = viewer.scene.add(shared, name="First placement")
+    second = viewer.scene.add(shared, name="Second placement")
+    mesh = Mesh.from_vertices_and_faces([[0, 0, 0], [1, 0, 0], [0, 1, 0]], [[0, 1, 2]])
+    viewer.scene.add(mesh, name="Mesh placement")
+    note = TextAnnotation("Note", [0, 0, 0])
+    note_entry = viewer.scene.add_annotation(note, name="Annotation only")
+    viewer.ui.sidebar.set_current_tab("Data")
+    panel = viewer.ui.sidebar.data_panel
+    missing_spatial = uuid4()
+    missing_annotation = uuid4()
+    viewer.running = True
+    try:
+        viewer.scene.add_reference(missing_spatial, name="Missing shape")
+    finally:
+        viewer.running = False
+    assert panel._records[missing_spatial].item is None
+    missing_row = next(row for row in range(panel.table.rowCount()) if panel.table.item(row, 0).data(Qt.ItemDataRole.UserRole) == missing_spatial)
+    assert panel.table.item(missing_row, 2).text() == "Unresolved"
+    viewer.scene.add_annotation_reference(missing_annotation, name="Missing annotation")
+    panel.update()
+
+    viewer.state.selection.add(first)
+    records = panel._records
+
+    assert panel.table.editTriggers() == QAbstractItemView.EditTrigger.NoEditTriggers
+    assert records[shared.guid].item is viewer.scene.item_store[shared.guid] is shared
+    assert [(ref.domain, ref.guid) for ref in records[shared.guid].references] == [
+        ("Scene", first.guid),
+        ("Scene", second.guid),
+    ]
+    assert records[note.guid].item is note
+    assert [(ref.domain, ref.guid) for ref in records[note.guid].references] == [("Annotation", note_entry.guid)]
+    assert records[missing_spatial].item is None
+    assert records[missing_annotation].item is None
+
+    panel.table.selectRow(next(row for row in range(panel.table.rowCount()) if panel.table.item(row, 0).data(Qt.ItemDataRole.UserRole) == shared.guid))
+    assert panel.details_button.isEnabled()
+    assert viewer.state.selection.objects == (first,)
+    assert viewer.state.annotation_selection.objects == ()
+
+    details = DataDetailsDialog(records[mesh.guid])
+    models = [table.model() for table in details.findChildren(QTableView) if isinstance(table.model(), _ElementAttributesModel)]
+    assert models
+    index = models[0].index(0, 1)
+    assert not models[0].flags(index) & Qt.ItemFlag.ItemIsEditable
 
 
 def test_core_annotations_serialize_and_resolve_without_fallbacks():
@@ -248,17 +403,37 @@ def test_core_annotations_serialize_and_resolve_without_fallbacks():
     style = DimensionStyle(
         color=Color.red(),
         line_width=5,
+        extension_line_width=1.5,
         text_size=18,
         arrow_size=20,
         label_offset=7,
     )
     text_entry = scene.add_annotation(text, name="Origin note")
     arrow_entry = scene.add_annotation(arrow, name="Direction")
-    dimension_entry = scene.add_annotation(fixed, name="Span", style=style)
+    label_background = Color(0.1, 0.2, 0.3, 0.4)
+    layout = DistanceDimensionLayout(offset=-2.5, plane_normal=Vector(0, 0, 3))
+    dimension_entry = scene.add_annotation(
+        fixed,
+        name="Span",
+        style=style,
+        layout=layout,
+        label_background=label_background,
+        label_background_padding=4.0,
+    )
 
-    assert Scene.SCHEMA_VERSION == 3
-    assert scene.__data__["version"] == 3
+    assert json_loads(json_dumps(layout)) == layout
+    assert Scene.SCHEMA_VERSION == 6
+    assert scene.__data__["version"] == 6
     assert scene.annotations == (text_entry, arrow_entry, dimension_entry)
+    current_entry_data = dimension_entry.__data__
+    assert current_entry_data["version"] == SceneAnnotation.ENTRY_SCHEMA_VERSION == 3
+    assert current_entry_data["layout"] == layout
+    assert current_entry_data["style"].__data__["version"] == DimensionStyle.STYLE_SCHEMA_VERSION == 2
+    assert current_entry_data["style"].extension_line_width == 1.5
+    missing_current_layout = dict(current_entry_data)
+    del missing_current_layout["layout"]
+    with pytest.raises(ValueError, match="Missing scene-annotation fields: layout"):
+        SceneAnnotation.__from_data__(missing_current_layout)
     assert text_entry not in scene.objects
     assert set(scene.object_store) == {scene.root.guid, point_object.guid, line_object.guid, mesh_object.guid}
     with pytest.raises(KeyError):
@@ -268,10 +443,14 @@ def test_core_annotations_serialize_and_resolve_without_fallbacks():
 
     payload = scene.to_jsonstring()
     restored_scene = Scene.from_jsonstring(payload)
-    assert restored_scene.__data__["version"] == 3
+    assert restored_scene.__data__["version"] == 6
     assert len(restored_scene.objects) == 3
     assert [entry.name for entry in restored_scene.annotations] == ["Origin note", "Direction", "Span"]
     assert restored_scene.annotations[2].style == style
+    assert restored_scene.annotations[2].style.extension_line_width == 1.5
+    assert restored_scene.annotations[2].layout == layout
+    assert restored_scene.annotations[2].label_background == label_background
+    assert restored_scene.annotations[2].label_background_padding == 4.0
     assert isinstance(restored_scene.annotations[2], SceneAnnotation)
     assert restored_scene.item_store == {}
     with pytest.raises(SceneItemNotBoundError, match=str(text.guid)):
@@ -282,6 +461,43 @@ def test_core_annotations_serialize_and_resolve_without_fallbacks():
     assert restored_scene.annotations[1].item is arrow
     assert restored_scene.annotations[2].item is fixed
     assert json_loads(json_dumps(style)) == style
+
+    render_object = scene.annotation_render_object(dimension_entry)
+    assert isinstance(render_object, DistanceDimensionRenderObject)
+    assert render_object.style.line_width == 5.0
+    assert render_object.style.extension_line_width == 1.5
+
+    legacy_entry_data = SceneAnnotation(fixed).__data__
+    del legacy_entry_data["version"]
+    del legacy_entry_data["layout"]
+    legacy_entry = SceneAnnotation.__from_data__(legacy_entry_data)
+    legacy_scene_data = Scene().__data__
+    legacy_scene_data["version"] = 4
+    legacy_scene_data["annotations"] = [legacy_entry]
+    migrated_scene = Scene.__from_data__(legacy_scene_data)
+
+    assert migrated_scene.annotations[0].layout is None
+    migrated_scene.bind(fixed)
+    assert migrated_scene.annotations[0].layout == DistanceDimensionLayout()
+
+    schema_five_payload = json.loads(scene.to_jsonstring())
+    schema_five_payload["data"]["version"] = 5
+    for serialized_entry in schema_five_payload["data"]["annotations"]:
+        serialized_entry["data"]["version"] = 2
+    schema_five_entry = schema_five_payload["data"]["annotations"][2]["data"]
+    schema_five_style = schema_five_entry["style"]["data"]
+    del schema_five_style["version"]
+    del schema_five_style["extension_line_width"]
+    schema_five_restored = Scene.from_jsonstring(json.dumps(schema_five_payload))
+    assert schema_five_restored.annotations[2].style.line_width == 5.0
+    assert schema_five_restored.annotations[2].style.extension_line_width == 5.0
+
+    malformed_schema_six = json.loads(scene.to_jsonstring())
+    malformed_style = malformed_schema_six["data"]["annotations"][2]["data"]["style"]["data"]
+    del malformed_style["version"]
+    del malformed_style["extension_line_width"]
+    with pytest.raises(ValueError, match="version 6 requires current dimension-style payloads"):
+        Scene.from_jsonstring(json.dumps(malformed_schema_six))
 
 
 def test_viewer_dispatches_canonical_annotations_without_legacy_types():
@@ -617,7 +833,12 @@ def test_contextual_editable_scene_state_is_graphics_free_and_not_serialized():
         "surfacecolor",
     }
     assert editable_state <= sceneobject.editable_attributes().keys()
-    assert "u" not in sceneobject.editable_attributes()
+    shape_editable_state = {field.attribute for field in sceneobject.scene_state_fields()["compas.scene.ShapeObject"] if field.editable}
+    assert shape_editable_state == {"u", "v"}
+    assert shape_editable_state <= sceneobject.editable_attributes().keys()
+    geometry_state = sceneobject.__data__["extensions"]["compas.scene.GeometryObject"]
+    assert {"show_lines", "linecolor", "linewidth"} <= geometry_state.keys()
+    assert not any("wireframe" in key for key in geometry_state)
 
     def update_resolution(obj: ShapeObject, value: object) -> None:
         obj.u = int(value)

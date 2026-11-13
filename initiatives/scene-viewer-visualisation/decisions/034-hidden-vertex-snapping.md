@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed.
+Accepted; implemented, locally verified, and independently reviewed.
 
 ## Context
 
@@ -71,4 +71,27 @@ Partial ordinary vertex-display lists do not restrict measurement candidates.
 
 ## Decision
 
-Pending explicit approval.
+Approved on 2026-11-10. Viewer adds a measurement-only acquisition footprint
+for every semantic vertex of an otherwise visibly represented Mesh. Ordinary
+vertex-glyph visibility remains independent. The existing radius, same-object
+depth qualification, hidden-object exclusion, and prohibition on edge/face
+snapping remain unchanged. Additional object types require a separate
+follow-up after this implementation is stable.
+
+## Implementation note
+
+Implemented on 2026-11-10. Viewer builds a private Mesh-vertex index buffer
+for measurement acquisition and draws it only in the active measurement
+instance/depth pass. A Mesh contributes these footprints when its effective
+visibility and ordinary face, edge, or vertex representation make it visible;
+the footprints never enter normal rendering. Graph nodes and Point objects
+retain their existing acquisition paths, and no broader object type, edge, or
+face candidate was added.
+
+The full offscreen Viewer suite passes 550 tests with one structured skip for
+the unavailable native OpenGL harness. The same native regression passes in a
+separate real macOS run on OpenGL 4.1 Metal. Viewer Ruff, formatting, Pyright,
+and `git diff --check` pass, and independent review reports no remaining
+findings. The framework direct-source gate passes 15 tests with one expected
+exact-revision skip. Refreshed hosted CI, candidate-artifact verification, and
+user direct-use confirmation remain pending.

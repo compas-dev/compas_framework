@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted.
+Accepted; amended by ADR 044 on 2026-11-10.
 
 ## Context
 
@@ -40,10 +40,10 @@ durable snapshot.
 that the stored coordinate distance is already expressed in millimetres. It
 appends `mm` to the formatted value but never rescales coordinates.
 
-`precision` is a non-negative number of decimal places. The derived label uses
+`precision` is an integer from 0 through 15 inclusive. The derived label uses
 fixed-point formatting and separates a non-empty unit from the value with one
 space. A non-`None` explicit label is displayed verbatim instead of the
-derived value.
+derived value but does not relax precision validation.
 
 Tolerance remains Viewer measurement behavior governed by ADR 027; it is not
 stored on every dimension. Do not add a supported-unit registry, spelling
@@ -69,8 +69,9 @@ initial serialized semantics without reviving the removed Viewer root unit.
 ## Verification
 
 - Derive and format distances with no unit and with an explicit unit.
-- Verify zero and multiple precision values.
-- Reject negative precision and invalid unit values precisely.
+- Verify the 0 and 15 precision boundaries.
+- Reject -1, 16, and invalid unit values precisely without clamping or
+  truncation.
 - Verify an explicit label bypasses derived numeric and unit formatting.
 - Verify serialization preserves unit, precision, and label without adding a
   conversion factor or source-unit field.
@@ -94,5 +95,11 @@ it never performs implicit conversion. Durable dimensions retain their
 snapshot when Viewer preferences change, and tolerance is not duplicated on
 each dimension. The rationale is deterministic, honest formatting without an
 unowned source unit or hidden conversion.
+
+Amended on 2026-11-10 through ADR 044. Core data, Viewer configuration, and
+Viewer editors share the 0–15 inclusive precision domain. Outside values raise
+`ValueError` rather than being clamped or truncated. Existing data or
+configuration above 15 is rejected without migration or schema changes, and
+an explicit label does not bypass validation.
 
 
