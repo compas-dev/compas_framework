@@ -2,12 +2,6 @@ name: candidate-contracts
 
 on:
   pull_request:
-    branches:
-      - main
-      - c3-upgrade
-      - initiative/geometry-tessellation
-      - initiative/repository-modernisation
-      - initiative/candidate-artifact-integration
   push:
     branches:
       - initiative/candidate-artifact-integration

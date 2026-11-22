@@ -16,6 +16,14 @@ checkpoint. The matching Viewer changes remain uncommitted at `0f263f1`.
 Core is unchanged at `9f4db76`. Candidate pins still identify the previous
 published sources.
 
+The framework checkpoint `94f675ba0a46cb8bdd04846e4e3652699b9d162b` was merged with
+`c3-upgrade` at `81ec5252559ce8a902bd68c8acc5ae0a856c9dca` after
+[PR #9](https://github.com/compas-dev/compas_framework/pull/9) passed hosted CI.
+On the merged scene tree, the 10 pure tests, Ruff, Pyright, and strict MkDocs
+passed. The direct-source gate passed 16 tests with one skip for missing
+installed revision metadata. The hosted scene gate still awaits matching
+published Viewer and framework revisions.
+
 The complete Viewer suite passes 705 tests with two expected offscreen native
 OpenGL skips. The documentation-example suite passes 20 tests. Viewer Ruff and
 formatting, package Pyright with zero errors, strict Viewer and framework

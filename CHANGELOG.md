@@ -13,9 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added cross-package integration tests for continuous-geometry tessellation, triangle-processing plugin boundaries, serialization, and native geometry backends.
 * Added immutable cross-repository candidate manifests, provenance and wheel
   verification, secret-isolated native integration, and release-order checks.
+* Added a manual clean-install check for the full metapackage.
 
 ### Changed
 
+* Run ordinary CI on pull requests to any base branch and use canonical
+  checkouts for initiative work.
 * Documented the COMPAS 3 geometry package compatibility matrix, native backend prerequisites, and geometry integration test workflow.
 * Replaced legacy development extras and mutable workflows with locked PEP 735 tool groups, uv-based contributor commands, immutable actions, and Python 3.12–3.14 checks.
 * Modernized release-candidate automation to build and verify one temporary

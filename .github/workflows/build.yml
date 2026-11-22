@@ -4,7 +4,6 @@ on:
   push:
     branches: [main, initiative/candidate-artifact-integration]
   pull_request:
-    branches: [main, initiative/geometry-tessellation, initiative/repository-modernisation]
 
 permissions:
   contents: read
@@ -18,7 +17,6 @@ env:
 
 jobs:
   quality:
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'docs-only') }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -44,7 +42,7 @@ jobs:
         with:
           version: "0.12.7"
       - name: Synchronize pure development tools
-        run: uv sync --frozen --only-group dev --no-install-project
+        run: uv sync --locked --only-group dev --no-install-project
       - name: Verify runtime packages are excluded
         run: >-
           uv run --no-sync python -c

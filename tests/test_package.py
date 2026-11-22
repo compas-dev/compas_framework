@@ -1,3 +1,6 @@
+import json
+import re
+import tomllib
 from pathlib import Path
 from runpy import run_path
 
@@ -6,6 +9,15 @@ def test_version_is_available():
     namespace = run_path(str(Path(__file__).parents[1] / "src" / "compas_framework" / "__init__.py"))
 
     assert namespace["__version__"]
+
+
+def test_install_matrix_covers_declared_python_versions():
+    root = Path(__file__).resolve().parents[1]
+    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    matrix = json.loads((root / "framework-matrix.json").read_text(encoding="utf-8"))
+    classifier_prefix = "Programming Language :: Python :: 3."
+    declared = {classifier.removeprefix("Programming Language :: Python :: ") for classifier in project["classifiers"] if classifier.startswith(classifier_prefix)}
+    assert set(matrix["python"]) == declared
 
 
 def test_local_build_uses_current_working_tree(tmp_path):
@@ -59,12 +71,13 @@ def test_native_candidate_integration_runs_from_the_protected_initiative_branch(
 
 def test_scene_candidate_integration_pins_exact_source_revisions():
     source = Path(__file__).parents[1]
-    core_requirements = (source / ".github" / "scene-candidates" / "core-requirements.txt").read_text()
-    viewer_requirements = (source / ".github" / "scene-candidates" / "viewer-requirements.txt").read_text()
     workflow = (source / ".github" / "workflows" / "scene-candidate-integration.yml").read_text()
 
-    assert "compas.git@a4cc38a4f54d147f1ff45e19673b32f089576e2f" in core_requirements
-    assert "compas_viewer.git@a4fe52e51f7254c13df9659f9a61dc22ebbc1daa" in viewer_requirements
+    for filename, distribution in (("core-requirements.txt", "compas"), ("viewer-requirements.txt", "compas_viewer")):
+        requirement = (source / ".github" / "scene-candidates" / filename).read_text().strip()
+        prefix = f"{distribution} @ git+https://github.com/compas-dev/{distribution}.git@"
+        assert requirement.startswith(prefix)
+        assert re.fullmatch(r"[0-9a-f]{40}", requirement.removeprefix(prefix))
     assert "branches: [c3-upgrade]" in workflow
     assert "core-requirements.txt" in workflow
     assert "viewer-requirements.txt" in workflow

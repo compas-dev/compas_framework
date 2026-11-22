@@ -2,16 +2,6 @@ name: docs
 
 on:
   pull_request:
-    branches: [main, initiative/geometry-tessellation, initiative/repository-modernisation]
-    paths:
-      - "docs/**"
-      - "mkdocs.yml"
-      - "README.md"
-      - "CHANGELOG.md"
-      - "LICENSE"
-      - "pyproject.toml"
-      - "uv.lock"
-      - ".github/workflows/docs.yml"
   push:
     branches: [main, initiative/candidate-artifact-integration]
 
