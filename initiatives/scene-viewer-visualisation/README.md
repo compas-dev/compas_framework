@@ -3,10 +3,12 @@
 This initiative aligns backend-neutral scene infrastructure with Viewer
 rendering, interaction, state, and UI composition.
 
-Current phase: **Accepted implementation through ADR 048 is complete, locally
-verified, and independently reviewed. Native ADR 048/scroll/layout/style
-confirmation, hosted verification, and candidate artifacts remain pending.
-ADR 049 is Proposed and not implemented.**
+Current phase: **Accepted implementation through ADR 052 is complete and
+locally verified in the uncommitted working trees. The complete Viewer suite,
+package quality gates, executable documentation, strict documentation builds,
+and framework direct-source integration pass. Native ADR 048/scroll/layout/style
+and ADR 049 modeless-focus and high-DPI confirmation, refreshed hosted
+verification, and candidate artifacts remain pending.**
 
 - [Objective](objective.md)
 - [Inventory](inventory.md)
@@ -49,6 +51,27 @@ annotation label backgrounds, contextual deletion, and moving the existing
 geometry Add hierarchy under Scene. ADR 036 accepts the programmatic-first
 screen-text overlay. ADRs 037–039 are implemented, locally verified, and
 independently reviewed.
+Accepted ADR 049 supersedes System's placement as a peer content domain. The
+built-in sidebar will contain exactly Scene, Data, and Annotations, while one
+reusable modeless **Viewer Settings** window owns the existing Camera, Display,
+and Grid and Units sections. The user approved the clean composition and API
+migration on 2026-11-14. Implementation, local verification, framework
+direct-source integration, and independent re-review pass. Native macOS direct
+use and refreshed hosted verification remain pending.
+Typed keyword-only `sidebar_items` and `settings_items` inputs now provide the
+setup-time composition boundary on the first process-local Viewer construction.
+The Viewer shallow-copies supplied definitions before UI construction; later
+constructor calls and post-construction mutation do not recompose the singleton
+interface. The uncommitted end-to-end tutorial and executable Viewer Settings
+and Object/Data inspection examples cover this lifecycle and the
+Scene/Data/Annotations ownership split under Accepted ADR 052. Accepted ADRs
+050–051 implement the independent read-only Data Details and Object Details
+expansions; ADR 052 remains documentation-only. The combined Viewer tree passes
+705 tests with two expected offscreen OpenGL skips, package Ruff and formatting,
+Pyright with zero errors, strict MkDocs, and the framework direct-source gate.
+A permanent
+regression now covers later public singleton constructor calls after a
+low-severity review finding; clean follow-up review reports no findings.
 Accepted ADRs 040–042 add synchronized toolbar controls, a coherent Grid and
 Units System section with consistent field alignment, and transient
 selected-object area and volume inspection. ADRs 033–035 are implemented,

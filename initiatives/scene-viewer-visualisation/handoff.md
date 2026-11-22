@@ -1,34 +1,63 @@
 # Scene, Viewer, and Visualisation Handoff
 
-Last updated: 2026-11-13
+Last updated: 2026-11-22
 
 ## Resume here
 
-Current phase: `Local ADR 048 checkpoint committed; ADR 049 Proposed`
+Current phase:
+`ADRs 049–052 implemented and locally verified; external verification pending`
 
-The user resumed the initiative on 2026-11-13 and requested that the currently
-approved work be wrapped and committed to the corresponding initiative
-branches. Accepted implementation through ADR 048 is now committed locally at
-the exact revisions below. Core passes 2,306 tests; Viewer passes 672 tests
-with two expected offscreen native-OpenGL skips; the framework direct-source
-gate passes 16 tests with one expected exact-VCS-metadata skip. Independent
-review passes after correcting Data refresh on removal, clearing, and batched
-deletion plus the Scene-name tree-only refresh path.
+The user approved ADRs 049–052 on 2026-11-14. Their Viewer Settings,
+read-only Data Details, read-only Object Details, tutorial, examples,
+documentation coverage, docstring, and typing work are implemented in the
+Viewer working tree with matching framework integration assertions. The
+framework assertions and decision records are saved in the local scene
+checkpoint. The matching Viewer changes remain uncommitted at `0f263f1`.
+Core is unchanged at `9f4db76`. Candidate pins still identify the previous
+published sources.
 
-Native ADR 048, scroll, extension-style, displaced-dimension, and Spatial
-Layout confirmation remains pending. The Viewer launched for a native ADR 048
-check on 2026-11-13, but macOS denied the automation service screen-capture
-permission, so no native pass is claimed. Hosted CI has not been refreshed
-because the local commits were not pushed. Candidate artifacts remain unrun
-and are required only if admission or release needs that compatibility claim.
-Do not treat the initiative as fully verified or publish without explicit
-approval.
+The complete Viewer suite passes 705 tests with two expected offscreen native
+OpenGL skips. The documentation-example suite passes 20 tests. Viewer Ruff and
+formatting, package Pyright with zero errors, strict Viewer and framework
+MkDocs, and `git diff --check` pass. The framework direct-source gate passes 16
+tests with one expected exact-revision skip. Independent review passes 87
+focused Viewer/documentation tests and two focused integration tests; it finds
+the ADR 050–051 runtime clean. Its documentation serialization, scope-wording,
+changelog, and initiative-status findings were corrected and revalidated.
 
-The user also identified that System is a settings surface rather than a peer
-session-content domain. Proposed ADR 049 recommends one modeless per-Viewer
-**Viewer Settings** window for Camera, Display, and Grid and Units, leaving
-Scene, Data, and Annotations in the sidebar. No ADR 049 runtime implementation
-is authorized before explicit approval.
+Native ADR 048, scroll, extension-style, displaced-dimension, Spatial Layout,
+and ADR 049 modeless focus, high-DPI, and direct-use confirmation remain
+pending. Hosted CI is stale until the working trees are committed and pushed.
+Candidate artifacts remain unrun and are required only if admission or release
+needs that compatibility claim. Do not treat the initiative as fully verified
+or publish without explicit approval.
+
+ADR 049 leaves Scene, Data, and Annotations as the three content domains and
+moves Camera, Display, and Grid and Units to one reusable, initially hidden,
+modeless **Viewer Settings** window. It uses `viewer.settings_items`,
+`default_settings_items()`, and `viewer.ui.settings.show(section)` as the clean
+composition and navigation path, with no System-tab aliases or persisted
+window state. Settings-window Escape hides only that window.
+
+Typed keyword-only `sidebar_items` and `settings_items` inputs now make the
+composition boundary usable during the first process-local `Viewer(...)`
+construction. Supplied iterables are shallow-copied before UI construction;
+later constructor calls return the singleton and ignore new inputs, and list
+mutation does not live-recompose the UI. The end-to-end Viewer tutorial and
+executable Viewer Settings example document and verify this lifecycle.
+
+ADR 050 combines safe parameters, general attributes for every verified Core
+`Datastructure`, and existing Mesh/Graph component tables in one ordered,
+read-only Data Details surface. ADR 051 expands read-only Object Details with
+identity, general scene state, declared type-specific state, and
+represented-item parameters while retaining Object Settings as the sole
+editing surface.
+
+ADR 052 implements one executable end-to-end tutorial, focused category-level
+examples, MkDocs-compatible NumPy docstrings and Python 3.12 annotations,
+Ruff/Pyright checks for `docs/examples/`, representative headless contracts,
+strict MkDocs/link/snippet validation, and separately reported native or
+optional evidence. It authorizes no runtime change.
 
 The scene foundation, contextual settings, Viewer configuration and tables,
 selection, and reversible transformations governed by Accepted ADRs 001–020
@@ -303,42 +332,48 @@ bound and unresolved items and opens modal read-only details, including lazy
 Mesh/Graph attribute tables. It does not own, persist, load, resolve, edit, or
 delete data. The user approved this narrow first step on 2026-11-11 and
 implementation, local verification, and independent review pass. The final
-sidebar order is Scene, Data, Annotations, System. Review confirms one immediate
-Data refresh and no renderer refresh for direct object/reference additions,
-selection preservation while the GUID remains referenced, safe shared
-inspection without arbitrary `__data__`, and isolation of individual attribute
-exceptions. The active Scene is the initial inventory source; a future Session
-ADR may replace or extend it with unattached or multi-scene data without making
-Viewer the owner.
+ADR 048's checkpoint sidebar order was Scene, Data, Annotations, System; ADR
+049 now leaves Scene, Data, and Annotations in the content sidebar. Review
+confirms one immediate Data refresh and no renderer refresh for direct
+object/reference additions, selection preservation while the GUID remains
+referenced, safe shared inspection without arbitrary `__data__`, and isolation
+of individual attribute exceptions. The active Scene is the initial inventory
+source; a future Session ADR may replace or extend it with unattached or
+multi-scene data without making Viewer the owner.
 
 ## Exact candidates
 
-| Repository | Branch | Verified revision | Pull request | Status |
+| Repository | Branch | Working-tree base HEAD | Pull request | Status |
 |---|---|---|---|---|
-| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `fd09874eb92157e48d0c5e960078d80d58660115` | [7](https://github.com/compas-dev/compas_framework/pull/7) | Local contracts and direct-source integration passed; commit not pushed |
-| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `9f4db763d2de0dd9bcddabd29e63bb047ac20385` | [1540](https://github.com/compas-dev/compas/pull/1540) | Local verification and independent review passed; commit not pushed |
-| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `0f263f15899b85633d5de038bec59ed8504b1142` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | Local verification and independent review passed; commit not pushed |
+| `compas-dev/compas_framework` | `initiative/scene-viewer-visualisation` | `7575d30770447d2e16349e69e7215f02ed63f3a0` | [7](https://github.com/compas-dev/compas_framework/pull/7) | This checkpoint records the framework changes on top of this base; PR 7 still points to the earlier published revision |
+| `compas-dev/compas` | `initiative/scene-viewer-visualisation` | `9f4db763d2de0dd9bcddabd29e63bb047ac20385` | [1540](https://github.com/compas-dev/compas/pull/1540) | Unchanged for ADRs 049–052 |
+| `compas-dev/compas_viewer` | `initiative/scene-viewer-visualisation` | `0f263f15899b85633d5de038bec59ed8504b1142` | [233](https://github.com/compas-dev/compas_viewer/pull/233) | ADR 049–052 implementation and local verification pass; no checkpoint commit exists |
 | `BlockResearchGroup/compas_model` | `c3-upgrade` | `83df4167f7ba1539ae205a837e0238afecc0a36b` | None | Compatibility consumer only; no source changes authorized |
+
+Use the recorded Viewer base to identify its uncommitted working tree. Update
+the requirement pins after the matching package commits are published and
+their provenance can be verified.
 
 ## Verification evidence
 
 | Layer | Status | Evidence |
 |---|---|---|
-| Local package checks | Passed | Core passes 2,306 tests. Viewer passes 672 tests with two expected offscreen native-OpenGL skips. Focused final review passes 74 Viewer tests. Core and Viewer Ruff and formatting, Viewer Pyright, focused changed-source Core Pyright, strict documentation builds, and `git diff --check` pass. Full Core Pyright still reports only the two unrelated existing documentation-example errors for the removed `Tag` import and a missing VolMesh argument. |
-| Native interactive probes | ADR 047 passed; ADR 048 pending | An exact native macOS high-resolution Torus probe passed with valid OpenGL. Direct use on 2026-11-11 confirms responsive **Show wireframe** off/on toggling at Torus U resolution 64, the grouped controls, Camera population, splitters, palette, and dimension backgrounds. The 2026-11-13 ADR 048 launch could not be inspected because macOS denied the automation service screen-capture permission. Data, scroll, extension-style, displaced-dimension, and Spatial Layout confirmation remains pending. |
-| Package CI | Stale | Core PR 1540 and Viewer PR 233 are green only for earlier published revisions. The local candidate commits above have not been pushed, so hosted package CI has not run for them. |
-| Framework integration | Local passed; hosted stale | The direct-source gate passes 16 tests with one expected exact-VCS-metadata skip; its Pyright check has zero errors. Framework PR 7 is green only for an earlier published revision. |
+| Local package checks | Passed | Core is unchanged. The ADR 049–052 Viewer working tree passes 705 tests with two expected offscreen native-OpenGL skips. The documentation-example suite passes 20 tests, including Viewer Settings composition, Object/Data inspection, serialization with durable annotation identity/references, measurements, and overlays. Viewer Ruff and formatting, package Pyright with zero errors, strict Viewer and framework MkDocs with only the informational Material end-of-life notice, and `git diff --check` pass. Independent review passes 87 focused Viewer/documentation tests and finds the ADR 050–051 runtime clean; its documentation findings were corrected and revalidated. |
+| Native interactive probes | ADR 047 passed; ADRs 048–051 pending | An exact native macOS high-resolution Torus probe passed with valid OpenGL. Direct use on 2026-11-11 confirms responsive **Show wireframe** off/on toggling at Torus U resolution 64, the grouped controls, Camera population, splitters, palette, and dimension backgrounds. Data/Object Details presentation, Data, scroll, extension-style, displaced-dimension, Spatial Layout, and ADR 049 modeless focus, high-DPI, and direct-use confirmation remain pending. |
+| Package CI | Stale | Core PR 1540 and Viewer PR 233 are green only for earlier published revisions. ADRs 049–052 remain uncommitted, so hosted package CI has not run for this tree. |
+| Framework integration | Local passed; hosted stale | The ADR 049–052 direct-source gate passes 16 tests with one expected exact-revision skip; two focused ADR 050–051 integration tests also pass under independent review. Framework PR 7 is green only for an earlier published revision. |
 | Candidate artifacts | Not run; conditional | No compatibility claim is made for independently built candidate artifacts. Run this layer before artifact admission or release if that claim is required. |
 
 ## Next tasks
 
-1. Approve, amend, or reject Proposed ADR 049's modeless Viewer Settings
-   surface before any runtime implementation.
-2. Obtain native direct-use confirmation of ADR 048's Data tab and the pending
-   scroll, extension-style, displaced-dimension, and Spatial Layout paths.
-3. With explicit publish approval, push the three local candidate commits and
-   refresh Core, Viewer, and framework hosted CI; run candidate artifacts only
-   if admission or release requires that layer.
+1. Obtain native macOS confirmation of ADR 049 modeless focus, high-DPI, and
+   direct-use behavior together with ADR 048's Data tab and the pending scroll,
+   extension-style, displaced-dimension, and Spatial Layout paths.
+2. Commit the verified Viewer working tree. With explicit push approval, publish
+   the matching branch commits and refresh hosted CI. Run candidate
+   artifacts only if admission or release requires that layer.
+3. Record the resulting exact commit SHAs and hosted workflow runs in this
+   handoff before requesting merge or publication approval.
 
 ADR 044 has no remaining architecture approval gate.
 
@@ -365,9 +400,16 @@ gate.
   verification remain pending. Session aggregation, unattached data, and
   multiple-scene inventory require a separate ADR and approval; Viewer remains
   non-owning.
-- ADR 049 is Proposed. Its modeless per-Viewer settings window, three-domain
-  content sidebar, clean composition/API migration, and verification contract
-  require explicit approval before implementation.
+- ADR 049 is Accepted and implemented. Its modeless per-Viewer settings window,
+  three-domain content sidebar, clean composition/API migration, local package
+  verification, direct-source integration, and independent re-review pass.
+  Native macOS modeless focus, high-DPI, direct-use, hosted CI, and the final
+  committed candidate revision remain pending.
+- ADRs 050–052 are Accepted, implemented, and locally verified. ADRs 050–051
+  add read-only Data and Scene Object inspection without adding an editing
+  path. ADR 052's executable documentation/example contract authorizes no
+  runtime change. Native/optional evidence, hosted CI, and candidate artifacts
+  remain separately pending.
 - ADR 037's Annotations-details amendment, ADR 040's toolbar/viewport
   amendment, and ADR 045's `#D8DDE2` Viewer background are Accepted.
 - ADR 037's default-background amendment, ADR 040's grouped-control amendment,

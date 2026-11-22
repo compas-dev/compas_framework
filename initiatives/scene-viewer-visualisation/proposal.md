@@ -681,6 +681,10 @@ speculative replacement model.
 46. [ADR 046 — Viewer scheme-aware content palette](decisions/046-viewer-content-palette.md)
 47. [ADR 047 — Editable parametric shape resolution](decisions/047-editable-parametric-shape-resolution.md)
 48. [ADR 048 — Referenced Data domain](decisions/048-referenced-data-domain.md)
+49. [ADR 049 — Viewer Settings surface](decisions/049-viewer-settings-surface.md)
+50. [ADR 050 — Read-only Data item inspection](decisions/050-read-only-data-item-inspection.md)
+51. [ADR 051 — Scene Object Details and settings boundary](decisions/051-scene-object-details-boundary.md)
+52. [ADR 052 — Executable Viewer documentation and example coverage](decisions/052-executable-viewer-documentation-and-example-coverage.md)
 
 ADRs 013–016 are Accepted. ADRs 008–009 and 011–012 are superseded as recorded
 in the decision index; ADR 010 remains Accepted with amended terminology.
@@ -689,6 +693,12 @@ superseded `FormField` implementation was replaced.
 ADRs 017–020 are Accepted and were implemented in order ADR 019, ADR 020, ADR
 017, then ADR 018 so configuration and sidebar ownership were established
 first. Local verification, independent review, and hosted verification passed.
+ADRs 050–052 were accepted on 2026-11-14 and remain independent. ADR 050
+completes the existing read-only Data Details surface without changing Data
+ownership. ADR 051 completes the read-only Scene Object Details snapshot while
+retaining Object Settings as the sole editing surface. ADR 052 adopts an
+executable Viewer documentation and category-level example contract without
+changing runtime behavior.
 ADR 003 is fully verified. ADR 004 is implemented, locally verified, and
 independently approved; refreshed hosted core, Viewer, and framework
 verification passed.
@@ -936,26 +946,197 @@ safe shared inspection isolates attribute failures without reading arbitrary
 ADR may replace or extend it with unattached or multi-scene data, but Viewer
 must remain a read-only consumer rather than the aggregate owner.
 
-## Proposed Viewer Settings surface
+## Accepted Viewer Settings surface
 
 Direct use identifies a category mismatch in the resulting four-tab sidebar:
 Scene, Data, and Annotations are content domains, while System is a collection
-of Viewer settings. Proposed ADR 049 would leave exactly the three content
-domains in the right sidebar and move the existing Camera, Display, and Grid
-and Units sections into one per-Viewer modeless **Viewer Settings** window.
+of Viewer settings. Accepted ADR 049 leaves exactly the three content domains
+in the right sidebar and moves the existing Camera, Display, and Grid and Units
+sections into one per-Viewer modeless **Viewer Settings** window.
 
-The proposed window is opened from **View → Viewer Settings…**, refreshed and
+The window is opened from **View → Viewer Settings…**, refreshed and
 raised on reuse, hidden rather than destroyed on close, and owned by the main
 Viewer lifecycle. Its visibility, geometry, and focused section remain
-transient. Window-level Escape hides only Viewer Settings; it does not cancel
-measurement or clear content selection. Existing renderer, measurement, state,
-and configuration paths stay unchanged.
+transient, as does its scroll position. Window-level Escape hides only Viewer
+Settings; it does not cancel measurement or clear content selection. Existing
+renderer, measurement, state, and configuration paths stay unchanged.
 
-The proposal replaces the System sidebar identifier and
+The accepted decision replaces the System sidebar identifier and
 `focus_system_section` with one settings-window API and moves the three
 components from `viewer.sidebar_items` to `viewer.settings_items`, without
-aliases or overlapping supported paths. A modal dialog would block live
+aliases or overlapping supported paths. The public navigation boundary is
+`viewer.ui.settings.show(section)`, and `default_settings_items()` provides the
+built-in composition. The implemented setup path accepts typed keyword-only
+`sidebar_items` and `settings_items` iterables on the first `Viewer(...)`
+construction, shallow-copies them before UI construction, and uses built-in
+definitions when omitted. Because Viewer is a process-local singleton, later
+constructor calls ignore new composition inputs, and post-construction list
+mutation does not live-recompose the interface. No reset or reload framework
+is added. A modal dialog would block live
 viewport tuning; a dock would introduce layout and persistence decisions; and
 a popover or drawer would be too small and focus-sensitive for the existing
-forms. ADR 049 remains Proposed and no implementation is authorized before
-explicit approval.
+forms. The user approved ADR 049 on 2026-11-14. Implementation and verification
+now pass locally, including independent re-review and the framework
+direct-source gate. The Viewer tutorial and executable Viewer Settings example
+cover the setup-time composition and navigation contract. A permanent public
+singleton regression now verifies that later `Viewer(...)` composition inputs
+are ignored; clean follow-up review reports no findings. Native macOS modeless
+focus, high-DPI, and direct-use confirmation
+plus refreshed hosted CI remain pending.
+
+## Accepted Scene and Data inspection completion
+
+The current Scene and Data surfaces expose complementary but incomplete views.
+Object Settings edits the normalized declared Viewer-context attributes, while
+Object Details shows only a small descriptive snapshot. Data Details shows safe
+parameters for general Data, but substitutes Mesh/Graph element tables for
+those parameters and does not expose general `Datastructure.attributes`.
+
+The recommended correction is two independent read-only decisions.
+
+### Data Details interface
+
+Accepted ADR 050 preserves ADR 048's identity/reference header and gives every
+bound item one ordered tab surface:
+
+1. **Parameters** — safe available public constructor parameters with no
+   serialized fallback or arbitrary `__data__` traversal;
+2. **General Attributes** — the ordered public `attributes` mapping for verified
+   Core `Datastructure` values only; and
+3. the existing lazy read-only Mesh vertex/edge/face or Graph node/edge tabs.
+
+Empty Parameters or General Attributes tables remain visible. Component tabs
+retain ADR 017's declared-column, effective-value, lazy-read, and sparse-omission
+semantics. Unresolved items remain metadata-only. Each value-formatting failure
+is isolated to its row or cell. Parameter and General Attributes tables use
+**Parameter/Attribute** plus **Value** columns and the existing `str(value)` or
+`<unavailable: ExceptionType>` convention. Component tables retain their
+existing key, scalar, and Boolean presentation.
+
+The Data projection remains non-owning and read-only. No edit, bind, resolve,
+rename, delete, selection-coupling, serialization, renderer-refresh, or generic
+inspection registry is added. VolMesh, CellNetwork, external Data types, and
+undeclared sparse attributes remain unsupported until concrete evidence
+justifies a later decision.
+
+### Scene Object Details interface
+
+Accepted ADR 051 preserves Object Settings as the only editing surface and
+expands the one-object modal Details snapshot into four ordered sections:
+
+1. **Identity** — name, concrete SceneObject type and GUID, represented-item
+   type and GUID, and binding status;
+2. **General Scene State** — visibility, base color, opacity, and local
+   transformation;
+3. **Type-Specific Scene State** — every editable or noneditable declaration
+   from `scene_state_fields()`, in namespace and declaration order; and
+4. **Represented Item Parameters** — existing safe parameters when bound.
+
+Type-specific rows use stable `namespace.field` identifiers and read values
+through each declaration's `attribute`. The snapshot does not inspect unknown
+extension payloads, `__dict__`, arbitrary properties, or adapter caches. One
+read/format failure is isolated without hiding other state. Unresolved items
+still show complete SceneObject state, and the existing multiple-selection
+count/type/name snapshot remains unchanged.
+
+The existing scrolling text snapshot remains the presentation surface. Each
+section has its exact heading; identity and base-state rows use the labels in
+ADR 051, declared state uses `namespace.field: repr(value)`, and parameter rows
+use `name: repr(value)`. A failed value is shown as
+`<unavailable: ExceptionType>`.
+
+Object Settings continues to resolve ADRs 015–016's normalized editability
+mapping, own editor/validation behavior, and select refresh after atomic
+mutation. Object Details adds no second setter or refresh path.
+
+### Alternatives and tradeoffs
+
+Editable Data is not recommended. A deduplicated item may have many referrers,
+so editing requires new decisions for validation, atomicity, referrer-wide
+refresh, defaults/reset, and undo. It conflicts with ADR 048's accepted
+read-only boundary and needs a separate future ADR.
+
+A generic Data or Scene-details registry is also not recommended. Existing
+public Datastructure and SceneStateField contracts satisfy the demonstrated
+Mesh/Graph and SceneObject needs. A registry would introduce extension and
+presentation metadata without evidence for additional producers.
+
+Keeping the current surfaces avoids implementation work but fails the stated
+need to access general and component-specific data together and to inspect
+noneditable SceneObject state.
+
+### Affected packages and compatibility
+
+Only `compas_viewer` runtime, tests, examples, and documentation change.
+`compas` already provides the required public contracts; no Core source,
+schema, serialization, or migration change is proposed. `compas_framework`
+adds direct-source integration assertions for the resulting read-only surfaces.
+
+Both changes are additive inside existing modal snapshots. Existing Data and
+Scene selection, editing, refresh, identity, and configuration behavior remain
+unchanged. ADRs 050 and 051 may be implemented and verified independently.
+
+### Required tests and examples
+
+- Verify Parameters and General Attributes order, emptiness, safe formatting,
+  and failure isolation.
+- Verify Mesh/Graph component tabs appear alongside general sections while
+  retaining lazy declared-column behavior and sparse omission.
+- Verify unresolved and shared Data identity/reference behavior and prove
+  Details causes no mutation or renderer/UI refresh.
+- Verify exact Object Details identity/base-state fields and namespace/field
+  declaration order across representative SceneObject types.
+- Verify unresolved-item, read/format failure, multiple-selection, and
+  no-mutation/no-refresh behavior.
+- Verify Object Settings remains exactly the normalized editable mapping and
+  the only editing surface.
+- Add one focused example with Mesh general attributes, declared defaults,
+  local component overrides, and shared Scene references; extend the Viewer
+  tutorial and representative built-in examples to document the distinctions
+  among Object Settings, Object Details, Data Details, opt-in editable Scene
+  Attributes, and Viewer Settings.
+
+The user accepted ADRs 050 and 051 on 2026-11-14. Their uncommitted Viewer
+implementation, focused and full package tests, typing and formatting gates,
+strict documentation, direct-source framework integration, and independent
+runtime review pass. Native interaction/visual evidence, refreshed hosted CI,
+and candidate artifacts remain separately pending.
+
+## Accepted executable Viewer documentation contract
+
+Accepted ADR 052 separates documentation quality from the runtime ownership in
+ADRs 049–051. It recommends one maintained end-to-end tutorial backed by one
+authoritative runnable script, plus focused workflow/category examples rather
+than ad-hoc prose, a prose-only tutorial, or an exhaustive example for every
+public symbol. Public and touched Python APIs use MkDocs-compatible NumPy
+docstrings and Python 3.12 annotations without changing runtime semantics.
+
+The exact coverage matrix in ADR 052 spans Scene/content domains and inspection
+boundaries, Viewer Settings/configuration, selection/transforms/refresh,
+measurements/annotations, serialization, overlays, dynamic examples, and
+optional geometry backends. Python under `docs/examples/` is checked by Ruff
+and Pyright. The canonical tutorial and representative workflows receive
+headless smoke or contract coverage; strict MkDocs, link/snippet validation,
+focused doctests where applicable, and diff checks complete the automated
+documentation gate. Native rendering, visual layout, focus, scrolling,
+keyboard behavior, and high-DPI checks remain separately reported evidence.
+Optional backend examples must name their dependency and must not convert an
+unavailable runtime into a claimed pass.
+
+Documentation may describe only implemented and verified behavior. Runtime
+gaps found while documenting a workflow return to the ADR that owns the
+contract; they are not fixed speculatively under ADR 052. The uncommitted
+end-to-end tutorial, Viewer Settings and Object/Data inspection examples,
+coverage matrix, and affected docstring/type work now implement the accepted
+documentation contract and follow the verified disposition of ADRs 050 and
+051.
+
+Only `compas_viewer` documentation-facing source, examples, documentation
+tests, and package documentation configuration are in scope. ADR 052 changes
+no runtime API, behavior, schema, serialization, ownership, or migration
+contract. The user accepted ADR 052 on 2026-11-14. The documentation-example
+suite passes 20 tests; authoritative examples pass Ruff, formatting, and
+Python 3.12 Pyright; strict MkDocs and `git diff --check` pass. Independent
+review findings on annotation serialization coverage and scope wording were
+corrected and revalidated. Native and optional-backend evidence remains
+separately pending.

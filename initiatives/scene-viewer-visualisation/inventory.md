@@ -395,3 +395,47 @@ offscreen OpenGL skips and 16 framework direct-source tests with one expected
 exact-VCS skip. Ruff, formatting, Pyright, strict MkDocs, diff checks, and
 independent review pass. Native user direct use, hosted CI, and
 candidate-artifact verification remain pending.
+
+## 2026-11-14 Scene and Data inspection findings
+
+The accepted Scene and Data surfaces expose different partial views of the
+same referenced content.
+
+`ObjectSetting` is the editing surface for the normalized attributes governed
+by ADRs 015–016. It includes general editable values such as name and opacity,
+Viewer-context contributions, and applicable type-specific durable state such
+as Mesh display fields or Shape/Surface resolution. It intentionally excludes
+noneditable state. Its modal Object Details snapshot currently shows name,
+represented-item type, visibility, and safe represented-item parameters for
+one selection; it does not show SceneObject identity, item identity, base
+presentation, transformation, or declared noneditable type-specific scene
+state. Multiple-selection Details shows only count, represented types, and
+names.
+
+ADR 048's Data Details dialog shows identity, binding status, and all Scene or
+Annotation references. For a bound general `Data` value it shows safe public
+constructor parameters without reading arbitrary `__data__`. For Mesh and
+Graph it currently shows the accepted lazy read-only element-domain tables
+*instead of* the parameter table. It therefore does not provide one combined
+view of parameters and component attributes.
+
+Every verified Core `Datastructure` owns a public ordered `attributes` mapping
+for general attributes. Mesh and Graph additionally expose the declared
+default-domain mappings and singular APIs already used by ADR 017's lazy
+vertex/edge/face or node/edge tables. Data Details does not currently show the
+general `Datastructure.attributes` mapping. General attributes supplied through
+constructor `**kwargs` are intentionally not recovered by constructor-parameter
+inspection.
+
+The existing component-table contract remains deliberately narrow: only Mesh
+and Graph are supported, only declared default-attribute columns are shown,
+effective values are read lazily, and sparse undeclared local attributes are
+omitted. VolMesh, CellNetwork, arbitrary `Data` subclasses, and a generic
+inspection registry have no accepted component-domain contract.
+
+Data is a GUID-deduplicated, non-owning projection. A shared item may have many
+spatial and annotation referrers, while an unresolved row has no bound value to
+inspect. Editing from Data would therefore require new ownership, validation,
+atomicity, refresh-all-referrers, default/reset, and undo decisions that ADR
+048 explicitly excludes. Read-only inspection can be expanded without any
+Core API, serialization, schema, selection, or renderer-refresh change.

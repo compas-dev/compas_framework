@@ -61,14 +61,18 @@ from compas_viewer.snapping import SnapQuery
 from compas_viewer.snapping import SnapResult
 from compas_viewer.snapping import query_snaps
 from compas_viewer.uidefinitions import default_menu_items
+from compas_viewer.uidefinitions import default_settings_items
 from compas_viewer.uidefinitions import default_sidebar_items
 from compas_viewer.uidefinitions import default_toolbar_items
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QAbstractItemView
+from PySide6.QtWidgets import QApplication
 from PySide6.QtWidgets import QPlainTextEdit
 from PySide6.QtWidgets import QScrollArea
 from PySide6.QtWidgets import QSplitter
 from PySide6.QtWidgets import QTableView
+from PySide6.QtWidgets import QTableWidget
+from PySide6.QtWidgets import QTabWidget
 from PySide6.QtWidgets import QToolButton
 
 CORE_COMMIT = "9f4db763d2de0dd9bcddabd29e63bb047ac20385"
@@ -102,14 +106,19 @@ from compas.plugins import PluginManager
 manager = PluginManager()
 manager.load_plugins()
 from compas_viewer.config import Config
-from compas_viewer.uidefinitions import default_sidebar_items, default_toolbar_items
+from compas_viewer.uidefinitions import default_settings_items, default_sidebar_items, default_toolbar_items
 
 assert Config().schema_version == 4
 assert not any(item.get("type") == "DatastructureAttributes" for item in default_sidebar_items())
 assert any(item.get("type") == "AnnotationPanel" for item in default_sidebar_items())
 assert any(item.get("type") == "DataPanel" for item in default_sidebar_items())
-assert any(item.get("type") == "GridUnitSetting" for item in default_sidebar_items())
+assert not any(item.get("type") == "GridUnitSetting" for item in default_sidebar_items())
 assert not any(item.get("type") == "MeasurementSetting" for item in default_sidebar_items())
+assert [item.get("type") for item in default_settings_items()] == [
+    "CameraSetting",
+    "DisplaySetting",
+    "GridUnitSetting",
+]
 toolbar_items = default_toolbar_items()
 assert [item.get("type") for item in toolbar_items] == ["button", "button", "button", "menu_button"]
 assert [item.get("title") for item in toolbar_items] == [
@@ -174,6 +183,8 @@ def test_viewer_configuration_and_sidebar_contracts():
         "DataPanel",
         "AnnotationPanel",
         "ObjectSetting",
+    ]
+    assert [item["type"] for item in default_settings_items()] == [
         "CameraSetting",
         "DisplaySetting",
         "GridUnitSetting",
@@ -205,6 +216,10 @@ def test_viewer_configuration_and_sidebar_contracts():
     ]
     menus = default_menu_items()
     assert [menu["title"] for menu in menus] == ["View", "Edit", "Select", "Measure", "Scene", "Help"]
+    view_menu = next(menu for menu in menus if menu["title"] == "View")
+    viewer_settings_items = [item for item in view_menu["items"] if item.get("title") == "Viewer Settings…"]
+    assert viewer_settings_items == [{"title": "Viewer Settings…", "command": "viewer.show_viewer_settings"}]
+    assert {"viewer.show_viewer_settings", "viewer.camera_settings"} <= builtin_commands().keys()
     scene_menu = next(menu for menu in menus if menu["title"] == "Scene")
     add_menu = next(item for item in scene_menu["items"] if item.get("title") == "Add")
     assert [category["title"] for category in add_menu["items"]] == ["Primitives", "Curves", "Surfaces", "Shapes"]
@@ -218,9 +233,10 @@ def test_viewer_configuration_and_sidebar_contracts():
         Config.from_dict({"schema_version": 3, "window": {"width": 0}})
 
 
-def test_viewer_sidebar_separates_scene_annotation_and_system_domains():
+def test_viewer_sidebar_separates_content_and_settings_domains(monkeypatch):
     viewer = Viewer()
     sidebar = viewer.ui.sidebar
+    settings = viewer.ui.settings
 
     view_control = viewer.ui.viewport._view_control
     view_button = view_control.findChild(QToolButton, "viewport_view_menu_button")
@@ -250,8 +266,13 @@ def test_viewer_sidebar_separates_scene_annotation_and_system_domains():
         "Scene",
         "Data",
         "Annotations",
-        "System",
     ]
+    assert not hasattr(sidebar, "focus_system_section")
+    assert list(settings.sections) == ["Camera", "Display", "Grid and Units"]
+    assert settings.widget.parent() is viewer.ui.window.widget
+    assert settings.widget.isModal() is False
+    assert settings.widget.windowModality() == Qt.WindowModality.NonModal
+    assert not settings.widget.isVisible()
     splitters = {splitter.objectName(): splitter for splitter in sidebar.widget.findChildren(QSplitter)}
     assert set(splitters) == {"sceneInspectorSplitter", "annotationInspectorSplitter"}
     assert all(splitter.count() == 2 for splitter in splitters.values())
@@ -282,21 +303,69 @@ def test_viewer_sidebar_separates_scene_annotation_and_system_domains():
     sidebar.object_setting.populate(mesh_object)
     mesh_labels = [control.label.text() for control in sidebar.object_setting.children]
     assert [label for label in mesh_labels if label in {"Show edges", "Edgecolor", "Edgewidth"}] == ["Show edges", "Edgecolor", "Edgewidth"]
+    assert "hide_coplanaredges" not in sidebar.object_setting._editable_attributes(mesh_object)
+
+    selection_before_details = viewer.state.selection.objects
+    details_text = sidebar.object_setting._details_text([mesh_object])
+    assert viewer.state.selection.objects == selection_before_details
+    assert mesh_object.show is True
+    section_offsets = [
+        details_text.index(section)
+        for section in (
+            "Identity\n--------",
+            "General Scene State\n-------------------",
+            "Type-Specific Scene State\n-------------------------",
+            "Represented Item Parameters\n---------------------------",
+        )
+    ]
+    assert section_offsets == sorted(section_offsets)
+    assert f"Scene Object Type: {type(mesh_object).__name__}" in details_text
+    assert f"Scene Object GUID: {mesh_object.guid}" in details_text
+    assert "Represented Type: Mesh" in details_text
+    assert f"Item GUID: {mesh_object.item_guid}" in details_text
+    assert "Status: Bound" in details_text
+    assert "Visible: True" in details_text
+    assert "Base Color:" in details_text
+    assert "Opacity: 1.0" in details_text
+    assert "Local Transformation: None" in details_text
+    assert "compas.scene.MeshObject.show_edges: False" in details_text
+    assert "compas.scene.MeshObject.hide_coplanaredges: False" in details_text
+    assert "default_vertex_attributes:" in details_text
 
     sidebar.set_current_tab("Annotations")
     assert sidebar.widget.tabText(sidebar.widget.currentIndex()) == "Annotations"
+    assert sidebar.deletion_domain(use_focus=False) == "annotations"
+    sidebar.set_current_tab("Scene")
+    assert sidebar.deletion_domain(use_focus=False) == "spatial"
+    sidebar.set_current_tab("Data")
+    assert sidebar.deletion_domain(use_focus=False) is None
 
-    sidebar.focus_system_section("Camera")
-    assert sidebar.widget.tabText(sidebar.widget.currentIndex()) == "System"
-    sidebar.focus_system_section("Grid and Units")
-    assert sidebar.widget.tabText(sidebar.widget.currentIndex()) == "System"
+    settings_widget = settings.widget
+    update_settings = Mock(wraps=settings.update)
+    focus_section = Mock(wraps=settings.focus_section)
+    monkeypatch.setattr(settings, "update", update_settings)
+    monkeypatch.setattr(settings, "focus_section", focus_section)
+    settings.show("Camera")
+    QApplication.processEvents()
+    assert settings.widget is settings_widget
+    assert settings.widget.isVisible()
+    settings.show("Grid and Units")
+    QApplication.processEvents()
+    assert settings.widget is settings_widget
+    assert settings.widget.isVisible()
+    assert update_settings.call_count == 2
+    assert [entry.args for entry in focus_section.call_args_list] == [("Camera",), ("Grid and Units",)]
+    settings.widget.close()
+    QApplication.processEvents()
+    assert settings.widget is settings_widget
+    assert not settings.widget.isVisible()
 
     with pytest.raises(ValueError, match="Unsupported sidebar tab"):
         sidebar.set_current_tab("Other")  # type: ignore[arg-type]
-    with pytest.raises(ValueError, match="Unsupported system section"):
-        sidebar.focus_system_section("Other")  # type: ignore[arg-type]
-    with pytest.raises(ValueError, match="Unsupported system section"):
-        sidebar.focus_system_section("Units and Measurement")  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="Unsupported Viewer Settings section"):
+        settings.show("Other")  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="Unsupported Viewer Settings section"):
+        settings.show("Units and Measurement")  # type: ignore[arg-type]
 
 
 def test_data_domain_projects_distinct_references_without_owning_selection():
@@ -305,6 +374,11 @@ def test_data_domain_projects_distinct_references_without_owning_selection():
     first = viewer.scene.add(shared, name="First placement")
     second = viewer.scene.add(shared, name="Second placement")
     mesh = Mesh.from_vertices_and_faces([[0, 0, 0], [1, 0, 0], [0, 1, 0]], [[0, 1, 2]])
+    mesh.attributes.update([("purpose", "integration"), ("level", 2)])
+    mesh.update_default_vertex_attributes({"weight": 1.0})
+    mesh.update_default_edge_attributes({"crease": False})
+    mesh.update_default_face_attributes({"region": "default"})
+    mesh.vertex_attribute(0, "weight", 2.5)
     viewer.scene.add(mesh, name="Mesh placement")
     note = TextAnnotation("Note", [0, 0, 0])
     note_entry = viewer.scene.add_annotation(note, name="Annotation only")
@@ -342,11 +416,35 @@ def test_data_domain_projects_distinct_references_without_owning_selection():
     assert viewer.state.selection.objects == (first,)
     assert viewer.state.annotation_selection.objects == ()
 
+    mesh_data_before = json_dumps(mesh)
     details = DataDetailsDialog(records[mesh.guid])
+    assert json_dumps(mesh) == mesh_data_before
+    tabs = details.findChild(QTabWidget)
+    assert tabs is not None
+    assert [tabs.tabText(index) for index in range(tabs.count())] == [
+        "Parameters",
+        "General Attributes",
+        "Vertices",
+        "Edges",
+        "Faces",
+    ]
+    parameters = tabs.widget(0)
+    general_attributes = tabs.widget(1)
+    assert isinstance(parameters, QTableWidget)
+    assert isinstance(general_attributes, QTableWidget)
+    assert parameters.horizontalHeaderItem(0).text() == "Parameter"
+    assert parameters.horizontalHeaderItem(1).text() == "Value"
+    assert [general_attributes.item(row, 0).text() for row in range(general_attributes.rowCount())] == ["purpose", "level"]
+    assert [general_attributes.item(row, 1).text() for row in range(general_attributes.rowCount())] == ["integration", "2"]
+    assert general_attributes.editTriggers() == QAbstractItemView.EditTrigger.NoEditTriggers
     models = [table.model() for table in details.findChildren(QTableView) if isinstance(table.model(), _ElementAttributesModel)]
-    assert models
-    index = models[0].index(0, 1)
-    assert not models[0].flags(index) & Qt.ItemFlag.ItemIsEditable
+    models_by_domain = {model.domain.name: model for model in models}
+    assert set(models_by_domain) == {"vertices", "edges", "faces"}
+    vertex_model = models_by_domain["vertices"]
+    weight_column = vertex_model.attributes.index("weight") + 1
+    assert vertex_model.data(vertex_model.index(0, weight_column)) == "2.5"
+    assert vertex_model.data(vertex_model.index(1, weight_column)) == "1.0"
+    assert not vertex_model.flags(vertex_model.index(0, weight_column)) & Qt.ItemFlag.ItemIsEditable
 
 
 def test_core_annotations_serialize_and_resolve_without_fallbacks():

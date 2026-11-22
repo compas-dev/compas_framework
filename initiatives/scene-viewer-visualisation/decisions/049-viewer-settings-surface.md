@@ -2,7 +2,16 @@
 
 ## Status
 
-Proposed on 2026-11-13. No implementation is authorized.
+Accepted on 2026-11-14. Implementation, local verification, framework
+direct-source integration, and independent re-review pass. Native macOS
+modeless focus, high-DPI, and direct-use confirmation plus refreshed hosted CI
+remain pending.
+
+A later review identified a low-severity coverage gap for repeated public
+`Viewer(...)` calls against the process-local singleton composition contract.
+A permanent regression now proves that later constructor arguments are ignored;
+clean follow-up review passes the targeted regression and complete settings
+module with no findings.
 
 ## Context
 
@@ -28,7 +37,7 @@ their placement.
 4. Use a toolbar popover or viewport drawer.
 5. Keep System as a fourth content-sidebar tab.
 
-## Recommendation
+## Decision
 
 Choose option 1.
 
@@ -78,8 +87,26 @@ Remove `SideBarRight.focus_system_section`. Move `CameraSetting`,
 Retire the old System placement and identifiers without compatibility aliases
 or two supported navigation paths.
 
+The implemented setup-time composition boundary is typed and explicit:
+
+```python
+Viewer(
+    *,
+    sidebar_items: Iterable[UIItem] | None = None,
+    settings_items: Iterable[UIItem] | None = None,
+)
+```
+
+The Viewer shallow-copies supplied iterables before constructing the UI and
+uses the built-in definitions when an input is omitted. The process-local
+Viewer singleton consumes these definitions only during its first
+construction. Later `Viewer(...)` calls return that existing instance and
+ignore new composition arguments; mutating either list after construction does
+not recompose the UI. No live reload, reset, or second composition path is
+part of this decision.
+
 Preserve the existing `renderer.*`, `measurement.*`, state, configuration,
-refresh, and command semantics. This proposal changes presentation ownership,
+refresh, and command semantics. This decision changes presentation ownership,
 not the controlled values.
 
 ## Alternatives and Tradeoffs
@@ -133,10 +160,14 @@ content/settings category error identified by direct use.
   high-DPI layout, minimum sizing, and scrolling.
 - Verify Camera, Display, grid, unit, and precision edits preserve their
   existing live refresh scope.
+- Verify typed list and generator composition inputs, shallow-copy ownership,
+  first-construction singleton behavior, defaults, unsupported item failures,
+  and the absence of live recomposition.
 - Verify configuration schema 4 round-trip and every existing state path are
   unchanged.
-- Update the Viewer user guide, developer composition guide, changelog,
-  package tests, and framework integration assertions.
+- Update the Viewer tutorial, user guide, developer composition guide,
+  executable examples, changelog, package tests, and framework integration
+  assertions.
 
 ## Dependencies
 
@@ -148,9 +179,10 @@ content/settings category error identified by direct use.
 - Follows ADR 048 by treating Scene, Data, and Annotations as the content
   domains.
 
-## Approval Gate
+## Approval Record
 
-Approve the modeless Viewer Settings ownership, clean API migration, and
-verification contract before changing Viewer runtime code. This proposal does
-not authorize implementation, compatibility aliases, a dock framework, or
-settings persistence.
+The user explicitly approved the modeless Viewer Settings ownership, clean API
+migration, and verification contract on 2026-11-14. That approval authorizes
+the scoped Viewer implementation and documentation changes above. It does not
+authorize compatibility aliases, a dock framework, settings persistence, or
+changes to renderer, measurement, state, or configuration semantics.

@@ -88,15 +88,35 @@ pass. Native direct use confirms responsive wireframe toggling at Torus U
 resolution 64, accepts the wording, and confirms the crash remains fixed.
 Accepted ADR 048 adds a read-only Viewer **Data** domain as a flat projection
 of Scene-referenced item GUIDs. It does not own, serialize, load, or edit data;
-implementation, local verification, and independent review pass. The final
+implementation, local verification, and independent review pass. Its checkpoint
 sidebar order is Scene, Data, Annotations, System. Unattached and multi-scene
 data remain in the separately deferred Session scope, which may later replace
 or extend the inventory source without making Viewer an owner.
-Proposed ADR 049 responds to the information-architecture distinction between
-the Scene, Data, and Annotations content domains and System settings. It would
-leave exactly those three content tabs in the sidebar and move Camera, Display,
-and Grid and Units into one Viewer-owned modeless settings window. It is not
-implemented and requires explicit approval.
+Accepted ADR 049 responds to the information-architecture distinction between
+the Scene, Data, and Annotations content domains and Viewer settings. It leaves
+exactly those three content tabs in the sidebar and moves Camera, Display, and
+Grid and Units into one Viewer-owned modeless settings window. The user
+approved the contract on 2026-11-14. Implementation, local verification,
+framework direct-source integration, and independent re-review pass; native
+macOS interaction and refreshed hosted verification remain pending.
+The implemented composition boundary accepts typed keyword-only
+`sidebar_items` and `settings_items` iterables during the first process-local
+Viewer construction, shallow-copies them before UI construction, and provides
+no post-construction recomposition or singleton-reset path. The Viewer tutorial
+and executable examples cover that lifecycle explicitly. A permanent regression
+now covers later public singleton constructor calls after a low-severity review
+finding; clean follow-up review reports no findings.
+Accepted ADR 050 expands the existing read-only Data Details snapshot so
+safe constructor parameters, verified general Datastructure attributes, and
+the existing lazy Mesh/Graph component tables are available together. Accepted
+ADR 051 expands read-only Object Details with explicit identity, base
+scene state, all declared type-specific state, and represented-item parameters
+while leaving Object Settings as the sole editing surface. The decisions are
+independent and are implemented and locally verified. Accepted ADR 052
+separately defines an executable Viewer documentation and example-coverage
+contract. It governs documentation quality only; its tutorial, focused
+examples, coverage matrix, docstring, typing, and executable checks are
+implemented and locally verified without authorizing a runtime change.
 
 | ADR | Decision | Status | Dependencies |
 |---|---|---|---|
@@ -148,7 +168,10 @@ implemented and requires explicit approval.
 | 046 | [Viewer scheme-aware content palette](046-viewer-content-palette.md) | Accepted; implemented and locally verified | Amends 043; supersedes 045; coordinates with 037 |
 | 047 | [Editable parametric shape resolution](047-editable-parametric-shape-resolution.md) | Accepted; implemented, locally verified, independently reviewed, and native user-confirmed | Uses 002, 004, 015–016 |
 | 048 | [Referenced Data domain](048-referenced-data-domain.md) | Accepted; implemented, locally verified, and independently reviewed | Preserves 001, 010, 013; reuses 017; extends 032 |
-| 049 | [Viewer Settings surface](049-viewer-settings-surface.md) | Proposed; approval required | Amends 032 and 041; preserves 038, 040, 043, 046, and 048 |
+| 049 | [Viewer Settings surface](049-viewer-settings-surface.md) | Accepted on 2026-11-14; typed setup composition, implementation, local verification, and independent re-review pass | Amends 032 and 041; preserves 038, 040, 043, 046, and 048 |
+| 050 | [Read-only Data item inspection](050-read-only-data-item-inspection.md) | Accepted on 2026-11-14; implemented and locally verified | Amends 048; reuses 017; preserves 018 |
+| 051 | [Scene Object Details and settings boundary](051-scene-object-details-boundary.md) | Accepted on 2026-11-14; implemented and locally verified | Amends 033; preserves 015–016; uses 013 |
+| 052 | [Executable Viewer documentation and example coverage](052-executable-viewer-documentation-and-example-coverage.md) | Accepted on 2026-11-14; implemented and locally verified | Documents implemented contracts; coordinates with 050–051 and authorizes no runtime change |
 
 ADRs 008–010 were accepted on 2026-11-07. ADR 010 refines ADR 008's item store
 into non-owning runtime bindings and keeps aggregation outside Scene. A

@@ -17,8 +17,17 @@ independently approved, and green in refreshed package and exact-candidate
 verification. Accepted ADRs 021–028 are implemented, locally verified,
 independently approved, and green in Core and Viewer package CI and the
 framework exact source-installed gate. Phase 3 source implementation and
-integration are complete. Exact candidate-artifact compatibility remains a
-separate, unrun verification layer.
+integration through ADR 048 are complete. ADR 049 was accepted on 2026-11-14;
+its Viewer Settings implementation, local verification, direct-source
+integration, and independent re-review pass. Native macOS confirmation and
+refreshed hosted CI remain pending. Exact candidate-artifact compatibility
+remains a separate, unrun verification layer. ADRs 050–052 are independent
+Accepted decisions: ADRs 050–051 govern runtime inspection changes, while ADR
+052 governs documentation quality and authorizes no runtime change. Their
+implementation, local package and documentation verification, direct-source
+integration, and independent review pass in the uncommitted working trees.
+Native interaction/visual checks, refreshed hosted CI, and candidate artifacts
+remain separately pending.
 
 ## Dependency graph
 
@@ -571,10 +580,12 @@ The active Scene is the initial inventory source. Replacing or extending it
 with an unattached or multi-scene Session aggregate requires a separate ADR;
 Viewer must not become the aggregate owner.
 
-The final sidebar order is Scene, Data, Annotations, System. Review confirms
-that direct `add_object` and `add_reference` calls cause one immediate Data
-refresh and no renderer refresh, selection is preserved while its GUID remains
-referenced, generic inspection does not use arbitrary `__data__`, and an
+The ADR 048 checkpoint sidebar order is Scene, Data, Annotations, System.
+Accepted ADR 049 replaces that System placement with a separate Viewer Settings
+window. ADR 048 review confirms that direct `add_object` and `add_reference`
+calls cause one immediate Data refresh and no renderer refresh, selection is
+preserved while its GUID remains referenced, generic inspection does not use
+arbitrary `__data__`, and an
 individual attribute exception is isolated. Final review also verifies exactly
 one Data refresh after selected and unselected spatial or annotation removals,
 scene clearing, and batched spatial deletion, without extra renderer work.
@@ -582,6 +593,147 @@ Viewer passes 672 tests with two expected offscreen OpenGL skips; the framework
 direct-source gate passes 16 tests with one expected exact-VCS skip. Ruff,
 formatting, Pyright, strict MkDocs, and diff checks pass. Native direct use,
 hosted CI, and candidate artifacts remain pending.
+
+## Accepted Viewer Settings surface
+
+Governing decision: ADR 049, accepted on 2026-11-14. Implementation, local
+verification, direct-source integration, and independent re-review pass.
+
+1. [Complete; locally verified] Keep exactly Scene, Data, and Annotations in
+   the built-in content sidebar and preserve Data's read-only behavior plus
+   Scene/Annotations contextual deletion.
+2. [Complete; locally verified] Move Camera, Display, and Grid and Units into
+   one initially hidden, reusable, modeless Viewer Settings window owned by
+   each Viewer. Refresh the existing controls on open and keep window
+   visibility, geometry, scrolling, and focused section transient.
+3. [Complete; locally verified] Add **View → Viewer Settings…**, route Camera
+   Settings through the same window, and expose
+   `viewer.ui.settings.show(section)` with `viewer.settings_items` and
+   `default_settings_items()` as the single composition path.
+4. [Complete; locally verified] Accept typed keyword-only `sidebar_items` and
+   `settings_items` iterables on the first process-local `Viewer(...)`
+   construction, shallow-copy them before UI construction, use defaults when
+   omitted, and document that later constructor calls or list mutation do not
+   live-recompose the singleton UI.
+5. [Complete; locally verified] Remove the System sidebar identifier,
+   `focus_system_section`, and the old settings composition path without
+   aliases. Preserve renderer, measurement, state, configuration, and refresh
+   semantics.
+6. [Complete locally; native confirmation pending] Verify reuse, refresh
+   scope, close-to-hide and owner teardown, editor-local Escape,
+   settings-window Escape isolation, keyboard and accessibility behavior,
+   styling, sizing, scrolling, the end-to-end tutorial and executable
+   examples, and the framework direct-source contract.
+
+Exit gate: package tests, Ruff, formatting, Pyright, strict MkDocs,
+direct-source framework integration, independent review, and the applicable
+native lifecycle checks pass at recorded exact revisions. Hosted and
+candidate-artifact evidence remain separate verification layers.
+
+Local evidence: the full Viewer suite passes 689 tests with two expected
+offscreen OpenGL skips. Independent focused Viewer/UI/documentation review
+passes 130 tests; its one singleton-lifecycle wording finding was corrected.
+A later low-severity missing public singleton regression was resolved with a
+permanent focused test. Clean follow-up review passes that targeted test and
+the 16-test settings module with Ruff, formatting, and diff checks and reports
+no findings. The
+documentation-example suite passes 17 tests, including effective settings
+composition and the opt-in Attributes inspector. Ruff, formatting, Pyright
+with zero errors, strict Viewer and framework MkDocs, `git diff --check`, and
+the framework direct-source gate with 16 passes and one expected exact-revision
+skip all pass. Native macOS modeless focus, high-DPI, and direct-use
+confirmation remains pending. Hosted CI is stale until the working trees are
+committed and pushed; candidate artifacts remain unrun and conditional on an
+admission or release claim.
+
+## Accepted Scene and Data inspection completion
+
+Governing decisions: Accepted ADRs 050 and 051.
+
+Status: accepted on 2026-11-14; implementation, local verification,
+direct-source integration, and independent review pass. The decisions remain
+independent.
+
+### ADR 050 — read-only Data item inspection
+
+1. [Complete locally] Retain the existing Data
+   identity/reference header and add one ordered read-only tab surface
+   containing Parameters, General Attributes, then the applicable Mesh or Graph
+   component-domain tables.
+2. [Complete locally] Limit General Attributes to the
+   ordered public `Datastructure.attributes` mapping; preserve ADR 017's lazy
+   declared-column, effective-value, and sparse-omission behavior for component
+   tables.
+3. [Complete locally] Preserve metadata-only unresolved
+   items, shared-item deduplication, selection independence, failure isolation,
+   and no mutation, resolution, ownership, serialization, or refresh side
+   effect.
+4. [Complete locally] Add focused Viewer tests,
+   direct-source framework integration assertion, and Viewer tutorial/example
+   coverage distinguishing general attributes, component attributes, and safe
+   parameters.
+
+### ADR 051 — Scene Object Details and settings boundary
+
+1. [Complete locally] Expand one-object Object Details into
+   ordered Identity, General Scene State, Type-Specific Scene State, and
+   Represented Item Parameters sections.
+2. [Complete locally] Derive type-specific rows only from
+   declared `scene_state_fields()` in namespace/field order, including editable
+   and noneditable values, and read each value through its declared attribute.
+3. [Complete locally] Preserve unresolved-object inspection,
+   per-value failure isolation, and the current multiple-selection
+   count/type/name snapshot. Do not inspect arbitrary properties, extension
+   payloads, or adapter caches.
+4. [Complete locally] Keep Object Settings as the sole
+   editing surface and prove that Details adds no setter, mutation, renderer
+   rebuild, or UI refresh path. Add representative SceneObject tests,
+   direct-source integration, and Viewer tutorial/example coverage.
+
+No Core API, schema, serialization, compatibility alias, or migration change
+is planned. Editable Data, a generic inspection registry, additional
+datastructure types, and a second Scene editing surface require separate future
+approval.
+
+Local exit gate: the complete Viewer suite passes 705 tests with two expected
+offscreen native OpenGL skips. Ruff, formatting, Pyright with zero errors,
+strict Viewer and framework MkDocs, `git diff --check`, and the framework
+direct-source gate with 16 passes and one expected exact-revision skip pass.
+Independent review finds the ADR 050–051 runtime clean. Native, refreshed
+hosted, and artifact evidence remains separately pending.
+
+## Accepted executable Viewer documentation and examples
+
+Governing decision: Accepted ADR 052.
+
+Status: accepted on 2026-11-14; implementation and local verification pass in
+the uncommitted Viewer working tree.
+
+1. [Complete locally] Maintain one end-to-end tutorial backed
+   by one authoritative runnable script under `docs/examples/`.
+2. [Complete locally] Audit focused category-level coverage
+   for Scene/content and inspection boundaries, Viewer Settings/configuration,
+   selection/transforms/refresh, measurements/annotations, serialization,
+   overlays, dynamic workflows, and optional geometry backends.
+3. [Complete locally] Keep public and touched APIs on
+   MkDocs-compatible NumPy docstrings and Python 3.12 annotations; run Ruff and
+   Pyright over all authoritative Python examples.
+4. [Complete locally] Maintain representative headless
+   smoke/contract checks, focused doctests where applicable, strict MkDocs and
+   link/snippet validation, and `git diff --check`.
+5. [Complete locally] Label optional/native requirements and
+   report native visual, interaction, focus, scrolling, and high-DPI checks
+   separately from headless evidence.
+6. [Complete locally] Reconcile every claim with implemented,
+   verified behavior. Return runtime gaps to their owning ADR rather than
+   changing code under the documentation decision.
+
+Local exit gate: the documentation-example suite passes 20 tests; all
+authoritative examples pass Ruff, formatting, and Python 3.12 Pyright; strict
+MkDocs and `git diff --check` pass. Independent review findings on annotation
+serialization coverage and scope wording were corrected and revalidated.
+Native and optional-backend evidence remains explicitly separate. Acceptance
+of ADR 052 did not itself implement ADR 050 or 051.
 
 ## Deferred work requiring new approval
 
