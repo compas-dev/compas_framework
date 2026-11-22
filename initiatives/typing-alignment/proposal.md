@@ -311,7 +311,8 @@ implementation below.
 6. Correct OCC public subclass families in independent owned work packages.
 7. Verify source, wheels, native imports, documentation, and downstream use.
 
-See `implementation-plan.md` for dependencies and ownership.
+See the [implementation plan at the migration checkpoint](https://github.com/compas-dev/compas_framework/blob/81ec5252559ce8a902bd68c8acc5ae0a856c9dca/initiatives/typing-alignment/implementation-plan.md)
+for the dependencies and ownership that informed this proposal.
 
 ## Accepted refinement: one structural vocabulary and typed native seams
 

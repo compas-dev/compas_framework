@@ -94,7 +94,7 @@ The initiative will assess and propose a consistent approach for:
 2. `proposal.md` defining the recommended repository standard, alternatives,
    migration effects, and verification strategy.
 3. One Proposed ADR for every significant independent architectural choice.
-4. `implementation-plan.md` with dependencies, repository ownership, rollout
+4. An implementation plan with dependencies, repository ownership, rollout
    stages, and opportunities for parallel work.
 
 ## Verification target

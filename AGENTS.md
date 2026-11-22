@@ -1,17 +1,8 @@
 # COMPAS Framework — Agent Instructions
 
-You are the coordinator for cross-package COMPAS
-modernization initiatives.
-
-## Responsibilities
-
-- Read the active initiative objective.
-- Decompose objectives into verifiable tasks.
-- Identify task dependencies.
-- Delegate independent work to specialized agents.
-- Coordinate implementation across repositories.
-- Verify tests and documentation.
-- Maintain the initiative's plan and status.
+COMPAS Framework owns the COMPAS metapackage, release metadata, and
+cross-package integration checks. Cross-repository initiative coordination
+takes place in the COMPAS Hub.
 
 ## Engineering Principles
 
@@ -54,22 +45,10 @@ modernization initiatives.
   Check the branch and working tree before editing, and preserve existing changes.
 - Create an additional worktree only when explicitly requested. Use an agreed,
   visible path outside system temporary directories and record its path, branch,
-  owner, and cleanup status in the handoff.
-- Assign one writer per repository at a time. Read-only work and writes in
-  distinct package repositories can run in parallel.
+  owner, and cleanup status in the pull request.
 - At meaningful checkpoints, report the checkout, branch, changed files, and
   verification status. When commits and pushes are authorized, keep the draft PR
   current so progress is visible.
-
-## Delegation
-
-Use the explorer for repository investigations.
-Use the architect for cross-package design.
-Use implementers for approved code changes.
-Use the reviewer for independent validation.
-Use the documenter for examples and documentation.
-
-Parallelize independent tasks whenever practical.
 
 ## Documentation and Public API
 
@@ -83,7 +62,6 @@ Parallelize independent tasks whenever practical.
 - Documentation-only changes must not alter runtime behavior.
 - Run the validation required by the skill, including focused doctests, Ruff,
   `git diff --check`, and affected strict MkDocs builds.
-- Include these requirements in delegated implementation and review tasks.
 
 ## Repository Skills
 
@@ -97,53 +75,7 @@ Parallelize independent tasks whenever practical.
   guidance; `AGENTS.md`, accepted ADRs, and implemented behavior remain
   authoritative.
 
-## Workflow
-
-### Phase 1: Reconnaissance
-
-Launch independent investigations of:
-- Existing APIs, implementations, and data contracts
-- Cross-package dependencies and integration boundaries
-- Existing tests, workflows, examples, and documentation
-- Current branches, approved decisions, and compatibility constraints
-
-Consolidate findings into inventory.md.
-
-### Phase 2: Architecture
-
-Delegate cross-package architecture design to the architect.
-
-Produce proposal.md with:
-- Recommended interfaces
-- Alternatives and tradeoffs
-- Affected packages
-- Compatibility implications
-- Proposed tests and examples
-
-STOP and request user approval.
-
-### Phase 3: Implementation
-
-After approval:
-- Break the proposal into small tasks.
-- Assign file and repository ownership.
-- Execute independent tasks in parallel according to the checkout rules above.
-- Run tests after each task.
-- Keep implementation changes no broader than the accepted decisions.
-- Remove obsolete paths instead of leaving unused abstractions behind when
-  backward compatibility is not an approved requirement.
-
-### Phase 4: Integration
-
-- Run cross-package tests.
-- Run Ruff and Pyright for every affected package using that package's
-  configured commands.
-- Request independent code review.
-- Resolve findings.
-- Verify documentation.
-- Report completion and remaining issues.
-
-### Verification Responsibilities
+## Verification Responsibilities
 
 - Local checks provide fast, focused feedback before work is pushed. Run the
   narrowest relevant tests, Ruff, Pyright, documentation checks, and native
@@ -158,18 +90,17 @@ After approval:
 - Candidate-artifact CI verifies the exact wheels and distributions intended
   for admission or release. A source build or editable install does not count
   as evidence that independently built or published artifacts work together.
-- Initiative handoffs record the evidence for every applicable layer. Mark a
-  layer as passed, failed, not run, or unavailable; never infer a pass from a
-  different layer.
+- Record the evidence for every applicable verification layer in the pull
+  request. Report each result as passed, failed, not run, or unavailable.
 - Completion requires all applicable local, package, framework-integration,
   and candidate-artifact checks. If a layer does not apply, state why. If a
-  required layer cannot run, leave the initiative explicitly unverified.
+  required layer cannot run, leave that layer explicitly unverified.
 
 ## Rules
 
 - Do not modify package source code before approval.
 - Never assume an API exists without inspecting code.
-- Keep changes focused and reversible.
+- Keep changes focused, reversible, and within the accepted decisions.
 - Preserve existing behavior unless approved.
 - Do not claim tests passed without running them.
 - Do not claim implementation completion unless relevant tests, Ruff, and
@@ -191,7 +122,7 @@ After approval:
 
 ## Architecture Decision Records
 
-For every initiative:
+For significant architectural changes affecting COMPAS Framework:
 
 1. Identify significant architectural decisions during the proposal phase.
 2. Create one ADR per independent decision.
@@ -202,21 +133,3 @@ For every initiative:
 7. Identify dependencies between ADRs.
 8. Do not implement tasks blocked by unresolved ADRs.
 9. Revisit accepted ADRs only when new evidence warrants reconsideration.
-
-## Session Handoffs
-
-- Treat `initiatives/<name>/handoff.md` as the entry point for an active
-  initiative. Read it first, then read only the authoritative files it links
-  for the next task.
-- Keep the handoff short. It is an index and checkpoint, not a copy of the
-  objective, inventory, proposal, ADRs, or implementation plan.
-- Update the handoff at a meaningful checkpoint and before ending or moving an
-  initiative to a new conversation. Record exact branches, commit SHAs, pull
-  requests, workflow runs, verification results, and remaining approval gates.
-- List at most three ordered next tasks. Move longer task lists and design
-  details to the implementation plan.
-- Start a new conversation for each initiative, or for a new architecture,
-  implementation, integration, or audit phase of a large initiative. Resume
-  with: `Continue <initiative> from initiatives/<name>/handoff.md`.
-- A handoff never overrides an accepted ADR or the implementation plan. Resolve
-  inconsistencies in the authoritative source, then refresh the handoff.
