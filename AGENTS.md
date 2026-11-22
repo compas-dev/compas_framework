@@ -24,6 +24,21 @@ These instructions apply to the entire repository.
 - Use `TYPE_CHECKING` for dependencies imported only for annotations, especially optional or heavy geometry and GUI dependencies.
 - Do not hide integration problems behind broad exception handling or optional imports. Skip tests only for explicitly optional system capabilities.
 
+## Checkouts and Progress
+
+- Work in each repository's canonical checkout on the agreed task branch.
+  Check the branch and working tree before editing, and preserve existing changes.
+- Create an additional worktree only when explicitly requested. Use an agreed,
+  visible path outside system temporary directories and record its path, branch,
+  owner, and cleanup status in the handoff.
+- Assign one writer per repository at a time. Read-only work and writes in
+  distinct package repositories can run in parallel.
+- At meaningful checkpoints, report the checkout, branch, changed files, and
+  verification status. When commits and pushes are authorized, keep the draft PR
+  current so progress is visible.
+- Keep initiative handoffs short. Record the current checkpoint, evidence, and
+  up to three next tasks. Keep design details in the initiative plan and decisions.
+
 ## Framework Integration Contracts
 
 - Exercise plugins through public COMPAS plugin APIs. Do not call backend implementation modules directly merely to make an integration test pass.
@@ -45,8 +60,9 @@ These instructions apply to the entire repository.
 ## Tests and Validation
 
 - Run the smallest relevant tests first, then broaden validation in proportion to risk.
-- Use the commands in `.github/CONTRIBUTING.md`: `invoke test`,
-  `invoke check`, `invoke typecheck`, `invoke docs`, and `invoke format`.
+- Use the locked tooling environment and the commands in `.github/CONTRIBUTING.md`
+  for ordinary repository checks. Use the owning package's environment for native
+  and cross-package integration.
 - Always run `git diff --check` for changed patches.
 - Mark integration, roundtrip, performance, GUI, and native-backend tests so they can be selected independently.
 - Test public behavior rather than implementation metadata. Prefer capability checks over platform-name checks.

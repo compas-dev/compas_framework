@@ -8,38 +8,34 @@ We accept code contributions through pull requests.
 In short, this is how that works.
 
 1. Fork [the repository](https://github.com/compas-dev/compas_framework) and clone the fork.
-2. Create a virtual environment using your tool of choice (e.g. `virtualenv`, `conda`, etc).
-3. Install development dependencies:
+2. Install Python 3.12–3.14 and [uv](https://docs.astral.sh/uv/).
+3. From the repository root, synchronize the locked tooling environment:
 
    ```bash
-   python -m pip install -e ".[dev,docs]"
+   uv sync --locked --project .github/tooling
    ```
 
-4. Make sure all tests pass:
+4. Start making changes on a branch based on `main`.
+5. Run the ordinary checks:
 
    ```bash
-   invoke test
+   uv run --no-sync --project .github/tooling ruff check .
+   uv run --no-sync --project .github/tooling ruff format --check .
+   uv run --no-sync --project .github/tooling pyright
+   uv run --no-sync --project .github/tooling pytest -p no:cacheprovider tests/test_package.py
+   uv run --no-sync --project .github/tooling mkdocs build --strict
    ```
 
-5. Start making your changes on a feature branch based on **main**.
-6. Make sure all tests still pass:
+6. Commit, push, and open a pull request.
 
-   ```bash
-   invoke test
-   ```
+The tooling environment installs repository checks independently of the
+framework and its native dependencies. Use an environment documented by the
+owning package when running native or cross-package integration.
 
-7. Commit your changes and push your branch to GitHub.
-8. Create a [pull request](https://help.github.com/articles/about-pull-requests/) through the GitHub website.
-
-During development, use [pyinvoke](http://docs.pyinvoke.org/) tasks on the
-command line to ease recurring operations:
-
-* `invoke clean`: Clean all generated artifacts.
-* `invoke check`: Run various code and documentation style checks.
-* `invoke test`: Run all tests and checks in one swift command.
-* `invoke typecheck`: Run Pyright over integration code and tests.
-* `invoke docs`: Build the MkDocs documentation.
-* `invoke`: Show available tasks.
+Use the canonical checkout for each repository. Keep one writer per repository
+and record checkpoints in the initiative handoff or draft PR. Create an
+additional worktree only when explicitly requested, with a visible path and
+owner recorded in the handoff.
 
 ## Bug reports
 

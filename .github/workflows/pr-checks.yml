@@ -2,16 +2,19 @@ name: verify-pr-checklist
 on:
   pull_request:
     types: [assigned, opened, synchronize, reopened, labeled, unlabeled]
-    branches:
-      - main
-      - master
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
   build:
     name: Check Actions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Changelog check
         uses: Zomzog/changelog-checker@v1.2.0
         with:
