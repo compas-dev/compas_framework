@@ -9,16 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Added a locked environment for repository checks without installing framework
-  runtime packages and a manual clean-install check for the full metapackage.
+* Added the geometry-tessellation initiative inventory, architecture proposal, accepted decision records, and coordinated implementation plan.
+* Added cross-package integration tests for continuous-geometry tessellation, triangle-processing plugin boundaries, serialization, and native geometry backends.
+* Added immutable cross-repository candidate manifests, provenance and wheel
+  verification, secret-isolated native integration, and release-order checks.
+* Added a manual clean-install check for the full metapackage.
 
 ### Changed
 
 * Run ordinary CI on pull requests to any base branch and use canonical
   checkouts for initiative work.
+* Documented the COMPAS 3 geometry package compatibility matrix, native backend prerequisites, and geometry integration test workflow.
+* Replaced legacy development extras and mutable workflows with locked PEP 735 tool groups, uv-based contributor commands, immutable actions, and Python 3.12–3.14 checks.
+* Modernized release-candidate automation to build and verify one temporary
+  artifact set while keeping publication, GitHub releases, and documentation
+  deployment disabled until the reviewed live candidate set passes its hosted
+  integration gate.
 
 ### Removed
 
+* Removed the `rhino`, `blender`, and `hosts` extras from the COMPAS 3
+  metapackage until their owning packages declare compatible dependencies and
+  pass host-runtime verification. Existing COMPAS 2 releases are unchanged.
 
 ## [0.1.3] 2025-06-04
 

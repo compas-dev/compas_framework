@@ -136,5 +136,8 @@ data/
 docs/api/generated/
 
 scripts/
+!/.github/scripts/
+!/.github/scripts/**
+/.github/scripts/__pycache__/
 
 .ruff_cache

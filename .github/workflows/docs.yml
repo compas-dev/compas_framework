@@ -1,23 +1,32 @@
 name: docs
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*'
   pull_request:
+  push:
+    branches: [main, initiative/candidate-artifact-integration]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
 
 jobs:
   docs:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    env:
-      UV_PYTHON: "3.12"
     steps:
-      - name: Configure temporary tool environment
-        run: echo "UV_PROJECT_ENVIRONMENT=$RUNNER_TEMP/framework-docs" >> "$GITHUB_ENV"
+      - name: Configure isolated uv paths
+        shell: bash
+        env:
+          UV_CACHE_PATH: ${{ runner.temp }}/uv-cache
+          UV_ENVIRONMENT_PATH: ${{ runner.temp }}/venv
+        run: |
+          echo "UV_CACHE_DIR=${UV_CACHE_PATH}" >> "${GITHUB_ENV}"
+          echo "UV_PROJECT_ENVIRONMENT=${UV_ENVIRONMENT_PATH}" >> "${GITHUB_ENV}"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -27,14 +36,5 @@ jobs:
       - uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
         with:
           version: "0.12.7"
-      - run: uv sync --locked --project .github/tooling
-      - run: uv run --no-sync --project .github/tooling mkdocs build --strict --site-dir "$RUNNER_TEMP/site"
-
-  deploy:
-    if: github.event_name == 'push'
-    needs: docs
-    runs-on: ubuntu-latest
-    steps:
-      - uses: compas-dev/compas-actions.docs@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: uv sync --frozen --only-group docs --no-install-project
+      - run: uv run --no-sync mkdocs build --strict --site-dir "${RUNNER_TEMP}/site"

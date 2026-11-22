@@ -1,0 +1,9 @@
+name: compas-candidate
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12.13
+  - pip
+  - pythonocc-core=7.9.3
+  - occt=7.9.3
+

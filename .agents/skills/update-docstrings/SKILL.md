@@ -5,7 +5,8 @@ description: Migrate or improve COMPAS Framework Python docstrings using MkDocs-
 
 # Update COMPAS Framework docstrings
 
-Apply `AGENTS.md`, especially **Documentation and Public API** and **Tests and Validation**.
+Apply `AGENTS.md`, accepted documentation decisions, and the owning
+repository's configured validation commands.
 
 ## Requirements
 

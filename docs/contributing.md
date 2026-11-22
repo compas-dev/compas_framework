@@ -1,22 +1,44 @@
 # Contributing
 
-Install [uv](https://docs.astral.sh/uv/) and synchronize the tooling environment
-from the repository root:
+Install [uv](https://docs.astral.sh/uv/), clone the repository, and synchronize
+the locked development group:
 
 ```bash
-uv sync --locked --project .github/tooling
+uv sync --locked --only-group dev --no-install-project
 ```
 
-Run focused tests while developing, then run the repository checks:
+This is intentionally a tooling-only environment. Although `uv.lock` records
+the full framework dependency graph, `--only-group dev --no-install-project`
+does not install the project or native backends. Use a package-specific native
+environment, such as `compas3`, for local native geometry integration work.
+
+Run focused tests while developing, then run the repository aliases:
 
 ```bash
-uv run --no-sync --project .github/tooling ruff check .
-uv run --no-sync --project .github/tooling ruff format --check .
-uv run --no-sync --project .github/tooling pyright
-uv run --no-sync --project .github/tooling pytest -p no:cacheprovider tests/test_package.py
-uv run --no-sync --project .github/tooling mkdocs build --strict
+uv run --no-sync invoke check typecheck test docs
 ```
 
-Use the canonical checkout and keep checkpoints visible in the handoff or
-draft PR. Install native dependencies separately using the owning package's
-documented environment when working on cross-package integration.
+Integration tests and examples should use public APIs and span package
+boundaries. Package-local fixes belong in the owning package repository.
+
+The Invoke tasks are thin aliases for Ruff, Pyright, pytest, MkDocs, and
+`uv build`. The direct commands used by CI remain visible in the
+workflow files.
+
+Use each repository's canonical checkout and make progress visible through the
+initiative handoff and draft pull request. Keep one writer per repository at a
+time. Read-only work and writes in different repositories can run in parallel.
+Create an additional worktree only when explicitly requested and record its
+visible path, branch, and owner in the handoff.
+
+Changes to coordinated candidate infrastructure use the isolated locked group:
+
+```bash
+uv sync --frozen --only-group candidate --no-install-project
+uv run --no-sync pytest .github/tests/test_candidate_artifacts.py
+uv run --no-sync ruff check .github/scripts/candidate_artifacts.py .github/candidates .github/tests/test_candidate_artifacts.py
+```
+
+These checks use generated fixtures and need no GitHub credential. Trusted
+cross-repository retrieval is a separately dispatched, protected workflow; do
+not place App credentials in a local environment or pull-request workflow.

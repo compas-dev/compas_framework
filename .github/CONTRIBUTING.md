@@ -8,34 +8,43 @@ We accept code contributions through pull requests.
 In short, this is how that works.
 
 1. Fork [the repository](https://github.com/compas-dev/compas_framework) and clone the fork.
-2. Install Python 3.12–3.14 and [uv](https://docs.astral.sh/uv/).
-3. From the repository root, synchronize the locked tooling environment:
+2. Install [uv](https://docs.astral.sh/uv/).
+3. Synchronize the locked, tooling-only development environment:
 
    ```bash
-   uv sync --locked --project .github/tooling
+   uv sync --locked --only-group dev --no-install-project
    ```
 
-4. Start making changes on a branch based on `main`.
-5. Run the ordinary checks:
+4. Run the ordinary repository checks:
 
    ```bash
-   uv run --no-sync --project .github/tooling ruff check .
-   uv run --no-sync --project .github/tooling ruff format --check .
-   uv run --no-sync --project .github/tooling pyright
-   uv run --no-sync --project .github/tooling pytest -p no:cacheprovider tests/test_package.py
-   uv run --no-sync --project .github/tooling mkdocs build --strict
+   uv run --no-sync invoke check typecheck test docs
    ```
 
-6. Commit, push, and open a pull request.
+5. Branch from `main` for ordinary changes. For an existing coordinated
+   initiative, follow the base branch recorded in its handoff.
+6. Repeat the ordinary checks and run any relevant integration checks:
 
-The tooling environment installs repository checks independently of the
-framework and its native dependencies. Use an environment documented by the
-owning package when running native or cross-package integration.
+   ```bash
+   uv run --no-sync invoke check typecheck test docs
+   ```
 
-Use the canonical checkout for each repository. Keep one writer per repository
-and record checkpoints in the initiative handoff or draft PR. Create an
-additional worktree only when explicitly requested, with a visible path and
-owner recorded in the handoff.
+7. Commit your changes and push your branch to GitHub.
+8. Create a [pull request](https://help.github.com/articles/about-pull-requests/) through the GitHub website.
+
+During development, use [pyinvoke](http://docs.pyinvoke.org/) tasks on the
+command line to ease recurring operations:
+
+* `uv run --no-sync invoke check`: Run Ruff lint and format checks.
+* `uv run --no-sync invoke test`: Run the pure package tests.
+* `uv run --no-sync invoke typecheck`: Run Pyright over the coordination package and pure tests.
+* `uv run --no-sync invoke docs`: Build the MkDocs documentation strictly into temporary storage.
+* `uv run --no-sync invoke build`: Build wheel and source distributions into temporary storage.
+* `uv run --no-sync invoke --list`: Show available aliases.
+
+Use the canonical checkout for each repository and record progress in the
+initiative handoff or draft PR. Create an additional worktree only when
+explicitly requested and record its visible path, branch, and owner.
 
 ## Bug reports
 

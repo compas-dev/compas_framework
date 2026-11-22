@@ -1,15 +1,5 @@
 # Testing Strategy
 
-Ordinary pull requests run a pure tooling check on Python 3.12–3.14 across
-Linux, macOS, and Windows, plus a strict documentation build. The tooling check
-does not install the framework or its runtime dependencies.
-
-For a coordinated release, the manual `framework-install` workflow builds
-one metapackage wheel and attempts a clean install of its required
-dependencies from PyPI on each target in `framework-matrix.json`. Run it
-after the intended upstream releases are available and record the result
-alongside the runtime integration evidence.
-
 Cross-package integration can cover:
 
 - plugin discovery and dispatch through public COMPAS APIs;
@@ -18,6 +8,90 @@ Cross-package integration can cover:
 - performance baselines for representative cross-package operations; and
 - installation checks for coordinated package releases.
 
-Use the `integration`, `roundtrip`, `performance`, `gui`, and `native_backend`
-markers to select tests by capability. Tests needing a display or native
-backend should skip with a precise reason when that capability is unavailable.
+## Pure repository checks
+
+The ordinary pull-request matrix covers Python 3.12, 3.13, and 3.14 on Linux,
+macOS, and Windows without installing the framework runtime dependencies:
+
+```bash
+uv sync --locked --only-group dev --no-install-project
+uv run --no-sync ruff check .
+uv run --no-sync ruff format --check .
+uv run --no-sync pyright
+uv run --no-sync pytest tests/test_package.py
+```
+
+CI also inspects the synchronized environment and fails if any framework
+distribution, including OCC, CGAL, or libigl, was installed.
+
+## Distribution artifacts
+
+The package job builds one wheel and one source distribution into the runner's
+temporary directory. The same files are checked for complete metadata and
+expected runtime requirements, installed with `--no-deps` in an isolated
+environment, and uploaded for review. This verifies the coordination package
+without downloading its native runtime backends.
+
+Documentation is built separately and strictly:
+
+```bash
+uv sync --frozen --only-group docs --no-install-project
+uv run --no-sync mkdocs build --strict
+```
+
+CI supplies a temporary `--site-dir`; generated documentation never lands in
+the repository checkout.
+
+## Complete installation
+
+The manual `framework-install` workflow builds one metapackage wheel and tries
+a clean installation with its required dependencies from PyPI on each target
+in `framework-matrix.json`. Run it after the intended upstream releases are
+available. Keep the result alongside the runtime and exact-artifact evidence.
+
+## Native integration
+
+`native-candidate-integration.yml` is the authoritative Linux x86-64,
+Python 3.12 candidate gate. A reviewed JSON manifest selects the exact COMPAS,
+OCC, CGAL, and libigl wheels by owning workflow run, artifact, filename, and
+SHA-256. Credentialed retrieval produces a verified offline bundle. A separate
+secret-free job installs that bundle and the framework wheel with
+`--no-index --no-deps`, then verifies installed distribution versions, plugin
+discovery, CGAL-to-core-to-libigl data flow, OCC BRep construction, and the
+external typing consumer.
+
+The JUnit post-check rejects a failed, errored, skipped, or empty suite and
+requires every named integration test. A skip is therefore useful diagnostic
+information but never passing candidate evidence. The reviewed live manifest
+is recorded, and the protected non-main integration ref plus read-only GitHub
+App environment are configured. Protected run `42299118381` provides the
+required hosted-positive evidence at `d0c9d4e`. Credentialed
+retrieval, framework-wheel construction, and secret-free execution all pass;
+the four required runtime tests report no skips, and installed-wheel Pyright
+reports zero errors and warnings. Main remains untouched.
+
+The selected `run_attempt` must be successful. GitHub reruns may retain outputs
+from successful jobs in an earlier attempt and use them in dependent jobs of
+the selected successful attempt. Candidate admission therefore binds the
+artifact to its exact workflow-run ID, commit, repository, API digest, archive
+digest, and wheel digest; it does not incorrectly require the retained
+artifact's creation timestamp to fall after the selected attempt's start. An
+artifact created after the selected successful attempt completed is rejected.
+
+`candidate-contracts.yml` runs on ordinary pull requests without secrets. It
+checks the schema, provenance rules, archive safety, wheel metadata, offline
+revalidation, release-order fixtures, and focused negative cases proving that
+a changed digest and a skipped backend are rejected.
+
+The larger `tests/test_native_geometry_backends.py` and
+`tests/test_geometry_tessellation_integration.py` files remain pending
+strategy-era fixtures outside the ordinary gates. They are not substituted
+for the installed-artifact contracts or cited as current integration evidence.
+
+Geometry-tessellation performance thresholds are deferred until the framework
+has an environment-normalized benchmark runner. Wall-clock assertions in this
+suite would primarily measure plugin discovery, native-library loading, and CI
+machine variance rather than tessellation regressions. Future benchmarks
+should use the existing `performance`
+marker with recorded input sizes, warm-up policy, backend versions, and
+per-backend baselines.

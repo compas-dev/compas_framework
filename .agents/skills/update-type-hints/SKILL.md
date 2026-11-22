@@ -5,7 +5,8 @@ description: Add, modernize, or review Python type hints in COMPAS Framework int
 
 # Update COMPAS Framework type hints
 
-Apply `AGENTS.md`, especially **Python and Typing**, **Framework Integration Contracts**, and **Tests and Validation**.
+Apply `AGENTS.md`, accepted typing and integration decisions, and the owning
+repository's configured validation commands.
 
 ## Requirements
 
