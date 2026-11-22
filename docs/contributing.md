@@ -1,19 +1,22 @@
 # Contributing
 
-Install the project with development and documentation dependencies:
+Install [uv](https://docs.astral.sh/uv/) and synchronize the tooling environment
+from the repository root:
 
 ```bash
-python -m pip install -e ".[dev,docs]"
+uv sync --locked --project .github/tooling
 ```
 
 Run focused tests while developing, then run the repository checks:
 
 ```bash
-invoke test
-invoke check
-invoke typecheck
-invoke docs
+uv run --no-sync --project .github/tooling ruff check .
+uv run --no-sync --project .github/tooling ruff format --check .
+uv run --no-sync --project .github/tooling pyright
+uv run --no-sync --project .github/tooling pytest -p no:cacheprovider tests/test_package.py
+uv run --no-sync --project .github/tooling mkdocs build --strict
 ```
 
-Integration tests and examples should use public APIs and span package
-boundaries. Package-local fixes belong in the owning package repository.
+Use the canonical checkout and keep checkpoints visible in the handoff or
+draft PR. Install native dependencies separately using the owning package's
+documented environment when working on cross-package integration.

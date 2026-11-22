@@ -2,24 +2,50 @@ name: build
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    if: "!contains(github.event.pull_request.labels.*.name, 'docs-only')"
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python: ["3.10", "3.11", "3.12"]
+        python: ["3.12", "3.13", "3.14"]
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      UV_PYTHON: ${{ matrix.python }}
+      RUFF_NO_CACHE: "true"
 
     steps:
-      - uses: compas-dev/compas-actions.build@v4
+      - name: Configure temporary tool environment
+        shell: bash
+        run: echo "UV_PROJECT_ENVIRONMENT=$RUNNER_TEMP/framework-tooling" >> "$GITHUB_ENV"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          python: ${{ matrix.python }}
-          invoke_lint: true
-          invoke_test: true
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          version: "0.12.7"
+      - run: uv sync --locked --project .github/tooling
+      - name: Lint and format
+        run: |
+          uv run --no-sync --project .github/tooling ruff check .
+          uv run --no-sync --project .github/tooling ruff format --check .
+      - name: Type check
+        run: uv run --no-sync --project .github/tooling pyright
+      - name: Run pure package tests
+        run: >-
+          uv run --no-sync --project .github/tooling pytest
+          --basetemp "${{ runner.temp }}/framework-pytest" -p no:cacheprovider tests/test_package.py

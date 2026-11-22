@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Added a locked environment for repository checks without installing framework
+  runtime packages and a manual clean-install check for the full metapackage.
+
 ### Changed
+
+* Run ordinary CI on pull requests to any base branch and use canonical
+  checkouts for initiative work.
 
 ### Removed
 
