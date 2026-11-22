@@ -1,12 +1,12 @@
 # Testing Strategy
 
-Framework tests are organized by the contract they exercise:
+Cross-package integration can cover:
 
 - plugin discovery and dispatch through public COMPAS APIs;
 - data roundtrips across serialization formats and package boundaries;
 - end-to-end workflows combining geometry, algorithms, models, and viewing;
 - performance baselines for representative cross-package operations; and
-- packaging checks for the supported Python and operating-system matrix.
+- installation checks for coordinated package releases.
 
 ## Pure repository checks
 
@@ -14,7 +14,7 @@ The ordinary pull-request matrix covers Python 3.12, 3.13, and 3.14 on Linux,
 macOS, and Windows without installing the framework runtime dependencies:
 
 ```bash
-uv sync --frozen --only-group dev --no-install-project
+uv sync --locked --only-group dev --no-install-project
 uv run --no-sync ruff check .
 uv run --no-sync ruff format --check .
 uv run --no-sync pyright
@@ -41,6 +41,13 @@ uv run --no-sync mkdocs build --strict
 
 CI supplies a temporary `--site-dir`; generated documentation never lands in
 the repository checkout.
+
+## Complete installation
+
+The manual `framework-install` workflow builds one metapackage wheel and tries
+a clean installation with its required dependencies from PyPI on each target
+in `framework-matrix.json`. Run it after the intended upstream releases are
+available. Keep the result alongside the runtime and exact-artifact evidence.
 
 ## Native integration
 

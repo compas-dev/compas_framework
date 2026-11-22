@@ -35,29 +35,31 @@ modernization initiatives.
 
 ## Default Environment
 
-- Use the Conda environment `compas3` for all COMPAS Framework work unless a
-  package explicitly documents a different required environment.
-- The default Python interpreter is:
+- Use the locked, tooling-only uv environment for ordinary checks. Sync with
+  `uv sync --locked --only-group dev --no-install-project`, then use
+  `uv run --no-sync invoke` with the tasks listed in the contributor guide.
+- Use `compas3` for local native and sibling-checkout integration unless the
+  owning package specifies another environment. The maintainer's interpreter is:
 
   ```text
   /Users/vanmelet/miniforge3/envs/compas3/bin/python
   ```
 
-- Run Python tools through this environment. Prefer explicit invocations such
-  as:
-
-  ```text
-  /Users/vanmelet/miniforge3/envs/compas3/bin/python -m pytest
-  /Users/vanmelet/miniforge3/envs/compas3/bin/python -m ruff check
-  /Users/vanmelet/miniforge3/envs/compas3/bin/python -m ruff format --check
-  /Users/vanmelet/miniforge3/envs/compas3/bin/python -m pyright
-  ```
-
-- Run the Pyright package installed in `compas3`. Do not use `npx` and do not
-  treat results from the shell's default Python or another environment as
-  authoritative.
 - Verify native package imports with `compas3` before reporting a compiled
   extension as unavailable.
+
+## Checkouts and Progress
+
+- Work in each repository's canonical checkout on the agreed task branch.
+  Check the branch and working tree before editing, and preserve existing changes.
+- Create an additional worktree only when explicitly requested. Use an agreed,
+  visible path outside system temporary directories and record its path, branch,
+  owner, and cleanup status in the handoff.
+- Assign one writer per repository at a time. Read-only work and writes in
+  distinct package repositories can run in parallel.
+- At meaningful checkpoints, report the checkout, branch, changed files, and
+  verification status. When commits and pushes are authorized, keep the draft PR
+  current so progress is visible.
 
 ## Delegation
 
@@ -125,8 +127,7 @@ STOP and request user approval.
 After approval:
 - Break the proposal into small tasks.
 - Assign file and repository ownership.
-- Execute independent tasks in parallel.
-- Avoid concurrent edits to shared files.
+- Execute independent tasks in parallel according to the checkout rules above.
 - Run tests after each task.
 - Keep implementation changes no broader than the accepted decisions.
 - Remove obsolete paths instead of leaving unused abstractions behind when

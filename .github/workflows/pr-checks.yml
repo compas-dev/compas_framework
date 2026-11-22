@@ -3,7 +3,6 @@ name: verify-pr
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
-    branches: [main, initiative/geometry-tessellation, initiative/repository-modernisation]
 
 permissions:
   contents: read

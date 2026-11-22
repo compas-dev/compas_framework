@@ -29,11 +29,8 @@ Development tooling is locked separately from the framework runtime packages.
 Create a pure tool environment without installing native backends:
 
 ```bash
-uv sync --frozen --only-group dev --no-install-project
-uv run invoke check
-uv run invoke typecheck
-uv run invoke test
-uv run invoke docs
+uv sync --locked --only-group dev --no-install-project
+uv run --no-sync invoke check typecheck test docs
 ```
 
 The lock records the complete published project metadata. Its package sources
