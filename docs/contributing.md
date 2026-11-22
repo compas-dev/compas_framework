@@ -25,11 +25,10 @@ The Invoke tasks are thin aliases for Ruff, Pyright, pytest, MkDocs, and
 `uv build`. The direct commands used by CI remain visible in the
 workflow files.
 
-Use each repository's canonical checkout and make progress visible through the
-initiative handoff and draft pull request. Keep one writer per repository at a
-time. Read-only work and writes in different repositories can run in parallel.
-Create an additional worktree only when explicitly requested and record its
-visible path, branch, and owner in the handoff.
+Use each repository's canonical checkout and record progress and verification
+in the pull request. The COMPAS Hub tracks plans and handoffs for work that
+spans repositories. Create an additional worktree only when explicitly
+requested and record its visible path, branch, and owner in the pull request.
 
 Changes to coordinated candidate infrastructure use the isolated locked group:
 

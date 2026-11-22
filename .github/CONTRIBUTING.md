@@ -21,8 +21,8 @@ In short, this is how that works.
    uv run --no-sync invoke check typecheck test docs
    ```
 
-5. Branch from `main` for ordinary changes. For an existing coordinated
-   initiative, follow the base branch recorded in its handoff.
+5. Branch from `main` for ordinary changes. For COMPAS 3 upgrade work, use
+   `c3-upgrade` or the base agreed for the initiative in the COMPAS Hub.
 6. Repeat the ordinary checks and run any relevant integration checks:
 
    ```bash
@@ -37,13 +37,13 @@ command line to ease recurring operations:
 
 * `uv run --no-sync invoke check`: Run Ruff lint and format checks.
 * `uv run --no-sync invoke test`: Run the pure package tests.
-* `uv run --no-sync invoke typecheck`: Run Pyright over the coordination package and pure tests.
+* `uv run --no-sync invoke typecheck`: Run Pyright over the framework package and pure tests.
 * `uv run --no-sync invoke docs`: Build the MkDocs documentation strictly into temporary storage.
 * `uv run --no-sync invoke build`: Build wheel and source distributions into temporary storage.
 * `uv run --no-sync invoke --list`: Show available aliases.
 
-Use the canonical checkout for each repository and record progress in the
-initiative handoff or draft PR. Create an additional worktree only when
+Use the canonical checkout for each repository and record progress and
+verification in the pull request. Create an additional worktree only when
 explicitly requested and record its visible path, branch, and owner.
 
 ## Bug reports

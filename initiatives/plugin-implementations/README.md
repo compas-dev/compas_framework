@@ -11,8 +11,8 @@ coordinated artifact and remaining selection/parity gates incomplete**.
 - [Inventory](inventory.md)
 - [Proposal](proposal.md)
 - [Architecture decisions](decisions/README.md)
-- [Implementation plan](implementation-plan.md)
-- [Current handoff](handoff.md)
+
+The COMPAS Hub tracks the active rollout plan and handoff.
 
 ADRs 001–006 are **Accepted**. Implementation is authorized only for the six
 packages in Waves 0–1. Subsequent modernization and typing work completed the
