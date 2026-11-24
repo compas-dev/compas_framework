@@ -4,9 +4,9 @@ The integration and release package for the main COMPAS framework packages:
 `compas`, `compas_occ`, `compas_cgal`, `compas_libigl`, `compas_gmsh`,
 `compas_viewer`, `compas_model`, `compas_shapeop`, and `compas_session`.
 
-In addition to providing one installation target, this repository hosts
-full-framework tests, data roundtrips, performance checks, examples, and
-documentation.
+This repository owns the metapackage, cross-package verification, and release
+candidate evidence. Individual package APIs and examples live in their owning
+repositories.
 
 ## Installation
 
@@ -14,8 +14,10 @@ documentation.
 pip install compas_framework
 ```
 
-Python 3.12, 3.13, and 3.14 are supported. Some geometry backends have native
-dependencies and may be easier to install through conda-forge.
+The metapackage targets Python 3.12, 3.13, and 3.14. Complete runtime
+installation across the target matrix still needs hosted verification. Some
+geometry backends also require native libraries. See the
+[package matrix](docs/packages.md) for current verification coverage.
 
 The COMPAS 3 metapackage does not currently provide Rhino, Grasshopper, or
 Blender extras. Those bundles will return after their owning packages declare

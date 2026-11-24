@@ -1,6 +1,8 @@
 # Installation
 
-The framework supports Python 3.12, 3.13, and 3.14.
+The metapackage targets Python 3.12, 3.13, and 3.14. Full runtime support is
+verified separately from the package metadata and pure tooling checks. See
+the [package matrix](packages.md) for current coverage.
 
 ```bash
 python -m pip install compas_framework
@@ -24,7 +26,7 @@ environment:
 ```bash
 git clone https://github.com/compas-dev/compas_framework.git
 cd compas_framework
-uv sync --frozen --only-group dev --no-install-project
+uv sync --locked --only-group dev --no-install-project
 ```
 
 Alternatively, `environment.yml` bootstraps Python and uv with Conda. Run the

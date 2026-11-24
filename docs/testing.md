@@ -1,12 +1,12 @@
 # Testing Strategy
 
-Cross-package integration can cover:
+Framework tests are organized by the contract they exercise:
 
 - plugin discovery and dispatch through public COMPAS APIs;
 - data roundtrips across serialization formats and package boundaries;
 - end-to-end workflows combining geometry, algorithms, models, and viewing;
 - performance baselines for representative cross-package operations; and
-- installation checks for coordinated package releases.
+- packaging checks for the supported Python and operating-system matrix.
 
 ## Pure repository checks
 
@@ -44,10 +44,12 @@ the repository checkout.
 
 ## Complete installation
 
-The manual `framework-install` workflow builds one metapackage wheel and tries
-a clean installation with its required dependencies from PyPI on each target
-in `framework-matrix.json`. Run it after the intended upstream releases are
-available. Keep the result alongside the runtime and exact-artifact evidence.
+The manual `framework-install.yml` workflow builds the metapackage from a
+selected commit and installs it from scratch with its dependencies from PyPI.
+It runs dependency checks on every target in the [package matrix](packages.md).
+Run it after the matching upstream distributions are available. The runtime
+and artifact gates supply separate evidence of cross-package behavior and
+exact artifact provenance.
 
 ## Native integration
 
@@ -83,10 +85,10 @@ checks the schema, provenance rules, archive safety, wheel metadata, offline
 revalidation, release-order fixtures, and focused negative cases proving that
 a changed digest and a skipped backend are rejected.
 
-The larger `tests/test_native_geometry_backends.py` and
-`tests/test_geometry_tessellation_integration.py` files remain pending
-strategy-era fixtures outside the ordinary gates. They are not substituted
-for the installed-artifact contracts or cited as current integration evidence.
+The pending geometry fixtures live under `tests/integration/`. For local
+diagnostics, explicitly select a file in that directory from `compas3`. The
+fixtures require the Core, OCC, CGAL, and libigl sibling checkouts. Bare
+`pytest` runs the pure suite and never loads those checkouts.
 
 Geometry-tessellation performance thresholds are deferred until the framework
 has an environment-normalized benchmark runner. Wall-clock assertions in this

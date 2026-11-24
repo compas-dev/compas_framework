@@ -1,28 +1,15 @@
 import os
-import re
 import tarfile
+import tomllib
 import zipfile
 from email.parser import BytesParser
 from pathlib import Path
 
+from packaging.requirements import Requirement
+from packaging.utils import canonicalize_name
 
-RUNTIME_DEPENDENCIES = {
-    "compas",
-    "compas-cgal",
-    "compas-gmsh",
-    "compas-libigl",
-    "compas-model",
-    "compas-occ",
-    "compas-session",
-    "compas-shapeop",
-    "compas-viewer",
-}
+
 DEVELOPMENT_DEPENDENCIES = {"build", "invoke", "mkdocs", "pyright", "pytest", "ruff", "twine"}
-
-
-def canonical_name(requirement: str) -> str:
-    name = re.split(r"[ (;<>=]", requirement, maxsplit=1)[0]
-    return re.sub(r"[-_.]+", "-", name).lower()
 
 
 def test_built_distributions_are_complete():
@@ -39,11 +26,12 @@ def test_built_distributions_are_complete():
         metadata = BytesParser().parsebytes(archive.read(metadata_path))
 
     raw_requirements = metadata.get_all("Requires-Dist", [])
-    requirements = {canonical_name(requirement) for requirement in raw_requirements}
+    requirements = {Requirement(value) for value in raw_requirements}
     assert "compas_framework/__init__.py" in names
     assert set(metadata["Requires-Python"].split(",")) == {">=3.12", "<3.15"}
-    assert RUNTIME_DEPENDENCIES <= requirements
-    assert DEVELOPMENT_DEPENDENCIES.isdisjoint(requirements)
+    assert DEVELOPMENT_DEPENDENCIES.isdisjoint(canonicalize_name(requirement.name) for requirement in requirements)
+    project = tomllib.loads((Path(__file__).resolve().parents[1] / "pyproject.toml").read_text())["project"]
+    assert requirements == {Requirement(value) for value in project["dependencies"]}
     assert metadata.get_all("Provides-Extra", []) == []
     assert all("extra ==" not in requirement for requirement in raw_requirements)
 

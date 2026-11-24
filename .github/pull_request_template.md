@@ -14,9 +14,7 @@
 _Put an `x` in the boxes that apply. You can also fill these out after creating the PR. If you're unsure about any of them, don't hesitate to ask. We're here to help! This is simply a reminder of what we are going to look for before merging your code._
 
 - [ ] I added a line to the `CHANGELOG.md` file in the `Unreleased` section under the most fitting heading (e.g. `Added`, `Changed`, `Removed`).
-- [ ] I ran the pure package tests locally (`uv run invoke test`).
-- [ ] I ran lint locally and there are no errors (`uv run invoke lint`).
-- [ ] I added new functions/classes and made them available on a second-level import, e.g. `compas.datastructures.Mesh`.
+- [ ] I ran the local checks (`uv run --no-sync invoke check typecheck test docs`).
 - [ ] I recorded any applicable cross-package verification evidence in this pull request.
 - [ ] I have added tests that prove my fix is effective or that my feature works.
 - [ ] I have added necessary documentation (if appropriate)

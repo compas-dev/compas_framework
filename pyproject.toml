@@ -111,8 +111,8 @@ where = ["src"]
 # ============================================================================
 
 [tool.pytest.ini_options]
-minversion = "6.0"
-testpaths = ["tests", "src/compas_framework"]
+minversion = "9.0"
+testpaths = ["tests/test_package.py"]
 python_files = ["test_*.py", "*_test.py", "test.py"]
 addopts = [
     "-ra",
@@ -165,8 +165,7 @@ line-length = 179
 indent-width = 4
 target-version = "py312"
 extend-exclude = [
-    "tests/test_geometry_tessellation_integration.py",
-    "tests/test_native_geometry_backends.py",
+    "tests/integration",
 ]
 
 [tool.ruff.lint]

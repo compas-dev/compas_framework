@@ -16,7 +16,7 @@ required package files.
 
 Run it only against artifacts built from the same checkout by setting
 `COMPAS_FRAMEWORK_DIST_DIR` to their temporary output directory. The local
-`uv run invoke build` command builds the current working tree rather than only
+`uv run --no-sync invoke build` command builds the current working tree rather than only
 committed `HEAD` content.
 
 ## Core geometry conversions
@@ -45,14 +45,14 @@ plugin-dispatch examples:
 
 ## Pending native integration fixtures
 
-[`tests/test_native_geometry_backends.py`](https://github.com/compas-dev/compas_framework/blob/main/tests/test_native_geometry_backends.py)
+`tests/integration/test_native_geometry_backends.py`
 and
-[`tests/test_geometry_tessellation_integration.py`](https://github.com/compas-dev/compas_framework/blob/main/tests/test_geometry_tessellation_integration.py)
+`tests/integration/test_geometry_tessellation_integration.py`
 are pending geometry and typing candidate-integration fixtures. They are
 outside the ordinary Ruff, Pyright, and runtime gates and are not authoritative
 proof of the accepted target contracts.
 
 They are not used as the candidate gate. The installed-artifact contracts in
 `.github/candidates` exercise the approved current boundaries without source
-checkout fallbacks. The reviewed live manifest exists, but until its hosted run
-succeeds, do not cite either fixture set as positive candidate evidence.
+checkout fallbacks. See the [testing strategy](testing.md) for the scope of
+recorded candidate evidence.

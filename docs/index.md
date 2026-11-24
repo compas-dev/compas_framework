@@ -1,8 +1,8 @@
 # COMPAS Framework
 
 `compas_framework` is the integration and release package for the main COMPAS
-framework. It provides one tested installation target and a home for workflows
-that cross package boundaries.
+framework. It provides a single installation target and owns cross-package
+verification and release candidate evidence.
 
 The distribution installs `compas`, `compas_occ`, `compas_cgal`,
 `compas_libigl`, `compas_gmsh`, `compas_viewer`, `compas_model`,
@@ -10,6 +10,6 @@ The distribution installs `compas`, `compas_occ`, `compas_cgal`,
 Grasshopper, or Blender extras because the published host packages do not yet
 declare compatible COMPAS 3 dependencies.
 
-This repository focuses on framework-level plugin discovery, data roundtrips,
-performance checks, examples, and documentation. Implementations owned by one
-package remain in that package's repository.
+See the [testing strategy](testing.md) for the verified scope and the
+[package matrix](packages.md) for coverage by package. Implementation and
+package-local examples live in their owning repositories.

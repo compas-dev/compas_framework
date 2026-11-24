@@ -1,4 +1,15 @@
 {
   "python": ["3.12", "3.13", "3.14"],
-  "install_check_os": ["ubuntu-latest", "macos-latest", "windows-latest"]
+  "install_check_os": ["ubuntu-latest", "macos-latest", "windows-latest"],
+  "packages": {
+    "compas": ["native-artifact", "scene-source"],
+    "compas-cgal": ["native-artifact"],
+    "compas-gmsh": [],
+    "compas-libigl": ["native-artifact"],
+    "compas-model": ["scene-source"],
+    "compas-occ": ["native-artifact"],
+    "compas-session": [],
+    "compas-shapeop": [],
+    "compas-viewer": ["scene-source"]
+  }
 }
