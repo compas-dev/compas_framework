@@ -88,7 +88,7 @@ interpreter and local core source path for a reproducible check.
 
 ### Central aliases reject supported NumPy inputs
 
-[`compas._typing`](/Users/vanmelet/Code/compas/src/compas/_typing.py) defines:
+[`compas._typing`](https://github.com/compas-dev/compas/blob/943d9fdc366bf4bc55a2942dad259d112b23ab6c/src/compas/_typing.py) defines:
 
 ```python
 CoordinateType = Coordinate | Sequence[float]
@@ -109,7 +109,7 @@ CellNetwork type modules, creating drift from the central aliases.
 
 ### `Tessellation` has a contradictory buffer contract
 
-[`Tessellation`](/Users/vanmelet/Code/compas/src/compas/geometry/tessellation.py)
+[`Tessellation`](https://github.com/compas-dev/compas/blob/943d9fdc366bf4bc55a2942dad259d112b23ab6c/src/compas/geometry/tessellation.py)
 documents and preserves zero-copy NumPy/native buffers. Runtime validation uses
 `numbers.Real` and `numbers.Integral`, correctly accepting NumPy scalar values.
 Its generic bounds and optional normal/UV/polyline annotations remain
@@ -210,7 +210,7 @@ express C-contiguity, so this must remain a documented runtime contract.
 
 ### Public input versus native buffer types
 
-[`compas_cgal.types`](/Users/vanmelet/Code/compas_cgal/src/compas_cgal/types.py)
+[`compas_cgal.types`](https://github.com/compas-dev/compas_cgal/blob/d31ec0f0cdbadc326d587b2b217763e19e8720e7/src/compas_cgal/types.py)
 contains dtype aliases such as `FloatNx3` and `IntNx3`. Their `Annotated` shape
 metadata is descriptive; Pyright does not enforce it.
 

@@ -11,7 +11,6 @@ integration scope**.
 - [Inventory](inventory.md)
 - [Proposal](proposal.md)
 - [Architecture decisions](decisions/README.md)
-- [Implementation plan](implementation-plan.md)
 
 ADRs 001–017 and Geometry ADRs 022–023 are approved. Together they define the
 exact geometry signatures, layered semantic

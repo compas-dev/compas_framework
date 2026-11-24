@@ -39,6 +39,9 @@ candidate manifest. `--only-group dev --no-install-project` installs only
 repository tools; it does not install `compas_occ`, `compas_cgal`,
 `compas_libigl`, or the other framework runtime packages.
 
+The COMPAS Hub tracks cross-package initiative plans and handoffs. In the
+local COMPAS workspace, start at `Hub/initiatives/README.md`.
+
 ## Documentation
 
 For more information, see the [COMPAS Framework documentation](https://compas.dev/compas_framework).

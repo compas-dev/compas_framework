@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+* Moved initiative coordination plans, handoffs, and Codex agent roles to
+  the COMPAS Hub. Framework retains the technical decision records.
 * Removed the `rhino`, `blender`, and `hosts` extras from the COMPAS 3
   metapackage until their owning packages declare compatible dependencies and
   pass host-runtime verification. Existing COMPAS 2 releases are unchanged.

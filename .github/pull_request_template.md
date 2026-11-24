@@ -17,5 +17,6 @@ _Put an `x` in the boxes that apply. You can also fill these out after creating 
 - [ ] I ran the pure package tests locally (`uv run invoke test`).
 - [ ] I ran lint locally and there are no errors (`uv run invoke lint`).
 - [ ] I added new functions/classes and made them available on a second-level import, e.g. `compas.datastructures.Mesh`.
+- [ ] I recorded any applicable cross-package verification evidence in this pull request.
 - [ ] I have added tests that prove my fix is effective or that my feature works.
 - [ ] I have added necessary documentation (if appropriate)
