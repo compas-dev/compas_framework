@@ -3,21 +3,20 @@ import re
 import tomllib
 from pathlib import Path
 from runpy import run_path
+from urllib.parse import urlsplit
+
+import pytest
+from packaging.requirements import Requirement
+from packaging.utils import canonicalize_name
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_version_is_available():
     namespace = run_path(str(Path(__file__).parents[1] / "src" / "compas_framework" / "__init__.py"))
 
     assert namespace["__version__"]
-
-
-def test_install_matrix_covers_declared_python_versions():
-    root = Path(__file__).resolve().parents[1]
-    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
-    matrix = json.loads((root / "framework-matrix.json").read_text(encoding="utf-8"))
-    classifier_prefix = "Programming Language :: Python :: 3."
-    declared = {classifier.removeprefix("Programming Language :: Python :: ") for classifier in project["classifiers"] if classifier.startswith(classifier_prefix)}
-    assert set(matrix["python"]) == declared
 
 
 def test_local_build_uses_current_working_tree(tmp_path):
@@ -69,20 +68,48 @@ def test_native_candidate_integration_runs_from_the_protected_initiative_branch(
     assert "inputs.manifest_path || '.github/candidates/native-linux-py312.json'" in workflow
 
 
-def test_scene_candidate_integration_pins_exact_source_revisions():
-    source = Path(__file__).parents[1]
-    workflow = (source / ".github" / "workflows" / "scene-candidate-integration.yml").read_text()
-
-    for filename, distribution in (("core-requirements.txt", "compas"), ("viewer-requirements.txt", "compas_viewer")):
-        requirement = (source / ".github" / "scene-candidates" / filename).read_text().strip()
-        prefix = f"{distribution} @ git+https://github.com/compas-dev/{distribution}.git@"
-        assert requirement.startswith(prefix)
-        assert re.fullmatch(r"[0-9a-f]{40}", requirement.removeprefix(prefix))
-    assert "branches: [c3-upgrade]" in workflow
-    assert "core-requirements.txt" in workflow
-    assert "viewer-requirements.txt" in workflow
+@pytest.mark.parametrize(
+    ("filename", "distribution", "repository"),
+    [
+        ("core-requirements.txt", "compas", "compas-dev/compas"),
+        ("viewer-requirements.txt", "compas_viewer", "compas-dev/compas_viewer"),
+        ("model-requirements.txt", "compas_model", "BlockResearchGroup/compas_model"),
+    ],
+)
+def test_scene_candidate_pins_exact_source_revision(filename, distribution, repository):
+    requirement = Requirement((ROOT / ".github" / "scene-candidates" / filename).read_text().strip())
+    assert requirement.name == distribution
+    assert requirement.url is not None
+    url = urlsplit(requirement.url)
+    assert url.scheme == "git+https"
+    assert url.netloc == "github.com"
+    repository_path, _, revision = url.path.rpartition("@")
+    assert repository_path == f"/{repository}.git"
+    assert re.fullmatch(r"[0-9a-f]{40}", revision)
+    assert requirement.marker is None
+    assert not requirement.extras
+    assert not url.query and not url.fragment
+    workflow = (ROOT / ".github" / "workflows" / "scene-candidate-integration.yml").read_text()
+    assert filename in workflow
     assert "--no-deps" in workflow
     assert "source-installed-candidates" in workflow
+
+
+def test_framework_matrix_matches_package_metadata_and_candidate_coverage():
+    matrix = json.loads((ROOT / "framework-matrix.json").read_text())
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
+    dependencies = {canonicalize_name(Requirement(value).name) for value in project["dependencies"]}
+    assert set(matrix["packages"]) == dependencies
+    assert matrix["python"] == [
+        classifier.removeprefix("Programming Language :: Python :: ") for classifier in project["classifiers"] if classifier.startswith("Programming Language :: Python :: 3.")
+    ]
+
+    native_manifest = json.loads((ROOT / ".github" / "candidates" / "native-linux-py312.json").read_text())
+    native_packages = {package["distribution"] for package in native_manifest["packages"]}
+    scene_packages = {canonicalize_name(Requirement(path.read_text().strip()).name) for path in (ROOT / ".github" / "scene-candidates").glob("*-requirements.txt")}
+    coverage = {name: set(gates) for name, gates in matrix["packages"].items()}
+    assert coverage == {name: {gate for gate, packages in [("native-artifact", native_packages), ("scene-source", scene_packages)] if name in packages} for name in dependencies}
+    assert native_packages | scene_packages <= dependencies
 
 
 def test_framework_examples_page_is_link_oriented():
@@ -93,7 +120,8 @@ def test_framework_examples_page_is_link_oriented():
 
 
 def test_pending_candidate_fixtures_are_outside_ordinary_static_gates():
-    configuration = (Path(__file__).parents[1] / "pyproject.toml").read_text()
+    configuration = tomllib.loads((ROOT / "pyproject.toml").read_text())["tool"]
 
-    assert '"tests/test_geometry_tessellation_integration.py"' in configuration
-    assert '"tests/test_native_geometry_backends.py"' in configuration
+    assert "tests/integration" in configuration["ruff"]["extend-exclude"]
+    assert configuration["pytest"]["ini_options"]["testpaths"] == ["tests/test_package.py"]
+    assert not (ROOT / "tests" / "conftest.py").exists()

@@ -2,7 +2,6 @@ name: scene-candidate-integration
 
 on:
   pull_request:
-    branches: [c3-upgrade]
     paths:
       - .github/scene-candidates/**
       - .github/workflows/scene-candidate-integration.yml

@@ -20,6 +20,12 @@ approval and implementation. Main remains untouched.
 4. The workflow uploads the verified files only as a temporary GitHub Actions
    candidate artifact.
 
+Before promoting a framework release, record the approved compatibility ranges
+for all required packages in `pyproject.toml`. Confirm the verified wheel
+contains those ranges. After the matching upstream packages are public, run
+`framework-install.yml` against the release commit and record the result
+alongside the exact-artifact evidence.
+
 For a coordinated native release, every owning repository builds its wheel
 once through its protected workflow. The reviewed framework manifest records
 the producing run and immutable archive/wheel hashes. After the hosted native

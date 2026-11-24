@@ -37,7 +37,7 @@ command line to ease recurring operations:
 
 * `uv run --no-sync invoke check`: Run Ruff lint and format checks.
 * `uv run --no-sync invoke test`: Run the pure package tests.
-* `uv run --no-sync invoke typecheck`: Run Pyright over the framework package and pure tests.
+* `uv run --no-sync invoke typecheck`: Run Pyright over the metapackage and pure tests.
 * `uv run --no-sync invoke docs`: Build the MkDocs documentation strictly into temporary storage.
 * `uv run --no-sync invoke build`: Build wheel and source distributions into temporary storage.
 * `uv run --no-sync invoke --list`: Show available aliases.

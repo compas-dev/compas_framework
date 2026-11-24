@@ -17,12 +17,16 @@ mixing these releases with COMPAS 2 is unsupported.
 | `compas_shapeop` | ShapeOp constraint solving | No geometry-tessellation API role |
 | `compas_session` | Session management for COMPAS workflows and tools | No geometry-tessellation API role |
 
-Compatibility is established by the framework test suite and released as one
-versioned dependency set.
+The [framework matrix](https://github.com/compas-dev/compas_framework/blob/c3-upgrade/framework-matrix.json)
+records all required distributions, their configured integration checks, and
+the Python and OS targets for clean installation. The native artifact gate
+covers Core, OCC, CGAL, and libigl on Linux x86-64 with Python 3.12. The scene
+gate covers Core, Viewer, and Model from pinned sources. An empty coverage entry
+indicates that the current integration gates do not exercise that package.
 
-The table intentionally does not predict package release numbers. Each package
-may have a different next major version, but its dependency metadata must express
-the same `compas>=3` baseline before coordinated publication.
+Package release numbers can differ. The tooling lock and candidate pins serve
+their respective checks. Before promotion, record and verify the release set
+and encode its approved compatibility ranges in the wheel metadata.
 
 ## Geometry-tessellation release checklist
 

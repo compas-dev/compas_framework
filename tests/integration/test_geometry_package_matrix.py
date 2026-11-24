@@ -8,7 +8,7 @@ from packaging.version import Version
 
 pytestmark = pytest.mark.integration
 
-CODE_ROOT = Path(__file__).parents[2]
+CODE_ROOT = Path(__file__).parents[3]
 
 
 def _pyproject(repository):
