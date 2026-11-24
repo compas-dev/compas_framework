@@ -39,7 +39,7 @@ jobs:
         run: |
           uv venv
           uv pip install --python .venv/bin/python pytest==9.0.2 pyright==1.1.414
-          uv pip install --python .venv/bin/python compas_viewer==2.0.2
+          uv pip install --python .venv/bin/python compas_viewer==2.0.2 Pillow
           uv pip install \
             --python .venv/bin/python \
             --reinstall \
