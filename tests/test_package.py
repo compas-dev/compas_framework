@@ -1,4 +1,5 @@
 import json
+import re
 import tomllib
 from pathlib import Path
 from runpy import run_path
@@ -66,6 +67,22 @@ def test_native_candidate_integration_runs_from_the_protected_initiative_branch(
 
     assert "push:\n    branches:\n      - initiative/candidate-artifact-integration" in workflow
     assert "inputs.manifest_path || '.github/candidates/native-linux-py312.json'" in workflow
+
+
+def test_scene_candidate_integration_pins_exact_source_revisions():
+    source = Path(__file__).parents[1]
+    workflow = (source / ".github" / "workflows" / "scene-candidate-integration.yml").read_text()
+
+    for filename, distribution in (("core-requirements.txt", "compas"), ("viewer-requirements.txt", "compas_viewer")):
+        requirement = (source / ".github" / "scene-candidates" / filename).read_text().strip()
+        prefix = f"{distribution} @ git+https://github.com/compas-dev/{distribution}.git@"
+        assert requirement.startswith(prefix)
+        assert re.fullmatch(r"[0-9a-f]{40}", requirement.removeprefix(prefix))
+    assert "branches: [c3-upgrade]" in workflow
+    assert "core-requirements.txt" in workflow
+    assert "viewer-requirements.txt" in workflow
+    assert "--no-deps" in workflow
+    assert "source-installed-candidates" in workflow
 
 
 def test_framework_examples_page_is_link_oriented():
