@@ -48,13 +48,15 @@ jobs:
             --python .venv/bin/python \
             --no-deps \
             --reinstall \
-            --requirements .github/scene-candidates/viewer-requirements.txt
+            --requirements .github/scene-candidates/viewer-requirements.txt \
+            --requirements .github/scene-candidates/model-requirements.txt
+          uv pip check --python .venv/bin/python
       - name: Check installed scene typing boundary
         run: >-
           uv run --no-sync pyright
           --pythonversion 3.12
           .github/scene-candidates/test_scene_integration.py
-      - name: Exercise installed scene and Viewer behavior
+      - name: Exercise installed Scene, Viewer, and Model behavior
         run: >-
           uv run --no-sync pytest
           --basetemp "${RUNNER_TEMP}/scene-candidate-pytest"

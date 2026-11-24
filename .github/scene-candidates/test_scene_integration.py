@@ -3,8 +3,10 @@ import os
 import subprocess
 import sys
 from importlib import import_module
+from importlib.metadata import PackageNotFoundError
 from importlib.metadata import distribution
 from math import pi
+from typing import NoReturn
 from unittest.mock import Mock
 from uuid import uuid4
 
@@ -76,29 +78,41 @@ from PySide6.QtWidgets import QTabWidget
 from PySide6.QtWidgets import QToolButton
 
 CORE_COMMIT = "9f4db763d2de0dd9bcddabd29e63bb047ac20385"
-VIEWER_COMMIT = "0f263f15899b85633d5de038bec59ed8504b1142"
+VIEWER_COMMIT = "ff9c36e6400ddc9cfcb541d55f4613c0479a8cd1"
+MODEL_COMMIT = "f8842589c7d3ce3c87d5f042d00de3efdf3f281c"
+
+
+def _missing_installation_metadata(message: str) -> NoReturn:
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        pytest.fail(message)
+    pytest.skip(message)
 
 
 def _installed_commit(distribution_name: str) -> str:
-    direct_url = distribution(distribution_name).read_text("direct_url.json")
+    try:
+        direct_url = distribution(distribution_name).read_text("direct_url.json")
+    except PackageNotFoundError:
+        _missing_installation_metadata(f"{distribution_name} is not installed")
     if direct_url is None:
-        pytest.skip(f"{distribution_name} has no direct_url.json revision metadata")
+        _missing_installation_metadata(f"{distribution_name} has no direct_url.json revision metadata")
     metadata = json.loads(direct_url)
     vcs_info = metadata.get("vcs_info")
     if vcs_info is None or "commit_id" not in vcs_info:
-        pytest.skip(f"{distribution_name} is installed without exact VCS revision metadata")
+        _missing_installation_metadata(f"{distribution_name} is installed without exact VCS revision metadata")
     return vcs_info["commit_id"]
 
 
 def test_exact_source_candidates_are_installed():
     if os.environ.get("COMPAS_SCENE_SOURCE_CHECKOUTS") == "1":
-        pytest.skip("Direct-source local check; exact installed revisions are verified by framework CI.")
+        _missing_installation_metadata("Direct-source checkout mode requires local execution")
     assert _installed_commit("compas") == CORE_COMMIT
     assert _installed_commit("compas_viewer") == VIEWER_COMMIT
+    assert _installed_commit("compas_model") == MODEL_COMMIT
 
 
 def test_plugin_discovery_does_not_import_graphics_modules():
     code = """
+import os
 import sys
 
 from compas.plugins import PluginManager
@@ -140,6 +154,9 @@ assert [item.get("command") for item in toolbar_items[3]["items"]] == [
 ]
 modules = tuple(sys.modules)
 assert "compas_viewer.plugins" in modules
+if os.environ.get("GITHUB_ACTIONS") == "true":
+    assert "compas_model.plugins" in modules
+assert not any(name == "compas_model.viewer" or name.startswith("compas_model.viewer.") for name in modules)
 assert not any(name == "PySide6" or name.startswith("PySide6.") for name in modules)
 assert not any(name == "OpenGL" or name.startswith("OpenGL.") for name in modules)
 """
@@ -147,6 +164,41 @@ assert not any(name == "OpenGL" or name.startswith("OpenGL.") for name in module
     if os.environ.get("COMPAS_SCENE_SOURCE_CHECKOUTS") != "1":
         environment.pop("PYTHONPATH", None)
     subprocess.run([sys.executable, "-c", code], check=True, env=environment)
+
+
+def test_installed_model_plugins_register_viewer_scene_support():
+    try:
+        entry_points = distribution("compas_model").entry_points.select(group="compas.plugins", name="compas_model")
+    except PackageNotFoundError:
+        _missing_installation_metadata("compas_model is not installed")
+    if not entry_points:
+        _missing_installation_metadata("compas_model has no installed plugin entry point")
+    assert [entry_point.value for entry_point in entry_points] == ["compas_model.plugins"]
+
+    from compas_model.elements import MeshElement
+    from compas_model.models import Model
+    from compas_model.scene import ElementObject
+    from compas_model.scene import ModelObject
+    from compas_model.viewer.elementobject import ElementObject as ElementRenderer
+
+    model = Model()
+    element = model.add_element(MeshElement(Box(1).to_polygonal_surface().to_mesh()))
+    scene = ViewerScene()
+    model_object = scene.add(model)
+    element_object = scene.add(element, parent=model_object)
+    assert type(model_object) is ModelObject
+    assert type(element_object) is ElementObject
+    assert model_object.children == (element_object,)
+    assert element_object.item is element
+
+    scene.prepare()
+    renderer = scene.render_object(element_object)
+    assert isinstance(renderer, ElementRenderer)
+    assert renderer.sceneobject is element_object
+    assert renderer.render_geometry is not None
+    scene.clear_object(element_object)
+    assert element_object.guid not in scene.render_objects
+    assert scene.object(element_object.guid) is element_object
 
 
 def test_viewer_configuration_and_sidebar_contracts():
